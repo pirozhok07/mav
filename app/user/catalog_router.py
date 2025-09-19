@@ -27,7 +27,7 @@ async def page_catalog_products(call: CallbackQuery, session_without_commit: Asy
                                                   filters=ProductCategoryIDModel(category_id=category_id))
     count_products = len(products_category)
     if count_products:
-        await call.answer(f"В данной категории {count_products} товаров.")
+        await call.edit_text(f"В данной категории {count_products} товаров.")
         for product in products_category:
             product_text = (
                 f"📦 <b>Название товара:</b> {product.name}\n\n"
@@ -40,7 +40,7 @@ async def page_catalog_products(call: CallbackQuery, session_without_commit: Asy
                 reply_markup=product_kb(product.id, product.price)
             )
     else:
-        await call.answer("В данной категории нет товаров.")
+        await call.edit_text("В данной категории нет товаров.")
 
 @catalog_router.callback_query(F.data.startswith('buy_'))
 async def process_about(call: CallbackQuery, session_without_commit: AsyncSession):
@@ -121,7 +121,7 @@ async def successful_payment(message: Message, session_with_commit: AsyncSession
             reply_markup=main_user_kb(message.from_user.id)
         )
     else:
-        await message.answer(
+        await message.edit_text(
             text=product_text,
             reply_markup=main_user_kb(message.from_user.id)
         )

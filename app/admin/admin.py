@@ -27,7 +27,7 @@ async def admin_process_cancel(call: CallbackQuery, state: FSMContext):
     await state.clear()
     await call.answer('Отмена сценария добавления товара')
     await call.message.delete()
-    await call.message.answer(
+    await call.message.edit_text(
         text="Отмена добавления товара.",
         reply_markup=admin_kb_back()
     )
@@ -98,14 +98,14 @@ async def admin_process_start_dell(call: CallbackQuery, session_without_commit: 
 async def admin_process_start_dell(call: CallbackQuery, session_with_commit: AsyncSession):
     product_id = int(call.data.split('_')[-1])
     await ProductDao.delete(session=session_with_commit, filters=ProductIDModel(id=product_id))
-    await call.answer(f"Товар с ID {product_id} удален!", show_alert=True)
+    await call.edit_text(f"Товар с ID {product_id} удален!", show_alert=True)
     await call.message.delete()
 
 @admin_router.callback_query(F.data == 'add_product', F.from_user.id.in_(settings.ADMIN_IDS))
 async def admin_process_add_product(call: CallbackQuery, state: FSMContext):
     await call.answer('Запущен сценарий добавления товара.')
     await call.message.delete()
-    msg = await call.message.answer(text="Для начала укажите имя товара: ", reply_markup=cancel_kb_inline())
+    msg = await call.message.edit_text(text="Для начала укажите имя товара: ", reply_markup=cancel_kb_inline())
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(AddProduct.name)
 
@@ -114,7 +114,7 @@ async def admin_process_add_product(call: CallbackQuery, state: FSMContext):
 async def admin_process_name(message: Message, state: FSMContext):
     await state.update_data(name=message.text)
     await process_dell_text_msg(message, state)
-    msg = await message.answer(text="Теперь дайте короткое описание товару: ", reply_markup=cancel_kb_inline())
+    msg = await message.edit_text(text="Теперь дайте короткое описание товару: ", reply_markup=cancel_kb_inline())
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(AddProduct.description)
 
@@ -124,7 +124,7 @@ async def admin_process_description(message: Message, state: FSMContext, session
     await state.update_data(description=message.html_text)
     await process_dell_text_msg(message, state)
     catalog_data = await CategoryDao.find_all(session=session_without_commit)
-    msg = await message.answer(text="Теперь выберите категорию товара: ", reply_markup=catalog_admin_kb(catalog_data))
+    msg = await message.edit_text(text="Теперь выберите категорию товара: ", reply_markup=catalog_admin_kb(catalog_data))
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(AddProduct.category_id)
 
@@ -135,7 +135,7 @@ async def admin_process_description(message: Message, state: FSMContext, session
 async def admin_process_category(call: CallbackQuery, state: FSMContext):
     category_id = int(call.data.split("_")[-1])
     await state.update_data(category_id=category_id)
-    await call.answer('Категория товара успешно выбрана.')
+    await call.edit_text('Категория товара успешно выбрана.')
     msg = await call.message.edit_text(text="Введите цену товара: ", reply_markup=cancel_kb_inline())
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(AddProduct.price)
@@ -154,14 +154,14 @@ async def admin_process_price(message: Message, state: FSMContext):
         await state.update_data(last_msg_id=msg.message_id)
         await state.set_state(AddProduct.file_id)
     except ValueError:
-        await message.answer(text="Ошибка! Необходимо ввести числовое значение для цены.")
+        await message.edit_text(text="Ошибка! Необходимо ввести числовое значение для цены.")
         return
 
 
 @admin_router.callback_query(F.data == "without_file", F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.file_id)
 async def admin_process_without_file(call: CallbackQuery, state: FSMContext):
     await state.update_data(file_id=None)
-    await call.answer('Файл не выбран.')
+    await call.edit_text('Файл не выбран.')
     msg = await call.message.edit_text(
         text="Теперь отправьте контент, который отобразится после покупки товара внутри карточки",
         reply_markup=cancel_kb_inline())
@@ -173,7 +173,7 @@ async def admin_process_without_file(call: CallbackQuery, state: FSMContext):
 async def admin_process_without_file(message: Message, state: FSMContext):
     await state.update_data(file_id=message.document.file_id)
     await process_dell_text_msg(message, state)
-    msg = await message.answer(
+    msg = await message.edit_text(
         text="Теперь отправьте контент, который отобразится после покупки товара внутри карточки",
         reply_markup=cancel_kb_inline())
     await state.update_data(last_msg_id=msg.message_id)
@@ -203,7 +203,7 @@ async def admin_process_hidden_content(message: Message, state: FSMContext, sess
     if file_id:
         msg = await message.answer_document(document=file_id, caption=product_text, reply_markup=admin_confirm_kb())
     else:
-        msg = await message.answer(text=product_text, reply_markup=admin_confirm_kb())
+        msg = await message.edit_text(text=product_text, reply_markup=admin_confirm_kb())
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(AddProduct.confirm_add)
 
@@ -215,4 +215,4 @@ async def admin_process_confirm_add(call: CallbackQuery, state: FSMContext, sess
     await bot.delete_message(chat_id=call.from_user.id, message_id=product_data["last_msg_id"])
     del product_data["last_msg_id"]
     await ProductDao.add(session=session_with_commit, values=ProductModel(**product_data))
-    await call.message.answer(text="Товар успешно добавлен в базу данных!", reply_markup=admin_kb())
+    await call.message.edit_text(text="Товар успешно добавлен в базу данных!", reply_markup=admin_kb())

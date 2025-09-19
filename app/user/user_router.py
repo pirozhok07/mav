@@ -35,7 +35,7 @@ async def cmd_start(message: Message, session_with_commit: AsyncSession):
 @user_router.callback_query(F.data == "home")
 async def page_home(call: CallbackQuery):
     await call.answer("Главная страница")
-    return await call.message.answer(
+    return await call.message.edit_text(
         f"👋 Привет, {call.from_user.full_name}! Выберите необходимое действие",
         reply_markup=main_user_kb(call.from_user.id)
     )
@@ -72,7 +72,7 @@ async def page_about(call: CallbackQuery, session_without_commit: AsyncSession):
 
     # Формируем сообщение в зависимости от наличия покупок
     if total_purchases == 0:
-        await call.message.answer(
+        await call.message.edit_text(
             text="🔍 <b>У вас пока нет покупок.</b>\n\n"
                  "Откройте каталог и выберите что-нибудь интересное!",
             reply_markup=main_user_kb(call.from_user.id)
@@ -84,7 +84,7 @@ async def page_about(call: CallbackQuery, session_without_commit: AsyncSession):
             f"Общая сумма: <b>{total_amount}₽</b>\n\n"
             "Хотите просмотреть детали ваших покупок?"
         )
-        await call.message.answer(
+        await call.message.edit_text(
             text=text,
             reply_markup=purchases_kb()
         )
@@ -128,11 +128,11 @@ async def page_user_purchases(call: CallbackQuery, session_without_commit: Async
             )
         else:
             # Отправляем только текст
-            await call.message.answer(
+            await call.message.edit_text(
                 text=product_text,
             )
 
-    await call.message.answer(
+    await call.message.edit_text(
         text="🙏 Спасибо за доверие!",
         reply_markup=main_user_kb(call.from_user.id)
     )
