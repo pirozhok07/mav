@@ -1,4 +1,5 @@
 
+from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 import sys
 from os.path import dirname, abspath
