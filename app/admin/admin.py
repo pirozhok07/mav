@@ -112,6 +112,7 @@ async def admin_process_add_product(call: CallbackQuery, state: FSMContext):
 @admin_router.message(F.text, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.name)
 async def admin_process_name(message: Message, state: FSMContext):
     await state.update_data(name=message.text)
+    await process_dell_text_msg(message, state)
     msg = await message.answer(text="Теперь дайте короткое описание товару: ", reply_markup=cancel_kb_inline())
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(AddProduct.description)
@@ -120,6 +121,7 @@ async def admin_process_name(message: Message, state: FSMContext):
 @admin_router.message(F.text, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.description)
 async def admin_process_description(message: Message, state: FSMContext, session_without_commit: AsyncSession):
     await state.update_data(description=message.html_text)
+    await process_dell_text_msg(message, state)
     catalog_data = await CategoryDao.find_all(session=session_without_commit)
     msg = await message.answer(text="Теперь выберите категорию товара: ", reply_markup=catalog_admin_kb(catalog_data))
     await state.update_data(last_msg_id=msg.message_id)
@@ -133,6 +135,7 @@ async def admin_process_category(call: CallbackQuery, state: FSMContext):
     category_id = int(call.data.split("_")[-1])
     await state.update_data(category_id=category_id)
     await call.answer('Категория товара успешно выбрана.')
+    await process_dell_text_msg(message, state)
     msg = await call.message.answer(text="Введите цену товара: ", reply_markup=cancel_kb_inline())
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(AddProduct.price)
@@ -210,4 +213,4 @@ async def admin_process_confirm_add(call: CallbackQuery, state: FSMContext, sess
     await bot.delete_message(chat_id=call.from_user.id, message_id=product_data["last_msg_id"])
     del product_data["last_msg_id"]
     await ProductDao.add(session=session_with_commit, values=ProductModel(**product_data))
-    await call.message.edit_text(text="Товар успешно добавлен в базу данных!", reply_markup=admin_kb())
+    await call.message.answer(text="Товар успешно добавлен в базу данных!", reply_markup=admin_kb())
