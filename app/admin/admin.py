@@ -104,7 +104,6 @@ async def admin_process_start_dell(call: CallbackQuery, session_with_commit: Asy
 @admin_router.callback_query(F.data == 'add_product', F.from_user.id.in_(settings.ADMIN_IDS))
 async def admin_process_add_product(call: CallbackQuery, state: FSMContext):
     await call.answer('Запущен сценарий добавления товара.')
-    await call.message.delete()
     msg = await call.message.edit_text(text="Для начала укажите имя товара: ", reply_markup=cancel_kb_inline())
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(AddProduct.name)
