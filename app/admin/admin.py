@@ -135,7 +135,6 @@ async def admin_process_category(call: CallbackQuery, state: FSMContext):
     category_id = int(call.data.split("_")[-1])
     await state.update_data(category_id=category_id)
     await call.answer('Категория товара успешно выбрана.')
-    await process_dell_text_msg(message, state)
     msg = await call.message.answer(text="Введите цену товара: ", reply_markup=cancel_kb_inline())
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(AddProduct.price)
