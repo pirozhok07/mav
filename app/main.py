@@ -1,11 +1,11 @@
 import asyncio
 from aiogram.types import BotCommand, BotCommandScopeDefault
 from loguru import logger
-from app.config import bot, admins, dp
-from app.dao.database_middleware import DatabaseMiddlewareWithoutCommit, DatabaseMiddlewareWithCommit
-from app.admin.admin import admin_router
-from app.user.user_router import user_router
-from app.user.catalog_router import catalog_router
+from config import bot, admins, dp
+from dao.database_middleware import DatabaseMiddlewareWithoutCommit, DatabaseMiddlewareWithCommit
+from admin.admin import admin_router
+from user.user_router import user_router
+from user.catalog_router import catalog_router
 
 # Функция, которая настроит командное меню (дефолтное для всех пользователей)
 async def set_commands():
