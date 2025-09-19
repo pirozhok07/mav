@@ -1,8 +1,8 @@
 from typing import List
 from aiogram.types import InlineKeyboardMarkup, ReplyKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
-from app.config import settings
-from app.dao.models import Category
+from config import settings
+from dao.models import Category
 
 
 def main_user_kb(user_id: int) -> InlineKeyboardMarkup:

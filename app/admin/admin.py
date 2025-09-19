@@ -4,12 +4,12 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import CallbackQuery, Message
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.config import settings, bot
-from app.dao.dao import UserDAO, ProductDao, CategoryDao, PurchaseDao
-from app.admin.kbs import admin_kb, admin_kb_back, product_management_kb, cancel_kb_inline, catalog_admin_kb, \
+from config import settings, bot
+from dao.dao import UserDAO, ProductDao, CategoryDao, PurchaseDao
+from admin.kbs import admin_kb, admin_kb_back, product_management_kb, cancel_kb_inline, catalog_admin_kb, \
     admin_send_file_kb, admin_confirm_kb, dell_product_kb
-from app.admin.schemas import ProductModel, ProductIDModel
-from app.admin.utils import process_dell_text_msg
+from admin.schemas import ProductModel, ProductIDModel
+from admin.utils import process_dell_text_msg
 
 admin_router = Router()
 

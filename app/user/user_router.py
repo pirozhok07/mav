@@ -2,9 +2,9 @@ from aiogram import Router, F
 from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.dao.dao import UserDAO
-from app.user.kbs import main_user_kb, purchases_kb
-from app.user.schemas import TelegramIDModel, UserModel
+from dao.dao import UserDAO
+from user.kbs import main_user_kb, purchases_kb
+from user.schemas import TelegramIDModel, UserModel
 
 user_router = Router()
 

@@ -2,7 +2,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from loguru import logger
 
-from app.config import bot
+from config import bot
 
 
 async def process_dell_text_msg(message: Message, state: FSMContext):

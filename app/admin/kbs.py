@@ -1,7 +1,7 @@
 from typing import List
 from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from app.dao.models import Category
+from dao.models import Category
 
 
 def catalog_admin_kb(catalog_data: List[Category]) -> InlineKeyboardMarkup:

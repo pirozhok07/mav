@@ -7,8 +7,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.dao.base import BaseDAO
-from app.dao.models import User, Purchase, Category, Product
+from dao.base import BaseDAO
+from dao.models import User, Purchase, Category, Product
 
 class CategoryDao(BaseDAO[Category]):
     model = Category
