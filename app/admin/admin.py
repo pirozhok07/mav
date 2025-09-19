@@ -109,7 +109,7 @@ async def admin_process_add_product(call: CallbackQuery, state: FSMContext):
     await state.set_state(AddProduct.name)
 
 
-@admin_router.message(F.text, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.name)
+@admin_router.callback_query(F.text, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.name)
 async def admin_process_name(call: CallbackQuery, state: FSMContext):
     await state.update_data(name=call.message.text)
     msg = await call.message.edit_text(text="Теперь дайте короткое описание товару: ", reply_markup=cancel_kb_inline())
@@ -117,7 +117,7 @@ async def admin_process_name(call: CallbackQuery, state: FSMContext):
     await state.set_state(AddProduct.description)
 
 
-@admin_router.message(F.text, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.description)
+@admin_router.callback_query(F.text, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.description)
 async def admin_process_description(call: CallbackQuery, state: FSMContext, session_without_commit: AsyncSession):
     await state.update_data(description=call.message.html_text)
     catalog_data = await CategoryDao.find_all(session=session_without_commit)
@@ -138,7 +138,7 @@ async def admin_process_category(call: CallbackQuery, state: FSMContext):
     await state.set_state(AddProduct.price)
 
 
-@admin_router.message(F.text, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.price)############
+@admin_router.callback_query(F.text, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.price)############
 async def admin_process_price(call: CallbackQuery, state: FSMContext):
     try:
         price = int(call.message.text)
@@ -165,7 +165,7 @@ async def admin_process_without_file(call: CallbackQuery, state: FSMContext):
     await state.set_state(AddProduct.hidden_content)
 
 
-@admin_router.message(F.document, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.file_id)###################
+@admin_router.callback_query(F.document, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.file_id)###################
 async def admin_process_without_file(message: Message, state: FSMContext):
     await state.update_data(file_id=message.document.file_id)
     msg = await message.answer(
@@ -175,7 +175,7 @@ async def admin_process_without_file(message: Message, state: FSMContext):
     await state.set_state(AddProduct.hidden_content)
 
 
-@admin_router.message(F.text, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.hidden_content)
+@admin_router.callback_query(F.text, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.hidden_content)
 async def admin_process_hidden_content(message: Message, state: FSMContext, session_without_commit: AsyncSession):
     await state.update_data(hidden_content=message.html_text)
 
