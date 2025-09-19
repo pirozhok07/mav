@@ -1,4 +1,4 @@
-from datetime import datetime, UTC, timedelta
+from datetime import datetime, timedelta
 from typing import Optional, List, Dict
 
 from loguru import logger
@@ -80,7 +80,7 @@ async def get_purchased_products(cls, session: AsyncSession, telegram_id: int) -
 @classmethod
 async def get_statistics(cls, session: AsyncSession):
     try:
-        now = datetime.now(UTC)
+        now = datetime.now()
         query = select(
             func.count().label('total_users'),
             func.sum(case((cls.model.created_at >= now - timedelta(days=1), 1), else_=0)).label('new_today'),
