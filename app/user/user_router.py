@@ -43,7 +43,7 @@ async def page_home(call: CallbackQuery):
 @user_router.callback_query(F.data == "about")
 async def page_about(call: CallbackQuery):
     await call.answer("О магазине")
-    await call.message.answer(
+    await call.message.edit_text(
         text=(
             "🎓 Добро пожаловать в наш учебный магазин!\n\n"
             "🚀 Этот бот создан как демонстрационный проект для статьи на Хабре.\n\n"
