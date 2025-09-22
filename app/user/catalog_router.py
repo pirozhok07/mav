@@ -5,7 +5,7 @@ from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 from config import bot, settings
 from dao.dao import UserDAO, CategoryDao, ProductDao, PurchaseDao
-from user.kbs import main_user_kb, catalog_kb, product_kb, get_product_buy_kb
+from user.kbs import cancele_kb, main_user_kb, catalog_kb, product_kb, get_product_buy_kb
 from user.schemas import TelegramIDModel, ProductCategoryIDModel, PaymentData
 
 catalog_router = Router()
@@ -39,6 +39,7 @@ async def page_catalog_products(call: CallbackQuery, session_without_commit: Asy
                 product_text,
                 reply_markup=product_kb(product.id, product.price)
             )
+        call.message.answer(reply_markup=cancele_kb())
     else:
         await call.message.edit_text(text="В данной категории нет товаров.\n\n Выберите категорию товаров:") # возврат
 
