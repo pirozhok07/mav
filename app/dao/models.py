@@ -52,11 +52,9 @@ class Product(Base):
 
 
 class Purchase(Base):
-    # purchase_id: Mapped[int] = mapped_column(BigInteger, unique=False, nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
     product_id: Mapped[int] = mapped_column(ForeignKey('products.id'))
     price: Mapped[int]
-    #payment_id: Mapped[str] = mapped_column(unique=True)
     user: Mapped["User"] = relationship("User", back_populates="purchases")
     product: Mapped["Product"] = relationship("Product", back_populates="purchases")
     status: Mapped[str] = mapped_column(Text)
