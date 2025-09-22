@@ -1,7 +1,7 @@
 from typing import List
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import BigInteger, Text, ForeignKey
-from dao.database import Base
+from app.dao.database import Base
 
 
 class User(Base):
