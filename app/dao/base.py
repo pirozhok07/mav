@@ -114,4 +114,19 @@ class BaseDAO(Generic[T]):
             return count
         except SQLAlchemyError as e:
             logger.error(f"Ошибка при подсчете записей: {e}")
+            raise e
+        
+    @classmethod
+    async def sum(cls, session: AsyncSession, filters: BaseModel | None = None): ##
+        # Подсчитать сумму
+        filter_dict = filters.model_dump(exclude_unset=True) if filters else {}
+        logger.info(f"Подсчет количества записей {cls.model.__name__} по фильтру: {filter_dict}")
+        try:
+            query = select(func.count(cls.model.id)).filter_by(**filter_dict)
+            result = await session.execute(query)
+            count = result.scalar()
+            logger.info(f"Найдено {count} записей.")
+            return count
+        except SQLAlchemyError as e:
+            logger.error(f"Ошибка при подсчете записей: {e}")
             raise

@@ -36,7 +36,7 @@ def purchases_kb() -> InlineKeyboardMarkup:
 
 def product_kb(product_id, price) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    kb.button(text="💸 Купить", callback_data=f"buy_{product_id}_{price}")
+    kb.button(text="💸 В корзину", callback_data=f"cart_{product_id}_{price}")
     kb.adjust(1)
     return kb.as_markup()
 
