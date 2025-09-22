@@ -324,3 +324,12 @@
 2025-09-22 at 09:47:02 | INFO | Поиск всех записей Product по фильтрам: {'category_id': 2}
 2025-09-22 at 09:47:02 | INFO | Найдено 0 записей.
 2025-09-22 at 10:25:09 | ERROR | Бот остановлен!
+2025-09-22 at 10:52:29 | INFO | Бот успешно запущен.
+2025-09-22 at 10:52:36 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-22 at 10:52:36 | ERROR | Ошибка при поиске записи по фильтрам {'telegram_id': 1330085937}: (sqlite3.OperationalError) no such table: users
+[SQL: SELECT users.telegram_id, users.username, users.first_name, users.last_name, users.id, users.created_at, users.updated_at 
+FROM users 
+WHERE users.telegram_id = ?]
+[parameters: (1330085937,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-22 at 10:52:44 | ERROR | Бот остановлен!
