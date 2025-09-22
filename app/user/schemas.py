@@ -21,8 +21,11 @@ class ProductCategoryIDModel(BaseModel):
     category_id: int
 
 
-class PaymentData(BaseModel):
+class ItemCartData(BaseModel):
     user_id: int = Field(..., description="ID пользователя Telegram")
     price: int = Field(..., description="Сумма платежа в рублях")
     product_id: int = Field(..., description="ID товара")
     status: str = Field(..., description="Статус товара")
+
+class CartModel(BaseModel):
+    id:int

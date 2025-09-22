@@ -78,6 +78,22 @@ class UserDAO(BaseDAO[User]):
             return None
     
     @classmethod
+    async def get_cart(cls, session: AsyncSession, telegram_id: int) -> Optional[List[Purchase]]:
+        try:
+            # Запрос для получения корзины пользователя
+            result = await session.execute(
+                select(Purchase)
+                ).join(User).filter(User.telegram_id == telegram_id)
+            user = result.fetchall() 
+            if user is None:
+                return None 
+            return user.purchase 
+        except SQLAlchemyError as e:
+            # Обработка ошибок при работе с базой данных
+            print(f"Ошибка при получении корзины: {e}")
+            return None
+        
+    @classmethod
     async def get_statistics(cls, session: AsyncSession):
         try:
             now = datetime.now()

@@ -2,9 +2,9 @@ from aiogram import Router, F
 from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 from sqlalchemy.ext.asyncio import AsyncSession
-from dao.dao import UserDAO
+from dao.dao import UserDAO, ProductDao
 from user.kbs import main_user_kb, purchases_kb
-from user.schemas import TelegramIDModel, UserModel
+from user.schemas import TelegramIDModel, UserModel, CartModel
 
 user_router = Router()
 
@@ -95,6 +95,57 @@ async def page_user_purchases(call: CallbackQuery, session_without_commit: Async
 
     # Получаем список покупок пользователя
     purchases = await UserDAO.get_purchased_products(session=session_without_commit, telegram_id=call.from_user.id)
+
+    if not purchases:
+        await call.message.edit_text(
+            text=f"🔍 <b>У вас пока нет покупок.</b>\n\n"
+                 f"Откройте каталог и выберите что-нибудь интересное!",
+            reply_markup=main_user_kb(call.from_user.id)
+        )
+        return
+
+    # Для каждой покупки отправляем информацию
+    for purchase in purchases:
+        product = purchase.product
+        file_text = "📦 <b>Товар включает файл:</b>" if product.file_id else "📄 <b>Товар не включает файлы:</b>"
+
+        product_text = (
+            f"🛒 <b>Информация о вашем товаре:</b>\n"
+            f"━━━━━━━━━━━━━━━━━━\n"
+            f"🔹 <b>Название:</b> <i>{product.name}</i>\n"
+            f"🔹 <b>Описание:</b>\n<i>{product.description}</i>\n"
+            f"🔹 <b>Цена:</b> <b>{product.price} ₽</b>\n"
+            f"🔹 <b>Закрытое описание:</b>\n<i>{product.hidden_content}</i>\n"
+            f"━━━━━━━━━━━━━━━━━━\n"
+            f"{file_text}\n"
+        )
+
+        if product.file_id:
+            # Отправляем файл с текстом
+            await call.message.answer_document(
+                document=product.file_id,
+                caption=product_text,
+            )
+        else:
+            # Отправляем только текст
+            await call.message.edit_text(
+                text=product_text,
+            )
+
+    await call.message.edit_text(
+        text="🙏 Спасибо за доверие!",
+        reply_markup=main_user_kb(call.from_user.id)
+    )
+
+@user_router.callback_query(F.data == "cart")
+async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSession):
+    await call.answer("Моя корзина")
+
+    # Получаем список покупок пользователя
+    # cart = await ProductDao.find_all(session=session_without_commit,
+                                                #   filters=CartModel(id=call.from_user.id))
+    # count_products = len(products_category)
+    purchases = await UserDAO.get_cart(session=session_without_commit, telegram_id=call.from_user.id)
 
     if not purchases:
         await call.message.edit_text(
