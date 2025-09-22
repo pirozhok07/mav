@@ -49,6 +49,12 @@ def cart_kb() -> InlineKeyboardMarkup:
     kb.adjust(1)
     return kb.as_markup()
 
+def dell_cart_kb(purchase_id: int) -> InlineKeyboardMarkup:
+    kb = InlineKeyboardBuilder()
+    kb.button(text="🗑️ Удалить", callback_data=f"dell_{purchase_id}")
+    kb.adjust(1)
+    return kb.as_markup()
+
 
 def cancele_kb()-> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()

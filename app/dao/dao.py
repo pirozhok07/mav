@@ -84,7 +84,7 @@ class UserDAO(BaseDAO[User]):
             result = await session.execute(
                 select(User)
                 .options(selectinload(User.purchases).selectinload(Purchase.product))
-                .filter(User.telegram_id == telegram_id)
+                .filter(User.telegram_id == telegram_id and Purchase.status == 'NEW')
                 )
             user = result.scalar_one_or_none() 
             logger.error(user)
