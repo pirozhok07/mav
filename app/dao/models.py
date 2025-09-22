@@ -55,7 +55,7 @@ class Purchase(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
     product_id: Mapped[int] = mapped_column(ForeignKey('products.id'))
     price: Mapped[int]
-    status: Mapped[str] = mapped_column(Text)
+    status: Mapped[str]
     user: Mapped["User"] = relationship("User", back_populates="purchases")
     product: Mapped["Product"] = relationship("Product", back_populates="purchases")
 
