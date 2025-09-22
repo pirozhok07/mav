@@ -88,7 +88,7 @@ class UserDAO(BaseDAO[User]):
             user = result.fetchall() 
             if user is None:
                 return None 
-            return user.purchase 
+            return user 
         except SQLAlchemyError as e:
             # Обработка ошибок при работе с базой данных
             print(f"Ошибка при получении корзины: {e}")
