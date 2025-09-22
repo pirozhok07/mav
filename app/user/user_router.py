@@ -178,7 +178,7 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
             text=product_text,
         )
 
-    await call.message.edit_text(
+    await call.message.answer(
         text="🙏 Спасибо за доверие!",
         reply_markup=main_user_kb(call.from_user.id)
     )
