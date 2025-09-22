@@ -82,10 +82,7 @@ class UserDAO(BaseDAO[User]):
         try:
             # Запрос для получения корзины пользователя
             result = await session.execute(
-                select(Purchase)
-                .options(
-                    selectinload(Purchase.product)
-                )
+                select(Purchase).join(Product).filter(Product.id == Purchase.product_id)
                 .filter(Purchase.user_id == telegram_id)
                 )
             user = result.fetchall() 
