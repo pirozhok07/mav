@@ -83,7 +83,7 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
         # 'payment_id': payment_info.telegram_payment_charge_id,
         'price': int(price),
         'product_id': int(product_id),
-        'status': "NEW"
+        'status': 'NEW',
     }
     logger.error(payment_data)
     # Добавляем информацию о покупке в базу данных
