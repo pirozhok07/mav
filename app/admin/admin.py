@@ -111,7 +111,7 @@ async def admin_process_add_product(call: CallbackQuery, state: FSMContext):
     await state.set_state(AddProduct.name)
 
 
-@admin_router.callback_query(F.text, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.name)
+@admin_router.message(F.text, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.name)
 async def admin_process_name(call: CallbackQuery, state: FSMContext):
     logger.info(f"'add descrip good'")#
     await state.update_data(name=call.message.text)
