@@ -172,20 +172,11 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
             f"🔹 <b>Цена:</b> <b>{product.price} ₽</b>\n"
             f"🔹 <b>Закрытое описание:</b>\n<i>{product.hidden_content}</i>\n"
             f"━━━━━━━━━━━━━━━━━━\n"
-            f"{file_text}\n"
         )
 
-        if product.file_id:
-            # Отправляем файл с текстом
-            await call.message.answer_document(
-                document=product.file_id,
-                caption=product_text,
-            )
-        else:
-            # Отправляем только текст
-            await call.message.edit_text(
-                text=product_text,
-            )
+        await call.message.edit_text(
+            text=product_text,
+        )
 
     await call.message.edit_text(
         text="🙏 Спасибо за доверие!",
