@@ -3,6 +3,7 @@ from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import CallbackQuery, Message
+from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 from config import settings, bot
 from dao.dao import UserDAO, ProductDao, CategoryDao, PurchaseDao
@@ -103,6 +104,7 @@ async def admin_process_start_dell(call: CallbackQuery, session_with_commit: Asy
 
 @admin_router.callback_query(F.data == 'add_product', F.from_user.id.in_(settings.ADMIN_IDS))
 async def admin_process_add_product(call: CallbackQuery, state: FSMContext):
+    logger.info(f"'add name good'")#
     await call.answer('Запущен сценарий добавления товара.')
     msg = await call.message.edit_text(text="Для начала укажите имя товара: ", reply_markup=cancel_kb_inline())
     await state.update_data(last_msg_id=msg.message_id)
@@ -111,6 +113,7 @@ async def admin_process_add_product(call: CallbackQuery, state: FSMContext):
 
 @admin_router.callback_query(F.text, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.name)
 async def admin_process_name(call: CallbackQuery, state: FSMContext):
+    logger.info(f"'add descrip good'")#
     await state.update_data(name=call.message.text)
     msg = await call.message.edit_text(text="Теперь дайте короткое описание товару: ", reply_markup=cancel_kb_inline())
     await state.update_data(last_msg_id=msg.message_id)
