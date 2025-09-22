@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from config import bot, settings
 from dao.dao import UserDAO, CategoryDao, ProductDao, PurchaseDao
 from user.kbs import cancele_kb, main_user_kb, catalog_kb, product_kb, get_product_buy_kb
-from user.schemas import TelegramIDModel, ProductCategoryIDModel, PaymentData
+from user.schemas import TelegramIDModel, ProductCategoryIDModel, ItemCartData
 
 catalog_router = Router()
 
@@ -87,7 +87,7 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
     }
     logger.error(payment_data)
     # Добавляем информацию о покупке в базу данных
-    await PurchaseDao.add(session=session_with_commit, values=PaymentData(**payment_data))
+    await PurchaseDao.add(session=session_with_commit, values=ItemCartData(**payment_data))
     # product_data = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=int(product_id))
 
     # # Формируем уведомление администраторам
