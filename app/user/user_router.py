@@ -155,7 +155,9 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
             reply_markup=main_user_kb(call.from_user.id)
         )
         return
-
+    product_text = (
+            f"🛒 <b>Информация о вашей корзине:</b>\n"
+            f"━━━━━━━━━━━━━━━━━━\n")
     # Для каждой покупки отправляем информацию
     for purchase in purchases:
 
@@ -164,21 +166,13 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
         logger.error(product)
         # file_text = "📦 <b>Товар включает файл:</b>" if product.file_id else "📄 <b>Товар не включает файлы:</b>"
 
-        product_text = (
-            f"🛒 <b>Информация о вашем товаре:</b>\n"
-            f"━━━━━━━━━━━━━━━━━━\n"
-            f"🔹 <b>Название:</b> <i>{product.name}</i>\n"
-            f"🔹 <b>Описание:</b>\n<i>{product.description}</i>\n"
-            f"🔹 <b>Цена:</b> <b>{product.price} ₽</b>\n"
-            f"🔹 <b>Закрытое описание:</b>\n<i>{product.hidden_content}</i>\n"
-            f"━━━━━━━━━━━━━━━━━━\n"
+        product_text += (
+            f"🔹 {product.name} - {product.price} ₽\n"
         )
+    product_text += (
+            f"━━━━━━━━━━━━━━━━━━\n")
 
-        await call.message.edit_text(
-            text=product_text,
-        )
-
-    await call.message.answer(
-        text="🙏 Спасибо за доверие!",
+    await call.message.edit_text(
+        text=product_text,
         reply_markup=main_user_kb(call.from_user.id)
     )
