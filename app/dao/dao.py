@@ -86,6 +86,7 @@ class UserDAO(BaseDAO[User]):
                 .filter(Purchase.user_id == telegram_id)
                 )
             user = result.fetchall() 
+            logger.error(user)
             if user is None:
                 return None 
             return user 
