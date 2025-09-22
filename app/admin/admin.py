@@ -112,10 +112,10 @@ async def admin_process_add_product(call: CallbackQuery, state: FSMContext):
 
 
 @admin_router.message(F.text, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.name)
-async def admin_process_name(call: CallbackQuery, state: FSMContext):
+async def admin_process_name(message: Message, state: FSMContext):
     logger.info(f"'add descrip good'")#
-    await state.update_data(name=call.message.text)
-    msg = await call.message.edit_text(text="Теперь дайте короткое описание товару: ", reply_markup=cancel_kb_inline())
+    await state.update_data(name=call.text)
+    msg = await message.edit_text(text="Теперь дайте короткое описание товару: ", reply_markup=cancel_kb_inline())
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(AddProduct.description)
 
