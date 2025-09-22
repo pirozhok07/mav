@@ -86,13 +86,13 @@ class UserDAO(BaseDAO[User]):
                 .options(
                     selectinload(User.purchases).selectinload(Purchase.product)
                 )
-                .filter(User.telegram_id == telegram_id and Purchase.status == "NEW")
+                .filter(User.telegram_id == telegram_id)
                 )
-            user = result.fetchall() 
+            user = result.scalar_one_or_none() 
             logger.error(user)
             if user is None:
                 return None 
-            return user 
+            return user.purchase 
         except SQLAlchemyError as e:
             # Обработка ошибок при работе с базой данных
             print(f"Ошибка при получении корзины: {e}")
