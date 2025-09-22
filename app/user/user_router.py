@@ -4,7 +4,7 @@ from aiogram.types import Message, CallbackQuery
 from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 from dao.dao import UserDAO, ProductDao
-from user.kbs import main_user_kb, purchases_kb
+from user.kbs import cart_kb, main_user_kb, purchases_kb
 from user.schemas import TelegramIDModel, UserModel, CartModel
 
 user_router = Router()
@@ -158,6 +158,7 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
     product_text = (
             f"🛒 <b>Информация о вашей корзине:</b>\n"
             f"━━━━━━━━━━━━━━━━━━\n")
+    cart_total=0
     # Для каждой покупки отправляем информацию
     for purchase in purchases:
 
@@ -169,10 +170,12 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
         product_text += (
             f"🔹 {product.name} - {product.price} ₽\n"
         )
+        cart_total +=product.price
     product_text += (
-            f"━━━━━━━━━━━━━━━━━━\n")
+            f"━━━━━━━━━━━━━━━━━━\n"
+            f"сумма заказа: {cart_total}₽\n")
 
     await call.message.edit_text(
         text=product_text,
-        reply_markup=main_user_kb(call.from_user.id)
+        reply_markup=cart_kb()
     )

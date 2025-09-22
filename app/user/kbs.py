@@ -41,6 +41,15 @@ def product_kb(product_id, price) -> InlineKeyboardMarkup:
     kb.adjust(1)
     return kb.as_markup()
 
+
+def cart_kb() -> InlineKeyboardMarkup:
+    kb = InlineKeyboardBuilder()
+    kb.button(text="💸 Оформить заказ", callback_data=f"do_order_")
+    kb.button(text="💸 Редактировать корзину", callback_data=f"edit_cart")
+    kb.adjust(1)
+    return kb.as_markup()
+
+
 def cancele_kb()-> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     kb.button(text="🛍 Назад", callback_data="catalog")
