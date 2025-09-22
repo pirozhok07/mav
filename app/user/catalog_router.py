@@ -79,7 +79,7 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
     _, product_id, price = call.data.split('_')
     user_id = call.from_user.id
     payment_data = {
-        'user_id': int(user_id),
+        'user_id': int(1),
         # 'payment_id': payment_info.telegram_payment_charge_id,
         'price': int(price),
         'product_id': int(product_id),
