@@ -40,7 +40,7 @@ async def page_catalog_products(call: CallbackQuery, session_without_commit: Asy
                 reply_markup=product_kb(product.id, product.price)
             )
     else:
-        await call.message.edit_text("В данной категории нет товаров.")
+        await call.message.edit_text(text="В данной категории нет товаров.\n\n Выберите категорию товаров:") # возврат
 
 @catalog_router.callback_query(F.data.startswith('buy_'))
 async def process_about(call: CallbackQuery, session_without_commit: AsyncSession):
