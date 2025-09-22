@@ -487,3 +487,20 @@ WHERE users.telegram_id = ?]
 [parameters: (1330085937, 1, 100, 'NEW')]
 (Background on this error at: https://sqlalche.me/e/20/gkpj)
 2025-09-22 at 13:10:52 | ERROR | Бот остановлен!
+2025-09-22 at 14:18:12 | INFO | Бот успешно запущен.
+2025-09-22 at 14:18:19 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-22 at 14:18:19 | ERROR | Ошибка при поиске записи по фильтрам {'telegram_id': 1330085937}: (sqlite3.OperationalError) no such table: users
+[SQL: SELECT users.telegram_id, users.username, users.first_name, users.last_name, users.id, users.created_at, users.updated_at 
+FROM users 
+WHERE users.telegram_id = ?]
+[parameters: (1330085937,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-22 at 14:19:39 | ERROR | Бот остановлен!
+2025-09-22 at 14:26:38 | INFO | Бот успешно запущен.
+2025-09-22 at 14:26:39 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-22 at 14:26:39 | INFO | Запись не найдена по фильтрам: {'telegram_id': 1330085937}
+2025-09-22 at 14:26:39 | INFO | Добавление записи User с параметрами: {'telegram_id': 1330085937, 'username': 'p_irozhok', 'first_name': 'Вика', 'last_name': None}
+2025-09-22 at 14:26:39 | INFO | Запись User успешно добавлена.
+2025-09-22 at 14:26:44 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-09-22 at 14:26:44 | INFO | Найдено 0 записей.
+2025-09-22 at 14:26:49 | ERROR | Бот остановлен!
