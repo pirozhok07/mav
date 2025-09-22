@@ -1,7 +1,7 @@
 from typing import List
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import BigInteger, Text, ForeignKey
-from app.dao.database import Base
+from bot.dao.database import Base
 
 
 class User(Base):
@@ -56,9 +56,9 @@ class Purchase(Base):
     product_id: Mapped[int] = mapped_column(ForeignKey('products.id'))
     price: Mapped[int]
     payment_id: Mapped[str] = mapped_column(unique=True)
+    status: Mapped[str] = mapped_column(Text)
     user: Mapped["User"] = relationship("User", back_populates="purchases")
     product: Mapped["Product"] = relationship("Product", back_populates="purchases")
-    status: Mapped[str] = mapped_column(Text)
 
     def __repr__(self):
         return f"<Purchase(id={self.id}, user_id={self.user_id}, product_id={self.product_id}, date={self.created_at})>"
