@@ -16,6 +16,8 @@ class UserModel(TelegramIDModel):
 class ProductIDModel(BaseModel):
     id: int
 
+class PurchaseIDModel(BaseModel):
+    id: int
 
 class ProductCategoryIDModel(BaseModel):
     category_id: int

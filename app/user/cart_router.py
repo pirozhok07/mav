@@ -3,9 +3,9 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
-from dao.dao import UserDAO, ProductDao
+from dao.dao import UserDAO, ProductDao, PurchaseDao
 from user.kbs import cart_kb, dell_cart_kb, main_user_kb, purchases_kb
-from user.schemas import TelegramIDModel, UserModel, CartModel
+from user.schemas import PurchaseIDModel, TelegramIDModel, UserModel, CartModel
 
 cart_router = Router()
 
@@ -57,10 +57,18 @@ async def edit_cart(call: CallbackQuery, session_without_commit: AsyncSession):
     all_items = await UserDAO.get_cart(session=session_without_commit, telegram_id=call.from_user.id)
 
     for item in all_items:
+        product = item.product
         product_text = (f'🛒 Описание товара:\n\n'
-                        f'🔹 <b>Название товара:</b> <b>{item.name}</b>\n'
-                        f'🔹 <b>Описание:</b>\n\n<b>{item.description}</b>\n\n'
-                        f'🔹 <b>Цена:</b> <b>{item.price} ₽</b>\n'
-                        f'🔹 <b>Описание (закрытое):</b>\n\n<b>{item.hidden_content}</b>\n\n')
-        await call.message.answer(text=product_text, reply_markup=dell_cart_kb(item.id))
+                        f'🔹 <b>Название товара:</b> <b>{product.name}</b>\n'
+                        f'🔹 <b>Описание:</b>\n\n<b>{product.description}</b>\n\n'
+                        f'🔹 <b>Цена:</b> <b>{product.price} ₽</b>\n'
+                        f'🔹 <b>Описание (закрытое):</b>\n\n<b>{product.hidden_content}</b>\n\n')
+        await call.message.answer(text=product_text, reply_markup=dell_cart_kb(product.id))
     # await call.message.answer("--", reply_markup=)
+
+@cart_router.callback_query(F.data.startswith('dell_'), F.from_user.id.in_(settings.ADMIN_IDS))
+async def admin_process_start_dell(call: CallbackQuery, session_with_commit: AsyncSession):
+    item_id = int(call.data.split('_')[-1])
+    await PurchaseDao.delete(session=session_with_commit, filters=PurchaseIDModel(id=item_id))
+    await call.message.edit_text(f"Товар с ID {item_id} удален!", show_alert=True)
+    await call.message.delete()
