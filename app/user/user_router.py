@@ -161,7 +161,8 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
 
         logger.error(purchase)
         product = purchase.product
-        file_text = "📦 <b>Товар включает файл:</b>" if product.file_id else "📄 <b>Товар не включает файлы:</b>"
+        logger.error(product)
+        # file_text = "📦 <b>Товар включает файл:</b>" if product.file_id else "📄 <b>Товар не включает файлы:</b>"
 
         product_text = (
             f"🛒 <b>Информация о вашем товаре:</b>\n"
