@@ -682,3 +682,36 @@ WHERE users.telegram_id = ?]
 2025-09-22 at 18:15:29 | INFO | Найдено 3 записей.
 2025-09-22 at 18:15:57 | INFO | Статистика успешно получена: {'total_users': 1, 'new_today': 1, 'new_week': 1, 'new_month': 1}
 2025-09-23 at 13:01:39 | ERROR | Бот остановлен!
+2025-09-23 at 14:19:56 | INFO | Бот успешно запущен.
+2025-09-23 at 14:20:04 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-23 at 14:20:04 | ERROR | Ошибка при поиске записи по фильтрам {'telegram_id': 1330085937}: Could not determine join condition between parent/child tables on relationship Product.taste_id - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-09-23 at 14:24:32 | ERROR | Бот остановлен!
+2025-09-23 at 14:25:53 | INFO | Бот успешно запущен.
+2025-09-23 at 14:25:57 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-23 at 14:25:57 | ERROR | Ошибка при поиске записи по фильтрам {'telegram_id': 1330085937}: Could not determine join condition between parent/child tables on relationship Product.taste_id - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-09-23 at 14:26:36 | ERROR | Бот остановлен!
+2025-09-23 at 14:30:24 | INFO | Бот успешно запущен.
+2025-09-23 at 14:30:31 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-23 at 14:30:31 | ERROR | Ошибка при поиске записи по фильтрам {'telegram_id': 1330085937}: Could not determine join condition between parent/child tables on relationship Product.taste_id - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-09-23 at 17:02:48 | ERROR | Бот остановлен!
+2025-09-23 at 17:05:08 | INFO | Бот успешно запущен.
+2025-09-23 at 17:05:53 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-23 at 17:05:53 | ERROR | Ошибка при поиске записи по фильтрам {'telegram_id': 1330085937}: Could not determine join condition between parent/child tables on relationship Product.taste_id - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-09-23 at 17:08:15 | ERROR | Бот остановлен!
+2025-09-23 at 17:09:49 | INFO | Бот успешно запущен.
+2025-09-23 at 17:09:51 | ERROR | Бот остановлен!
+2025-09-23 at 17:12:52 | INFO | Бот успешно запущен.
+2025-09-23 at 17:13:00 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-23 at 17:13:00 | ERROR | Ошибка при поиске записи по фильтрам {'telegram_id': 1330085937}: Could not determine join condition between parent/child tables on relationship Product.tastes - there are multiple foreign key paths linking the tables.  Specify the 'foreign_keys' argument, providing a list of those columns which should be counted as containing a foreign key reference to the parent table.
+2025-09-23 at 17:17:46 | ERROR | Бот остановлен!
+2025-09-23 at 17:19:33 | INFO | Бот успешно запущен.
+2025-09-23 at 17:19:49 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-23 at 17:19:49 | INFO | Запись не найдена по фильтрам: {'telegram_id': 1330085937}
+2025-09-23 at 17:19:49 | INFO | Добавление записи User с параметрами: {'telegram_id': 1330085937, 'username': 'p_irozhok', 'first_name': 'Вика', 'last_name': None}
+2025-09-23 at 17:19:49 | INFO | Запись User успешно добавлена.
+2025-09-23 at 17:20:02 | INFO | Статистика успешно получена: {'total_users': 1, 'new_today': 1, 'new_week': 1, 'new_month': 1}
+2025-09-23 at 17:21:37 | INFO | Подсчет количества записей Product по фильтру: {}
+2025-09-23 at 17:21:37 | INFO | Найдено 0 записей.
+2025-09-23 at 17:21:47 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-09-23 at 17:21:47 | INFO | Найдено 0 записей.
+2025-09-23 at 17:22:21 | ERROR | Бот остановлен!
