@@ -59,6 +59,7 @@ class Taste(Base):
 
     taste_name: Mapped[str] = mapped_column(Text, nullable=False)
     quantity: Mapped[int]
+    product_id: Mapped[int] = mapped_column(ForeignKey('products.id'))
     product: Mapped["Product"] = relationship("Product", back_populates="tastes")
 
     def __repr__(self):
