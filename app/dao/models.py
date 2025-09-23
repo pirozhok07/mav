@@ -9,11 +9,7 @@ class User(Base):
     username: Mapped[str | None]
     first_name: Mapped[str | None]
     last_name: Mapped[str | None]
-    purchases: Mapped[List['Purchase']] = relationship(
-        "Purchase",
-        back_populates="user",
-        cascade="all, delete-orphan"
-    )
+    purchases: Mapped[List['Purchase']] = relationship("Purchase", back_populates="user")
 
     def __repr__(self):
         return f"<User(id={self.id}, telegram_id={self.telegram_id}, username='{self.username}')>"
@@ -40,31 +36,22 @@ class Product(Base):
     quantity: Mapped[int]
     category_id: Mapped[int] = mapped_column(ForeignKey('categories.id'))
     category: Mapped["Category"] = relationship("Category", back_populates="products")
-    purchases: Mapped[List['Purchase']] = relationship(
-        "Purchase",
-        back_populates="product",
-        cascade="all, delete-orphan"
-    )
-    taste_id: Mapped[List['Taste']] = relationship(
-        "Taste",
-        back_populates="product",
-        cascade="all, delete-orphan"
-    )
+    purchases: Mapped[List['Purchase']] = relationship("Purchase", back_populates="product")
+    tastes: Mapped[List['Taste'] | None] = relationship("Taste", back_populates="product")
 
     def __repr__(self):
         return f"<Product(id={self.id}, name='{self.name}', price={self.price})>"
     
 class Taste(Base):
-    __tablename__ = 'tastes'
-
+    product_id: Mapped[int] = mapped_column(ForeignKey('products.id'))
     taste_name: Mapped[str] = mapped_column(Text, nullable=False)
     quantity: Mapped[int]
-    product_id: Mapped[int] = mapped_column(ForeignKey('products.id'))
     product: Mapped["Product"] = relationship("Product", back_populates="tastes")
 
     def __repr__(self):
-        return f"<Taste(id={self.id}, name='{self.taste_name}')>"
-    
+        return f"<Taste(id={self.id}, taste_name='{self.taste_name}', quantity={self.quantity})>"
+
+
 class Purchase(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey('users.telegram_id'))
     product_id: Mapped[int] = mapped_column(ForeignKey('products.id'))
