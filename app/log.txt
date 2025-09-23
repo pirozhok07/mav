@@ -626,3 +626,59 @@ WHERE users.telegram_id = ?]
 2025-09-22 at 17:06:17 | ERROR | <Purchase(id=3, user_id=1, product_id=2, date=2025-09-22 13:26:53)>
 2025-09-22 at 17:06:17 | ERROR | None
 2025-09-22 at 17:07:43 | ERROR | Бот остановлен!
+2025-09-22 at 17:16:44 | INFO | Бот успешно запущен.
+2025-09-22 at 17:16:45 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-22 at 17:16:45 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-09-22 at 17:16:46 | ERROR | <User(id=1, telegram_id=1330085937, username='p_irozhok')>
+2025-09-22 at 17:16:46 | ERROR | [<Purchase(id=2, user_id=1, product_id=1, date=2025-09-22 13:26:45)>, <Purchase(id=3, user_id=1, product_id=2, date=2025-09-22 13:26:53)>]
+2025-09-22 at 17:16:46 | ERROR | <Purchase(id=2, user_id=1, product_id=1, date=2025-09-22 13:26:45)>
+2025-09-22 at 17:16:46 | ERROR | <Product(id=1, name='Товар 1', price=100)>
+2025-09-22 at 17:16:46 | ERROR | <Purchase(id=3, user_id=1, product_id=2, date=2025-09-22 13:26:53)>
+2025-09-22 at 17:16:46 | ERROR | <Product(id=2, name='Товар 2', price=200)>
+2025-09-22 at 17:16:48 | ERROR | <User(id=1, telegram_id=1330085937, username='p_irozhok')>
+2025-09-22 at 17:16:53 | INFO | Удаление записей Purchase по фильтру: {'id': 1}
+2025-09-22 at 17:16:53 | INFO | Удалено 1 записей.
+2025-09-22 at 17:16:58 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-22 at 17:16:58 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-09-22 at 17:16:59 | ERROR | <User(id=1, telegram_id=1330085937, username='p_irozhok')>
+2025-09-22 at 17:16:59 | ERROR | [<Purchase(id=2, user_id=1, product_id=1, date=2025-09-22 13:26:45)>, <Purchase(id=3, user_id=1, product_id=2, date=2025-09-22 13:26:53)>]
+2025-09-22 at 17:16:59 | ERROR | <Purchase(id=2, user_id=1, product_id=1, date=2025-09-22 13:26:45)>
+2025-09-22 at 17:16:59 | ERROR | <Product(id=1, name='Товар 1', price=100)>
+2025-09-22 at 17:16:59 | ERROR | <Purchase(id=3, user_id=1, product_id=2, date=2025-09-22 13:26:53)>
+2025-09-22 at 17:16:59 | ERROR | <Product(id=2, name='Товар 2', price=200)>
+2025-09-22 at 17:17:45 | ERROR | <User(id=1, telegram_id=1330085937, username='p_irozhok')>
+2025-09-22 at 17:17:47 | INFO | Удаление записей Purchase по фильтру: {'id': 1}
+2025-09-22 at 17:17:47 | INFO | Удалено 0 записей.
+2025-09-22 at 17:17:49 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-22 at 17:17:49 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-09-22 at 17:17:50 | ERROR | <User(id=1, telegram_id=1330085937, username='p_irozhok')>
+2025-09-22 at 17:17:50 | ERROR | [<Purchase(id=2, user_id=1, product_id=1, date=2025-09-22 13:26:45)>, <Purchase(id=3, user_id=1, product_id=2, date=2025-09-22 13:26:53)>]
+2025-09-22 at 17:17:50 | ERROR | <Purchase(id=2, user_id=1, product_id=1, date=2025-09-22 13:26:45)>
+2025-09-22 at 17:17:50 | ERROR | <Product(id=1, name='Товар 1', price=100)>
+2025-09-22 at 17:17:50 | ERROR | <Purchase(id=3, user_id=1, product_id=2, date=2025-09-22 13:26:53)>
+2025-09-22 at 17:17:50 | ERROR | <Product(id=2, name='Товар 2', price=200)>
+2025-09-22 at 17:17:59 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-22 at 17:17:59 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-09-22 at 17:18:02 | ERROR | Бот остановлен!
+2025-09-22 at 17:18:08 | INFO | Бот успешно запущен.
+2025-09-22 at 17:18:10 | ERROR | <User(id=1, telegram_id=1330085937, username='p_irozhok')>
+2025-09-22 at 17:18:10 | ERROR | [<Purchase(id=2, user_id=1, product_id=1, date=2025-09-22 13:26:45)>, <Purchase(id=3, user_id=1, product_id=2, date=2025-09-22 13:26:53)>]
+2025-09-22 at 17:18:10 | ERROR | <Purchase(id=2, user_id=1, product_id=1, date=2025-09-22 13:26:45)>
+2025-09-22 at 17:18:10 | ERROR | <Product(id=1, name='Товар 1', price=100)>
+2025-09-22 at 17:18:10 | ERROR | <Purchase(id=3, user_id=1, product_id=2, date=2025-09-22 13:26:53)>
+2025-09-22 at 17:18:10 | ERROR | <Product(id=2, name='Товар 2', price=200)>
+2025-09-22 at 17:18:13 | ERROR | <User(id=1, telegram_id=1330085937, username='p_irozhok')>
+2025-09-22 at 17:18:15 | INFO | Удаление записей Purchase по фильтру: {'id': 2}
+2025-09-22 at 17:18:15 | INFO | Удалено 1 записей.
+2025-09-22 at 17:18:17 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-22 at 17:18:17 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-09-22 at 17:18:19 | ERROR | <User(id=1, telegram_id=1330085937, username='p_irozhok')>
+2025-09-22 at 17:18:19 | ERROR | [<Purchase(id=3, user_id=1, product_id=2, date=2025-09-22 13:26:53)>]
+2025-09-22 at 17:18:19 | ERROR | <Purchase(id=3, user_id=1, product_id=2, date=2025-09-22 13:26:53)>
+2025-09-22 at 17:18:19 | ERROR | <Product(id=2, name='Товар 2', price=200)>
+2025-09-22 at 17:19:08 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-22 at 17:19:08 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-09-22 at 18:15:29 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-09-22 at 18:15:29 | INFO | Найдено 3 записей.
+2025-09-22 at 18:15:57 | INFO | Статистика успешно получена: {'total_users': 1, 'new_today': 1, 'new_week': 1, 'new_month': 1}
+2025-09-23 at 13:01:39 | ERROR | Бот остановлен!
