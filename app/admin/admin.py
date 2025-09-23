@@ -141,68 +141,20 @@ async def admin_process_category(call: CallbackQuery, state: FSMContext):
 
 
 @admin_router.message(F.text, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.price)
-async def admin_process_price(message: Message, state: FSMContext):
-    try:
-        price = int(message.text)
-        await state.update_data(price=price)
-        await process_dell_text_msg(message, state)
-        msg = await message.answer(
-            text="Отправьте файл (документ), если требуется или нажмите на 'БЕЗ ФАЙЛА', если файл не требуется",
-            reply_markup=admin_send_file_kb()
-        )
-        await state.update_data(last_msg_id=msg.message_id)
-        await state.set_state(AddProduct.file_id)
-    except ValueError:
-        await message.answer(text="Ошибка! Необходимо ввести числовое значение для цены.")
-        return
-
-
-@admin_router.callback_query(F.data == "without_file", F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.file_id)
-async def admin_process_without_file(call: CallbackQuery, state: FSMContext):
-    await state.update_data(file_id=None)
-    await call.answer('Файл не выбран.')
-    msg = await call.message.edit_text(
-        text="Теперь отправьте контент, который отобразится после покупки товара внутри карточки",
-        reply_markup=cancel_kb_inline())
-    await state.update_data(last_msg_id=msg.message_id)
-    await state.set_state(AddProduct.hidden_content)
-
-
-@admin_router.message(F.document, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.file_id)
-async def admin_process_without_file(message: Message, state: FSMContext):
-    await state.update_data(file_id=message.document.file_id)
+async def admin_process_price(message: Message, state: FSMContext, session_without_commit: AsyncSession):
+    price = int(message.text)
+    await state.update_data(price=price)
     await process_dell_text_msg(message, state)
-    msg = await message.answer(
-        text="Теперь отправьте контент, который отобразится после покупки товара внутри карточки",
-        reply_markup=cancel_kb_inline())
-    await state.update_data(last_msg_id=msg.message_id)
-    await state.set_state(AddProduct.hidden_content)
-
-
-@admin_router.message(F.text, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.hidden_content)
-async def admin_process_hidden_content(message: Message, state: FSMContext, session_without_commit: AsyncSession):
-    await state.update_data(hidden_content=message.html_text)
-
     product_data = await state.get_data()
     category_info = await CategoryDao.find_one_or_none_by_id(session=session_without_commit,
                                                              data_id=product_data.get("category_id"))
-
-    file_id = product_data.get("file_id")
-    file_text = "📦 Товар с файлом" if file_id else "📄 Товар без файла"
-
     product_text = (f'🛒 Проверьте, все ли корректно:\n\n'
                     f'🔹 <b>Название товара:</b> <b>{product_data["name"]}</b>\n'
                     f'🔹 <b>Описание:</b>\n\n<b>{product_data["description"]}</b>\n\n'
                     f'🔹 <b>Цена:</b> <b>{product_data["price"]} ₽</b>\n'
-                    f'🔹 <b>Описание (закрытое):</b>\n\n<b>{product_data["hidden_content"]}</b>\n\n'
-                    f'🔹 <b>Категория:</b> <b>{category_info.category_name} (ID: {category_info.id})</b>\n\n'
-                    f'<b>{file_text}</b>')
+                    f'🔹 <b>Категория:</b> <b>{category_info.category_name} (ID: {category_info.id})</b>\n\n')
     await process_dell_text_msg(message, state)
-
-    if file_id:
-        msg = await message.answer_document(document=file_id, caption=product_text, reply_markup=admin_confirm_kb())
-    else:
-        msg = await message.answer(text=product_text, reply_markup=admin_confirm_kb())
+    msg = await message.answer(text=product_text, reply_markup=admin_confirm_kb())
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(AddProduct.confirm_add)
 
