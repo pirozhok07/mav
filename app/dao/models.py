@@ -58,6 +58,7 @@ class Taste(Base):
     __tablename__ = 'tastes'
 
     taste_name: Mapped[str] = mapped_column(Text, nullable=False)
+    quantity: Mapped[int]
     product: Mapped["Product"] = relationship("Product", back_populates="tastes")
 
     def __repr__(self):
