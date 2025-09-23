@@ -37,24 +37,35 @@ class Product(Base):
     name: Mapped[str] = mapped_column(Text)
     description: Mapped[str] = mapped_column(Text)
     price: Mapped[int]
-    file_id: Mapped[str | None] = mapped_column(Text)
+    quantity: Mapped[int]
     category_id: Mapped[int] = mapped_column(ForeignKey('categories.id'))
-    hidden_content: Mapped[str] = mapped_column(Text)
     category: Mapped["Category"] = relationship("Category", back_populates="products")
     purchases: Mapped[List['Purchase']] = relationship(
         "Purchase",
         back_populates="product",
         cascade="all, delete-orphan"
     )
+    taste_id: Mapped[List['Taste']] = relationship(
+        "Taste",
+        back_populates="product",
+        cascade="all, delete-orphan"
+    )
 
     def __repr__(self):
         return f"<Product(id={self.id}, name='{self.name}', price={self.price})>"
+    
+class Taste(Base):
+    __tablename__ = 'tastes'
 
+    taste_name: Mapped[str] = mapped_column(Text, nullable=False)
+    product: Mapped["Product"] = relationship("Product", back_populates="tastes")
 
+    def __repr__(self):
+        return f"<Taste(id={self.id}, name='{self.taste_name}')>"
+    
 class Purchase(Base):
-    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.telegram_id'))
     product_id: Mapped[int] = mapped_column(ForeignKey('products.id'))
-    price: Mapped[int]
     status: Mapped[str] = mapped_column(Text)
     user: Mapped["User"] = relationship("User", back_populates="purchases")
     product: Mapped["Product"] = relationship("Product", back_populates="purchases")
