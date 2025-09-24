@@ -3,11 +3,100 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
-from dao.dao import UserDAO, ProductDao, PurchaseDao
+from dao.dao import TasteDao, UserDAO, ProductDao, PurchaseDao
 from user.kbs import cart_kb, dell_cart_kb, main_user_kb, purchases_kb
-from user.schemas import PurchaseIDModel, TelegramIDModel, UserModel, CartModel
+from user.schemas import ItemCartData, ProductIDModel, PurchaseIDModel, TasteIDModel, TelegramIDModel, UserModel, CartModel
 
 cart_router = Router()
+
+@cart_router.callback_query(F.data.startswith('taste_cart_'))
+async def add_in_cart_taste(call: CallbackQuery, session_with_commit: AsyncSession):
+    user_info = await UserDAO.find_one_or_none(
+        session=session_with_commit,
+        filters=TelegramIDModel(telegram_id=call.from_user.id)
+    )
+    _, taste_id = call.data.split('_')
+    taste_info = await TasteDao.find_one_or_none(
+        session=session_with_commit,
+        filters=TasteIDModel(id=taste_id)
+    )
+    product_id = await ProductDao.find_one_or_none(
+        session=session_with_commit,
+        filters=ProductIDModel(id=taste_info.product_id)
+    )
+    user_id = call.from_user.id
+    payment_data = {
+        'user_id': user_id,
+        'product_id': int(product_id),
+        #taste
+        'status': 'NEW',
+    }
+    logger.error(payment_data)
+    # Добавляем информацию о покупке в базу данных
+    await PurchaseDao.add(session=session_with_commit, values=ItemCartData(**payment_data))
+
+# @catalog_router.message(F.content_type == ContentType.SUCCESSFUL_PAYMENT)
+@cart_router.callback_query(F.data.startswith('cart_'))
+async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
+    user_info = await UserDAO.find_one_or_none(
+        session=session_with_commit,
+        filters=TelegramIDModel(telegram_id=call.from_user.id)
+    )
+    _, product_id = call.data.split('_')
+    user_id = call.from_user.id
+    payment_data = {
+        'user_id': user_id,
+        'product_id': int(product_id),
+        'status': 'NEW',
+    }
+    logger.error(payment_data)
+    # Добавляем информацию о покупке в базу данных
+    await PurchaseDao.add(session=session_with_commit, values=ItemCartData(**payment_data))
+    # product_data = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=int(product_id))
+
+    # # Формируем уведомление администраторам
+    # for admin_id in settings.ADMIN_IDS:
+    #     try:
+    #         username = message.from_user.username
+    #         user_info = f"@{username} ({message.from_user.id})" if username else f"c ID {message.from_user.id}"
+
+    #         await bot.send_message(
+    #             chat_id=admin_id,
+    #             text=(
+    #                 f"💲 Пользователь {user_info} купил товар <b>{product_data.name}</b> (ID: {product_id}) "
+    #                 f"за <b>{product_data.price} ₽</b>."
+    #             )
+    #         )
+    #     except Exception as e:
+    #         logger.error(f"Ошибка при отправке уведомления администраторам: {e}")
+
+    # # Подготавливаем текст для пользователя
+    # file_text = "📦 <b>Товар включает файл:</b>" if product_data.file_id else "📄 <b>Товар не включает файлы:</b>"
+    # product_text = (
+    #     f"🎉 <b>Спасибо за покупку!</b>\n\n"
+    #     f"🛒 <b>Информация о вашем товаре:</b>\n"
+    #     f"━━━━━━━━━━━━━━━━━━\n"
+    #     f"🔹 <b>Название:</b> <b>{product_data.name}</b>\n"
+    #     f"🔹 <b>Описание:</b>\n<i>{product_data.description}</i>\n"
+    #     f"🔹 <b>Цена:</b> <b>{product_data.price} ₽</b>\n"
+    #     f"🔹 <b>Закрытое описание:</b>\n<i>{product_data.hidden_content}</i>\n"
+    #     f"━━━━━━━━━━━━━━━━━━\n"
+    #     f"{file_text}\n\n"
+    #     f"ℹ️ <b>Информацию о всех ваших покупках вы можете найти в личном профиле.</b>"
+    # )
+
+    # # Отправляем информацию о товаре пользователю
+    # if product_data.file_id:
+    #     await message.answer_document(
+    #         document=product_data.file_id,
+    #         caption=product_text,
+    #         reply_markup=main_user_kb(message.from_user.id)
+    #     )
+    # else:
+    #     await message.edit_text(
+    #         text=product_text,
+    #         reply_markup=main_user_kb(message.from_user.id)
+    #     )
 
 @cart_router.callback_query(F.data == "cart")
 async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSession):
