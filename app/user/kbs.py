@@ -76,7 +76,7 @@ def delete_kb(purchase_data: List[Purchase]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     for purchase in purchase_data:
         product = purchase.product
-        kb.button(text=f"{product.name} - {product.price}₽", callback_data=f"dell_item_{purchase.id}")
+        kb.button(text=f"{product.name} - {product.price}₽", callback_data=f"item_dell_{purchase.id}")
     kb.adjust(1)
     return kb.as_markup()
 
@@ -87,11 +87,11 @@ def cart_kb() -> InlineKeyboardMarkup:
     kb.adjust(1)
     return kb.as_markup()
 
-def dell_cart_kb(purchase_id: int) -> InlineKeyboardMarkup:
-    kb = InlineKeyboardBuilder()
-    kb.button(text="🗑️ Удалить", callback_data=f"item_dell_{purchase_id}")
-    kb.adjust(1)
-    return kb.as_markup()
+# def dell_cart_kb(purchase_id: int) -> InlineKeyboardMarkup:
+#     kb = InlineKeyboardBuilder()
+#     kb.button(text="🗑️ Удалить", callback_data=f"item_dell_{purchase_id}")
+#     kb.adjust(1)
+#     return kb.as_markup()
 
 
 def cancele_kb()-> InlineKeyboardMarkup:
