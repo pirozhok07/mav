@@ -25,7 +25,6 @@ class ProductCategoryIDModel(BaseModel):
 
 class ItemCartData(BaseModel):
     user_id: int = Field(..., description="ID пользователя Telegram")
-    price: int = Field(..., description="Сумма платежа в рублях")
     product_id: int = Field(..., description="ID товара")
     status: str = Field(..., description="Статус товара")
 
