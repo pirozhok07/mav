@@ -37,7 +37,7 @@ async def page_catalog_products(call: CallbackQuery, session_without_commit: Asy
             )
             await call.message.answer(
                 product_text,
-                reply_markup=product_kb(product.id, product.price)
+                reply_markup=product_kb(product.id)
             )
         await call.message.answer("-----", reply_markup=cancele_kb())
     else:
@@ -76,12 +76,10 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
         session=session_with_commit,
         filters=TelegramIDModel(telegram_id=call.from_user.id)
     )
-    _, product_id, price = call.data.split('_')
+    _, product_id = call.data.split('_')
     user_id = call.from_user.id
     payment_data = {
         'user_id': int(1),
-        # 'payment_id': payment_info.telegram_payment_charge_id,
-        'price': int(price),
         'product_id': int(product_id),
         'status': 'NEW',
     }
