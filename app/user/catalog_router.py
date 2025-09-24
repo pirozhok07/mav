@@ -55,10 +55,7 @@ async def page_catalog_products(call: CallbackQuery, session_without_commit: Asy
 
 @catalog_router.callback_query(F.data.startswith("taste_"))
 async def show_taste(call: CallbackQuery, session_without_commit: AsyncSession):
-    product_id = int(call.data.split("_")[-1])
-    tastes_product = await TasteDao.find_all(session=session_without_commit,
-                                                  filters=TasteProductIDModel(product_id=product_id))
-    
+    product_id = int(call.data.split("_")[-1])    
     taste_data = await TasteDao.find_all(session=session_without_commit, filters=TasteProductIDModel(product_id=product_id))
     await call.message.edit_text(
         text="Выберите вкус:",

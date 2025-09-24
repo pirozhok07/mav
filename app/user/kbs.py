@@ -65,7 +65,7 @@ def product_kb(product_data: List[Product]) -> InlineKeyboardMarkup:
 #     kb.adjust(1)
 #     return kb.as_markup()
 
-def taste_kb(taste_data: List[taste_kb]) -> InlineKeyboardMarkup:
+def taste_kb(taste_data: List[Taste]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     for taste in taste_data:
         kb.button(text=taste.taste_name, callback_data=f"cart_{taste.product_id}_{taste.id}")
