@@ -46,10 +46,11 @@ async def add_in_cart_taste(call: CallbackQuery, session_with_commit: AsyncSessi
         session=session_with_commit,
         filters=TasteIDModel(id=taste_id)
     )
-    product_id = await ProductDao.find_one_or_none(
+    product_info = await ProductDao.find_one_or_none(
         session=session_with_commit,
         filters=ProductIDModel(id=taste_info.product_id)
     )
+    product_id = product_info.id
     user_id = call.from_user.id
     payment_data = {
         'user_id': user_id,
