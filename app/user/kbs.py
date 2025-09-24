@@ -2,7 +2,7 @@ from typing import List
 from aiogram.types import InlineKeyboardMarkup, ReplyKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 from config import settings
-from dao.models import Category, Product, Taste
+from dao.models import Category, Product, Purchase, Taste
 
 
 def main_user_kb(user_id: int) -> InlineKeyboardMarkup:
@@ -69,6 +69,14 @@ def taste_kb(taste_data: List[Taste]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     for taste in taste_data:
         kb.button(text=taste.taste_name, callback_data=f"cart_{taste.product_id}_{taste.id}")
+    kb.adjust(1)
+    return kb.as_markup()
+
+def delete_kb(purchase_data: List[Purchase]) -> InlineKeyboardMarkup:
+    kb = InlineKeyboardBuilder()
+    for purchase in purchase_data:
+        product = purchase.product
+        kb.button(text=f"{product.name} - {product.price}₽", callback_data=f"dell_{purchase.id}")
     kb.adjust(1)
     return kb.as_markup()
 
