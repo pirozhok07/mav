@@ -61,8 +61,7 @@ async def edit_cart(call: CallbackQuery, session_without_commit: AsyncSession):
         product_text = (f'🛒 Описание товара:\n\n'
                         f'🔹 <b>Название товара:</b> <b>{product.name}</b>\n'
                         f'🔹 <b>Описание:</b>\n\n<b>{product.description}</b>\n\n'
-                        f'🔹 <b>Цена:</b> <b>{product.price} ₽</b>\n'
-                        f'🔹 <b>Описание (закрытое):</b>\n\n<b>{product.hidden_content}</b>\n\n')
+                        f'🔹 <b>Цена:</b> <b>{product.price} ₽</b>\n')
         await call.message.answer(text=product_text, reply_markup=dell_cart_kb(product.id))
     # await call.message.answer("--", reply_markup=)
 
