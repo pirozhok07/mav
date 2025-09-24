@@ -53,7 +53,7 @@ def product_kb(product_data: List[Product]) -> InlineKeyboardMarkup:
     for product in product_data:
         kb.button(text=f"{product.name} - {product.price} ₽", callback_data=f"product_{product.id}")
     kb.button(text="🏠 На главную", callback_data="home")
-    kb.adjust(2)
+    kb.adjust(1)
     return kb.as_markup()
 
 # def product_kb(product_id) -> InlineKeyboardMarkup:
