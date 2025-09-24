@@ -189,7 +189,7 @@ async def edit_cart(call: CallbackQuery, session_without_commit: AsyncSession):
     #     await call.message.answer(text=product_text, reply_markup=dell_cart_kb(product.id))
     # await call.message.answer("--", reply_markup=)
 
-@cart_router.callback_query(F.data.startswith('dell_'))
+@cart_router.callback_query(F.data.startswith('dell_item_'))
 async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
     item_id = int(call.data.split('_')[-1])
     logger.error(item_id)
