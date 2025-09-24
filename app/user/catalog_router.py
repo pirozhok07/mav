@@ -46,7 +46,7 @@ async def page_catalog_products(call: CallbackQuery, session_without_commit: Asy
                     product_text,
                     reply_markup=product_kb(product.id)
                 )
-        await call.message.answer("-----", reply_markup=cancele_kb())
+        await call.message.answer("", reply_markup=cancele_kb())
     else:
         await call.message.edit_text(text="В данной категории нет товаров.\n\n Выберите категорию товаров:") # возврат
 
@@ -63,6 +63,7 @@ async def show_taste(call: CallbackQuery, session_without_commit: AsyncSession):
     
     # count_tastes = len(tastes_product)
     # if count_tastes:
+
     #     await call.message.edit_text(f"У данного товара {count_tastes} вкусов.")
     #     for taste in tastes_product:
     #         taste_text = (
