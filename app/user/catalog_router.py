@@ -23,30 +23,33 @@ async def page_catalog(call: CallbackQuery, session_without_commit: AsyncSession
 @catalog_router.callback_query(F.data.startswith("category_"))
 async def page_catalog_products(call: CallbackQuery, session_without_commit: AsyncSession):
     category_id = int(call.data.split("_")[-1])
-    products_category = await ProductDao.find_all(session=session_without_commit,
+    product_data = await ProductDao.find_all(session=session_without_commit,
                                                   filters=ProductCategoryIDModel(category_id=category_id))
-    count_products = len(products_category)
+    count_products = len(product_data)
     if count_products:
-        await call.message.edit_text(f"В данной категории {count_products} товаров.")
-        for product in products_category:
-            product_text = (
-                f"📦 <b>Название товара:</b> {product.name}\n\n"
-                f"💰 <b>Цена:</b> {product.price} руб.\n\n"
-                f"📝 <b>Описание:</b>\n<i>{product.description}</i>\n\n"
-                f"━━━━━━━━━━━━━━━━━━"
-            )
-            if product.category_id == 1:
-                
-                await call.message.answer(
-                    product_text,
-                    reply_markup=product_kb_1(product.id)
-                )
-            else:
-                await call.message.answer(
-                    product_text,
-                    reply_markup=product_kb(product.id)
-                )
-        await call.message.answer(".", reply_markup=cancele_kb())
+        await call.message.edit_text(
+            text=f"В данной категории {count_products} товаров.",
+            reply_markup=product_kb(product_data)
+        )
+        # for product in products_category:
+        #     product_text = (
+        #         f"📦 <b>Название товара:</b> {product.name}\n\n"
+        #         f"💰 <b>Цена:</b> {product.price} руб.\n\n"
+        #         f"📝 <b>Описание:</b>\n<i>{product.description}</i>\n\n"
+        #         f"━━━━━━━━━━━━━━━━━━"
+        #     )
+        #     if product.category_id == 1:
+        #         await call.message.answer(
+        #             product_text,
+        #             reply_markup=product_kb_1(product.id)
+        #         )
+        #     else:
+        #         await call.message.answer(
+        #             product_text,
+        #             reply_markup=product_kb(product.id)
+        #         )
+            
+        # await call.message.answer(".", reply_markup=cancele_kb())
     else:
         await call.message.edit_text(text="В данной категории нет товаров.\n\n Выберите категорию товаров:") # возврат
 

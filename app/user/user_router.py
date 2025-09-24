@@ -16,7 +16,6 @@ async def cmd_start(message: Message, session_with_commit: AsyncSession):
         session=session_with_commit,
         filters=TelegramIDModel(telegram_id=user_id)
     )
-
     if user_info:
         return await message.answer(
             f"👋 Привет, {message.from_user.full_name}! Выберите необходимое действие",
