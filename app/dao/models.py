@@ -1,6 +1,6 @@
 from typing import List
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import BigInteger, Text, ForeignKey
+from sqlalchemy import BigInteger, Text, ForeignKey, Integer
 from dao.database import Base
 
 
@@ -33,7 +33,7 @@ class Product(Base):
     name: Mapped[str] = mapped_column(Text)
     description: Mapped[str] = mapped_column(Text)
     price: Mapped[int]
-    quantity: Mapped[int]
+    quantity: Mapped[int] = mapped_column(Integer, default=0)
     category_id: Mapped[int] = mapped_column(ForeignKey('categories.id'))
     category: Mapped["Category"] = relationship("Category", back_populates="products")
     tastes: Mapped[List['Taste'] | None] = relationship("Taste", back_populates="product")
@@ -45,7 +45,7 @@ class Product(Base):
 class Taste(Base):
     product_id: Mapped[int] = mapped_column(ForeignKey('products.id'))
     taste_name: Mapped[str] = mapped_column(Text, nullable=False)
-    quantity: Mapped[int]
+    quantity: Mapped[int] = mapped_column(Integer, default=0)
     product: Mapped["Product"] = relationship("Product", back_populates="tastes")
 
     def __repr__(self):
