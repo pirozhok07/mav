@@ -53,7 +53,7 @@ async def page_catalog_products(call: CallbackQuery, session_without_commit: Asy
     else:
         await call.message.edit_text(text="В данной категории нет товаров.\n\n Выберите категорию товаров:") # возврат
 
-@catalog_router.callback_query(F.data.startswith("show_taste_"))
+@catalog_router.callback_query(F.data.startswith("taste_"))
 async def show_taste(call: CallbackQuery, session_without_commit: AsyncSession):
     product_id = int(call.data.split("_")[-1])
     tastes_product = await TasteDao.find_all(session=session_without_commit,

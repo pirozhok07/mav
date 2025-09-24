@@ -35,7 +35,7 @@ cart_router = Router()
 #     # Добавляем информацию о покупке в базу данных
 #     await PurchaseDao.add(session=session_with_commit, values=ItemCartData(**payment_data))
 
-@cart_router.callback_query(F.data.startswith('taste_'))
+@cart_router.callback_query(F.data.startswith('ctaste_'))
 async def add_in_cart_taste(call: CallbackQuery, session_with_commit: AsyncSession):
     user_info = await UserDAO.find_one_or_none(
         session=session_with_commit,
@@ -69,11 +69,13 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
         session=session_with_commit,
         filters=TelegramIDModel(telegram_id=call.from_user.id)
     )
-    _, product_id = call.data.split('_')
+    _, product_id, taste_id = call.data.split('_')
     user_id = call.from_user.id
+    logger.error(taste_id)
     payment_data = {
         'user_id': user_id,
         'product_id': int(product_id),
+        #taste
         'status': 'NEW',
     }
     logger.error(payment_data)

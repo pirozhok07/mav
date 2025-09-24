@@ -23,7 +23,7 @@ def catalog_kb(catalog_data: List[Category]) -> InlineKeyboardMarkup:
     for category in catalog_data:
         kb.button(text=category.category_name, callback_data=f"category_{category.id}")
     kb.button(text="🏠 На главную", callback_data="home")
-    kb.adjust(2)
+    kb.adjust(1)
     return kb.as_markup()
 
 def taste_kb(taste_data: List[Taste]) -> InlineKeyboardMarkup:
@@ -51,7 +51,10 @@ def product_kb_1(product_id) -> InlineKeyboardMarkup:
 def product_kb(product_data: List[Product]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     for product in product_data:
-        kb.button(text=f"{product.name} - {product.price} ₽", callback_data=f"product_{product.id}")
+        if product.category_id == 1:
+            kb.button(text=f"{product.name} - {product.price} ₽", callback_data=f"taste_{product.id}_0")
+        else:
+            kb.button(text=f"{product.name} - {product.price} ₽", callback_data=f"cart_{product.id}")
     kb.button(text="🏠 На главную", callback_data="home")
     kb.adjust(1)
     return kb.as_markup()
@@ -62,11 +65,12 @@ def product_kb(product_data: List[Product]) -> InlineKeyboardMarkup:
 #     kb.adjust(1)
 #     return kb.as_markup()
 
-# def taste_kb(taste_id) -> InlineKeyboardMarkup:
-#     kb = InlineKeyboardBuilder()
-#     kb.button(text="💸 В корзину", callback_data=f"taste_cart_{taste_id}")
-#     kb.adjust(1)
-#     return kb.as_markup()
+def taste_kb(taste_data: List[taste_kb]) -> InlineKeyboardMarkup:
+    kb = InlineKeyboardBuilder()
+    for taste in taste_data:
+        kb.button(text=taste.taste_name, callback_data=f"cart_{taste.product_id}_{taste.id}")
+    kb.adjust(1)
+    return kb.as_markup()
 
 def cart_kb() -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
