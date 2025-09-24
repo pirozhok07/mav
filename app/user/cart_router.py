@@ -58,7 +58,7 @@ async def add_in_cart_taste(call: CallbackQuery, session_with_commit: AsyncSessi
         #taste
         'status': 'NEW',
     }
-    logger.error(payment_data)
+    # logger.error(payment_data)
     # Добавляем информацию о покупке в базу данных
     await PurchaseDao.add(session=session_with_commit, values=ItemCartData(**payment_data))
 
@@ -71,14 +71,14 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
     )
     _, product_id, taste_id = call.data.split('_')
     user_id = call.from_user.id
-    logger.error(taste_id)
+    # logger.error(taste_id)
     payment_data = {
         'user_id': user_id,
         'product_id': int(product_id),
         #taste
         'status': 'NEW',
     }
-    logger.error(payment_data)
+    # logger.error(payment_data)
     # Добавляем информацию о покупке в базу данных
     await PurchaseDao.add(session=session_with_commit, values=ItemCartData(**payment_data))
     # product_data = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=int(product_id))
@@ -136,7 +136,7 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
                                                 #   filters=CartModel(id=call.from_user.id))
     # count_products = len(products_category)
     purchases = await UserDAO.get_cart(session=session_without_commit, telegram_id=call.from_user.id)
-    logger.error(purchases)
+    # logger.error(purchases)
     if not purchases:
         await call.message.edit_text(
             text=f"🔍 <b>У вас пока нет покупок.</b>\n\n"
@@ -151,9 +151,9 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
     # Для каждой покупки отправляем информацию
     for purchase in purchases:
 
-        logger.error(purchase)
+        # logger.error(purchase)
         product = purchase.product
-        logger.error(product)
+        # logger.error(product)
         # file_text = "📦 <b>Товар включает файл:</b>" if product.file_id else "📄 <b>Товар не включает файлы:</b>"
 
         product_text += (
@@ -192,6 +192,7 @@ async def edit_cart(call: CallbackQuery, session_without_commit: AsyncSession):
 @cart_router.callback_query(F.data.startswith('dell_'))
 async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
     item_id = int(call.data.split('_')[-1])
+    logger.error(item_id)
     await PurchaseDao.delete(session=session_with_commit, filters=PurchaseIDModel(id=item_id))
     await call.message.edit_text(f"Товар с ID {item_id} удален!", show_alert=True)
     await call.message.delete()

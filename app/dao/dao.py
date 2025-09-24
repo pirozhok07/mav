@@ -90,7 +90,7 @@ class UserDAO(BaseDAO[User]):
                 .filter(User.telegram_id == telegram_id and Purchase.status == 'NEW')
                 )
             user = result.scalar_one_or_none() 
-            logger.error(user)
+            # logger.error(user)
             if user is None:
                 return None 
             return user.purchases 

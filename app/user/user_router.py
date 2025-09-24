@@ -146,7 +146,7 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
                                                 #   filters=CartModel(id=call.from_user.id))
     # count_products = len(products_category)
     purchases = await UserDAO.get_cart(session=session_without_commit, telegram_id=call.from_user.id)
-    logger.error(purchases)
+    # logger.error(purchases)
     if not purchases:
         await call.message.edit_text(
             text=f"🔍 <b>У вас пока нет покупок.</b>\n\n"
@@ -161,9 +161,9 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
     # Для каждой покупки отправляем информацию
     for purchase in purchases:
 
-        logger.error(purchase)
+        # logger.error(purchase)
         product = purchase.product
-        logger.error(product)
+        # logger.error(product)
         # file_text = "📦 <b>Товар включает файл:</b>" if product.file_id else "📄 <b>Товар не включает файлы:</b>"
 
         product_text += (
