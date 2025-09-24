@@ -4,7 +4,7 @@ from aiogram.types import Message, CallbackQuery
 from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 from dao.dao import TasteDao, UserDAO, ProductDao, PurchaseDao
-from user.kbs import cart_kb, delete_kb, dell_cart_kb, main_user_kb, purchases_kb
+from user.kbs import cart_kb, delete_kb, main_user_kb, purchases_kb
 from user.schemas import ItemCartData, ProductIDModel, PurchaseIDModel, TasteIDModel, TelegramIDModel, UserModel, CartModel
 
 cart_router = Router()
