@@ -57,7 +57,7 @@ async def show_taste(call: CallbackQuery, session_without_commit: AsyncSession):
     count_tastes = len(tastes_product)
     if count_tastes:
         await call.message.edit_text(f"У данного товара {count_tastes} вкусов.")
-        for taste in count_tastes:
+        for taste in tastes_product:
             taste_text = (
                 f"📦 <b>Название вкуса:</b> {taste.name}\n\n"
                 f"━━━━━━━━━━━━━━━━━━"
