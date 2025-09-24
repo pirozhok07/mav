@@ -36,6 +36,7 @@ async def page_catalog_products(call: CallbackQuery, session_without_commit: Asy
                 f"━━━━━━━━━━━━━━━━━━"
             )
             if product.category_id == 1:
+                
                 await call.message.answer(
                     product_text,
                     reply_markup=product_kb_1(product.id)
@@ -54,21 +55,27 @@ async def show_taste(call: CallbackQuery, session_without_commit: AsyncSession):
     product_id = int(call.data.split("_")[-1])
     tastes_product = await TasteDao.find_all(session=session_without_commit,
                                                   filters=TasteProductIDModel(product_id=product_id))
-    count_tastes = len(tastes_product)
-    if count_tastes:
-        await call.message.edit_text(f"У данного товара {count_tastes} вкусов.")
-        for taste in tastes_product:
-            taste_text = (
-                f"📦 <b>Название вкуса:</b> {taste.taste_name}\n\n"
-                f"━━━━━━━━━━━━━━━━━━"
-            )
-            await call.message.answer(
-                taste_text,
-                reply_markup=taste_kb(taste.id)
-            )
-        await call.message.answer("-----", reply_markup=cancele_kb())
-    else:
-        await call.message.edit_text(text="В данной категории нет товаров.\n\n Выберите категорию товаров:") # возврат   
+    
+    taste_data = await TasteDao.find_all(session=session_without_commit, filters=TasteProductIDModel(product_id=product_id))
+    await call.message.edit_text(
+        text="Выберите вкус:",
+        reply_markup=taste_kb(taste_data))
+    
+    # count_tastes = len(tastes_product)
+    # if count_tastes:
+    #     await call.message.edit_text(f"У данного товара {count_tastes} вкусов.")
+    #     for taste in tastes_product:
+    #         taste_text = (
+    #             f"📦 <b>Название вкуса:</b> {taste.taste_name}\n\n"
+    #             f"━━━━━━━━━━━━━━━━━━"
+    #         )
+    #         await call.message.answer(
+    #             taste_text,
+    #             reply_markup=taste_kb(taste.id)
+    #         )
+    #     await call.message.answer("-----", reply_markup=cancele_kb())
+    # else:
+    #     await call.message.edit_text(text="В данной категории нет товаров.\n\n Выберите категорию товаров:") # возврат   
 # @catalog_router.callback_query(F.data.startswith('cart_'))
 # async def process_about(call: CallbackQuery, session_without_commit: AsyncSession):
     # user_info = await UserDAO.find_one_or_none(
