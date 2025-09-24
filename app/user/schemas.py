@@ -19,9 +19,14 @@ class ProductIDModel(BaseModel):
 class PurchaseIDModel(BaseModel):
     id: int
 
+class TasteIDModel(BaseModel):
+    id: int
+
 class ProductCategoryIDModel(BaseModel):
     category_id: int
 
+class TasteProductIDModel(BaseModel):
+    product_id: int
 
 class ItemCartData(BaseModel):
     user_id: int = Field(..., description="ID пользователя Telegram")

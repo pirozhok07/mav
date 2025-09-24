@@ -35,12 +35,23 @@ def purchases_kb() -> InlineKeyboardMarkup:
     return kb.as_markup()
 
 
+def product_kb_1(product_id) -> InlineKeyboardMarkup:
+    kb = InlineKeyboardBuilder()
+    kb.button(text="Показать вкусы", callback_data=f"show_taste_{product_id}")
+    kb.adjust(1)
+    return kb.as_markup()
+
 def product_kb(product_id) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     kb.button(text="💸 В корзину", callback_data=f"cart_{product_id}")
     kb.adjust(1)
     return kb.as_markup()
 
+def taste_kb(taste_id) -> InlineKeyboardMarkup:
+    kb = InlineKeyboardBuilder()
+    kb.button(text="💸 В корзину", callback_data=f"taste_cart_{taste_id}")
+    kb.adjust(1)
+    return kb.as_markup()
 
 def cart_kb() -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
