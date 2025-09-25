@@ -16,12 +16,10 @@ class BaseDAO(Generic[T]):
     model: type[T]
 
     @classmethod
-    async def update_one_by_id(cls, session: AsyncSession, data_id: int, values: BaseModel):
-        values_dict = values.model_dump(exclude_unset=True)
+    async def update_one_by_id(cls, session: AsyncSession, data_id: int, in_cart: bool):
         try:
             record = await session.get(cls.model, data_id)
-            for key, value in values_dict.items():
-                setattr(record, key, record.quantity - 1)
+            setattr(record, 'quantity', record.quantity - 1)
             await session.flush()
         except SQLAlchemyError as e:
             print(e)
