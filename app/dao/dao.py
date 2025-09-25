@@ -39,6 +39,7 @@ class ProductDao(BaseDAO[Product]):
         try:
             # Запрос для уменьшения кол-во продукта
             product = session.get(Product, product_id)
+            logger.error(product)
             if product:
                 if do_less:
                     product.quantity -= 1
