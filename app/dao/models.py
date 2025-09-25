@@ -59,7 +59,7 @@ class Purchase(Base):
     status: Mapped[str] = mapped_column(Text)
     user: Mapped["User"] = relationship("User", back_populates="purchases")
     product: Mapped["Product"] = relationship("Product", back_populates="purchases")
-    taste: Mapped["Taste"] = relationship("Taste", back_populates="tastes")
+    taste: Mapped["Taste"] = relationship("Taste", back_populates="purchases")
 
     def __repr__(self):
         return f"<Purchase(id={self.id}, user_id={self.user_id}, product_id={self.product_id}, taste_id={self.taste_id}, date={self.created_at})>"
