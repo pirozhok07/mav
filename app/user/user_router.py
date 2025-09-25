@@ -168,7 +168,7 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
         if purchase.taste_id != 0:
             taste = await TasteDao.find_one_or_none(
                 session=session_without_commit,
-                filters=TasteIDModel(taste_id=purchase.taste_id)
+                filters=TasteIDModel(id=purchase.taste_id)
             )
             product_text += (f"🔹 {product.name} ({taste.taste_name}) - {product.price} ₽\n")
         else:
