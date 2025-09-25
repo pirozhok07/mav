@@ -24,6 +24,7 @@ class ProductDao(BaseDAO[Product]):
             logger.error(category_id)
             result = await session.execute(
                 select(Product)
+                .options(selectinload(Product.category))
                 .where(Product.category_id == category_id)
                 ) 
             logger.error(result)
