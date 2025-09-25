@@ -152,7 +152,8 @@ class UserDAO(BaseDAO[User]):
             # Запрос для получения корзины пользователя
             result = await session.execute(
                 select(User)
-                .options(selectinload(User.purchases).selectinload(Purchase.product).selectinload(Purchase.taste))
+                .options(selectinload(User.purchases).selectinload(Purchase.product))
+                .options(selectinload(User.purchases).selectinload(Purchase.taste))
                 .filter(User.telegram_id == telegram_id and Purchase.status == 'NEW')
                 )
             logger.error(result)
