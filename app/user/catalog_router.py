@@ -26,7 +26,7 @@ async def page_catalog(call: CallbackQuery, session_without_commit: AsyncSession
 @catalog_router.callback_query(F.data.startswith("category_"))
 async def page_catalog_products(call: CallbackQuery, session_without_commit: AsyncSession):
     category_id = int(call.data.split("_")[-1])
-    product_data = await ProductDao.get_cart(session=session_without_commit, telegram_id=call.from_user.id)
+    product_data = await ProductDao.get_products(session=session_without_commit, telegram_id=call.from_user.id)
     count_products = len(product_data)
     if count_products:
         await call.message.edit_text(
@@ -59,7 +59,7 @@ async def page_catalog_products(call: CallbackQuery, session_without_commit: Asy
 @catalog_router.callback_query(F.data.startswith("taste_"))
 async def show_taste(call: CallbackQuery, session_without_commit: AsyncSession):
     product_id = int(call.data.split("_")[-1])    
-    taste_data = await TasteDao.find_all(session=session_without_commit, filters=TasteProductIDModel(product_id=product_id))
+    taste_data = await TasteDao.get_tastes(session=session_without_commit, product_id=product_id)
     await call.message.edit_text(
         text="Выберите вкус:",
         reply_markup=taste_kb(taste_data))
