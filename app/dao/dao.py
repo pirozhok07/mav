@@ -107,7 +107,7 @@ class UserDAO(BaseDAO[User]):
             result = await session.execute(
                 select(
                     func.count(Purchase.id).label('total_purchases'),
-                    func.sum(Purchase.price).label('total_amount')
+                    # func.sum(Purchase.price).label('total_amount')
                 ).join(User).filter(User.telegram_id == telegram_id)
             )
             stats = result.one_or_none()
@@ -152,7 +152,7 @@ class UserDAO(BaseDAO[User]):
             # Запрос для получения корзины пользователя
             result = await session.execute(
                 select(User)
-                .options(selectinload(User.purchases).selectinload(Purchase.product).Purchase(Purchase.taste))
+                .options(selectinload(User.purchases).selectinload(Purchase.product).selectinload(Purchase.taste))
                 .filter(User.telegram_id == telegram_id and Purchase.status == 'NEW')
                 )
             user = result.scalar_one_or_none() 
