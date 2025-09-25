@@ -1,8 +1,8 @@
 from typing import List
 from aiogram.types import InlineKeyboardMarkup, ReplyKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
-from app.dao.dao import TasteDao
-from app.user.schemas import TasteIDModel
+from dao.dao import TasteDao
+from user.schemas import TasteIDModel
 from config import settings
 from dao.models import Category, Product, Purchase, Taste
 
