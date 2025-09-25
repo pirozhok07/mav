@@ -25,7 +25,7 @@ class ProductDao(BaseDAO[Product]):
             result = await session.execute(
                 select(Product)) 
             logger.error(result)
-            products = result.scalar_one_or_none() 
+            products = result.all() 
             logger.error(products)
 
             result = await session.execute(
