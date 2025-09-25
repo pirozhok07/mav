@@ -14,7 +14,6 @@ class UserModel(TelegramIDModel):
 
 class ProductUpdateIDModel(BaseModel):
     id: int
-    quantity: int = Field(int, ...)
 
 class ProductIDModel(BaseModel):
     id: int
