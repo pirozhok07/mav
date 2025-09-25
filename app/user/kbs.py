@@ -1,6 +1,8 @@
 from typing import List
 from aiogram.types import InlineKeyboardMarkup, ReplyKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
+from app.dao.dao import TasteDao
+from app.user.schemas import TasteIDModel
 from config import settings
 from dao.models import Category, Product, Purchase, Taste
 
@@ -77,12 +79,15 @@ def taste_kb(taste_data: List[Taste]) -> InlineKeyboardMarkup:
     kb.adjust(1)
     return kb.as_markup()
 
-def delete_kb(purchase_data: List[Purchase]) -> InlineKeyboardMarkup:
+async def delete_kb(purchase_data: List[Purchase]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     for purchase in purchase_data:
         product = purchase.product
         if purchase.taste_id != 0:
-            kb.button(text=f"{product.name} ({purchase.taste_id}) - {product.price}₽", callback_data=f"item_dell_{purchase.id}")
+            taste = await TasteDao.find_one_or_none(
+                filters=TasteIDModel(id=purchase.taste_id)
+            )
+            kb.button(text=f"{product.name} ({taste.taste_name}) - {product.price}₽", callback_data=f"item_dell_{purchase.id}")
         else:
             kb.button(text=f"{product.name} - {product.price}₽", callback_data=f"item_dell_{purchase.id}")
     kb.button(text="🛍 Назад", callback_data="cart")
