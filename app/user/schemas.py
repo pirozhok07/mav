@@ -31,6 +31,7 @@ class TasteProductIDModel(BaseModel):
 class ItemCartData(BaseModel):
     user_id: int = Field(..., description="ID пользователя Telegram")
     product_id: int = Field(..., description="ID товара")
+    taste_id: int = Field(default=0, description="ID вкуса")
     status: str = Field(..., description="Статус товара")
 
 class CartModel(BaseModel):

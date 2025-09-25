@@ -53,9 +53,9 @@ async def add_in_cart_taste(call: CallbackQuery, session_with_commit: AsyncSessi
     product_id = product_info.id
     user_id = call.from_user.id
     payment_data = {
-        'user_id': user_id,
+        'user_id': int(user_id),
         'product_id': int(product_id),
-        #taste
+        'taste_id': int(taste_id),
         'status': 'NEW',
     }
     # logger.error(payment_data)
@@ -75,7 +75,6 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
     payment_data = {
         'user_id': user_id,
         'product_id': int(product_id),
-        #taste
         'status': 'NEW',
     }
     # logger.error(payment_data)
