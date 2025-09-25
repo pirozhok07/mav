@@ -27,7 +27,7 @@ class ProductDao(BaseDAO[Product]):
                 .filter(Product.category_id == category_id)
                 ) 
             logger.error(result)
-            products = result.scalar_one_or_none() 
+            products = result.scalars().one_or_none()
             logger.error(products)
 
             result = await session.execute(
