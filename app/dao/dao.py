@@ -26,7 +26,7 @@ class ProductDao(BaseDAO[Product]):
                 .filter(Product.category_id == category_id and Product.quantity > 0)
                 )
             products = result.scalar_one_or_none() 
-            # logger.error(user)
+            logger.error(products)
             if products is None:
                 return None 
             return products

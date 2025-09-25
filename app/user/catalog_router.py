@@ -27,6 +27,7 @@ async def page_catalog(call: CallbackQuery, session_without_commit: AsyncSession
 async def page_catalog_products(call: CallbackQuery, session_without_commit: AsyncSession):
     category_id = int(call.data.split("_")[-1])
     product_data = await ProductDao.get_products(session=session_without_commit, category_id=category_id)
+    logger.error(product_data)
     count_products = len(product_data)
     if count_products:
         await call.message.edit_text(
