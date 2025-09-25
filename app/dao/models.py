@@ -40,7 +40,7 @@ class Product(Base):
     purchases: Mapped[List['Purchase']] = relationship("Purchase", back_populates="product")
 
     def __repr__(self):
-        return f"<Product(id={self.id}, name='{self.name}', category_id='{self.category_id}', price={self.price})>"
+        return f"<Product(id={self.id}, name='{self.name}', category_id='{self.category_id}', quantity='{self.quantity}', price={self.price})>"
     
 class Taste(Base):
     product_id: Mapped[int] = mapped_column(ForeignKey('products.id'))

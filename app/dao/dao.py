@@ -23,7 +23,7 @@ class ProductDao(BaseDAO[Product]):
             # Запрос для получения продуктов
             result = await session.execute(
                 select(Product)
-                .filter(Product.category_id == category_id and Product.quantity > 0)
+                .filter(Product.category_id == category_id, Product.quantity > 0)
                 ) 
             products = result.scalars().all() 
             if products is None:
@@ -58,9 +58,9 @@ class TasteDao(BaseDAO[Taste]):
             # Запрос для получения продуктов
             result = await session.execute(
                 select(Taste)
-                .filter(Taste.product_id == product_id and Taste.quantity > 0)
+                .filter(Taste.product_id == product_id, Taste.quantity > 0)
                 )
-            tastes = result.scalar_one_or_none() 
+            tastes = result.scalars().all() 
             # logger.error(user)
             if tastes is None:
                 return None 
