@@ -24,8 +24,6 @@ async def page_catalog(call: CallbackQuery, session_without_commit: AsyncSession
 async def page_catalog_products(call: CallbackQuery, session_without_commit: AsyncSession):
     category_id = int(call.data.split("_")[-1])
     product_data = await ProductDao.get_cart(session=session_without_commit, telegram_id=call.from_user.id)
-    product_data = await ProductDao.find_one_or_none(session=session_without_commit,
-                                                  filters=ProductCategoryIDModel(category_id=category_id, quantity=))
     count_products = len(product_data)
     if count_products:
         await call.message.edit_text(
