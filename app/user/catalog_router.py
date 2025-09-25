@@ -19,7 +19,6 @@ async def page_catalog(call: CallbackQuery, session_without_commit: AsyncSession
     #             text=f"В данной категории {count_products} товаров.",
     #             reply_markup=product_kb(product_data)
     
-    logger.error(type(catalog_data))
     await call.message.edit_text(
         text="Выберите категорию товаров:",
         reply_markup=catalog_kb(catalog_data)
@@ -28,11 +27,7 @@ async def page_catalog(call: CallbackQuery, session_without_commit: AsyncSession
 @catalog_router.callback_query(F.data.startswith("category_"))
 async def page_catalog_products(call: CallbackQuery, session_without_commit: AsyncSession):
     category_id = int(call.data.split("_")[-1])
-    
-    
     product_data = await ProductDao.get_products(session=session_without_commit, category_id=category_id)
-    logger.error(type(product_data))
-    logger.error(product_data)
     count_products = len(product_data)
     if count_products:
         await call.message.edit_text(
