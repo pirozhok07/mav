@@ -166,7 +166,7 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
         # logger.error(product)
         # file_text = "📦 <b>Товар включает файл:</b>" if product.file_id else "📄 <b>Товар не включает файлы:</b>"
         if purchase.taste_id != 0:
-            product_text += (f"🔹 {product.name} ({purchase.taste_id}) - {product.price} ₽\n")
+            product_text += (f"🔹 {product.name} ({product.purchase.taste_id}) - {product.price} ₽\n")
         else:
              product_text += (f"🔹 {product.name} - {product.price} ₽\n")
         cart_total +=product.price
