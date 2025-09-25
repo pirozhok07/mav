@@ -23,7 +23,7 @@ def main_user_kb(user_id: int) -> InlineKeyboardMarkup:
 
 def catalog_kb(catalog_data: List[Category]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    logger.error(catalog_data)
+    logger.error(type(catalog_data))
     for category in catalog_data:
         kb.button(text=category.category_name, callback_data=f"category_{category.id}")
     kb.button(text="🏠 На главную", callback_data="home")
@@ -48,7 +48,7 @@ def purchases_kb() -> InlineKeyboardMarkup:
 
 def product_kb(product_data: List[Product]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    logger.error(product_data)
+    logger.error(type(product_data))
     for product in product_data:
         if product:
             kb.button(text=f"{product.name} - {product.price} ₽", callback_data=f"taste_{product.id}")
