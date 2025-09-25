@@ -47,6 +47,7 @@ class Taste(Base):
     taste_name: Mapped[str] = mapped_column(Text, nullable=False)
     quantity: Mapped[int] = mapped_column(Integer, default=0)
     product: Mapped["Product"] = relationship("Product", back_populates="tastes")
+    purchases: Mapped[List['Purchase']] = relationship("Purchase", back_populates="taste")
 
     def __repr__(self):
         return f"<Taste(id={self.id}, taste_name='{self.taste_name}', quantity={self.quantity})>"
