@@ -5,7 +5,7 @@ from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 from dao.dao import TasteDao, UserDAO, ProductDao, PurchaseDao
 from user.kbs import cart_kb, delete_kb, main_user_kb, purchases_kb
-from user.schemas import ItemCartData, ProductIDModel, PurchaseIDModel, TasteIDModel, TelegramIDModel, UserModel, CartModel
+from user.schemas import ItemCartData, ProductIDModel, ProductUpdateIDModel, PurchaseIDModel, TasteIDModel, TelegramIDModel, UserModel, CartModel
 
 cart_router = Router()
 
@@ -40,7 +40,8 @@ cart_router = Router()
 async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
     _, product_id, taste_id = call.data.split('_')
     user_id = call.from_user.id
-    await ProductDao.edit_quantity_product(session=session_with_commit, product_id=product_id, do_less=True)
+    await ProductDao.update_one_by_id(session=session_with_commit, values=ProductUpdateIDModel(id=product_id, in_cart=True))
+    # await ProductDao.edit_quantity_product(session=session_with_commit, product_id=product_id, do_less=True)
     if taste_id != 0:
         await TasteDao.edit_quantity_taste(session=session_with_commit, product_id=product_id, do_less=True)
     # logger.error(taste_id)

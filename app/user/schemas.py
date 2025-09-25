@@ -12,6 +12,9 @@ class UserModel(TelegramIDModel):
     first_name: str | None
     last_name: str | None
 
+class ProductUpdateIDModel(BaseModel):
+    id: int
+    quantity: int = Field(int, ...)
 
 class ProductIDModel(BaseModel):
     id: int

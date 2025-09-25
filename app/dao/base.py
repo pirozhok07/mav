@@ -16,6 +16,18 @@ class BaseDAO(Generic[T]):
     model: type[T]
 
     @classmethod
+    async def update_one_by_id(cls, session: AsyncSession, data_id: int, values: BaseModel):
+        values_dict = values.model_dump(exclude_unset=True)
+        try:
+            record = await session.get(cls.model, data_id)
+            for key, value in values_dict.items():
+                setattr(record, key, record.quantity - 1)
+            await session.flush()
+        except SQLAlchemyError as e:
+            print(e)
+            raise e
+    
+    @classmethod
     async def find_one_or_none_by_id(cls, data_id: int, session: AsyncSession):
         # Найти запись по ID
         logger.info(f"Поиск {cls.model.__name__} с ID: {data_id}")
