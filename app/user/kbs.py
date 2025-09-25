@@ -1,6 +1,7 @@
 from typing import List
 from aiogram.types import InlineKeyboardMarkup, ReplyKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
+from loguru import logger
 from dao.dao import TasteDao
 from user.schemas import TasteIDModel
 from config import settings
@@ -46,6 +47,7 @@ def purchases_kb() -> InlineKeyboardMarkup:
 
 def product_kb(product_data: List[Product]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
+    logger.error(product_data)
     for product in product_data:
         if product.category_id == 1:
             kb.button(text=f"{product.name} - {product.price} ₽", callback_data=f"taste_{product.id}")
