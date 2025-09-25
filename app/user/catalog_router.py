@@ -23,8 +23,9 @@ async def page_catalog(call: CallbackQuery, session_without_commit: AsyncSession
 @catalog_router.callback_query(F.data.startswith("category_"))
 async def page_catalog_products(call: CallbackQuery, session_without_commit: AsyncSession):
     category_id = int(call.data.split("_")[-1])
-    product_data = await ProductDao.find_all(session=session_without_commit,
-                                                  filters=ProductCategoryIDModel(category_id=category_id))
+    product_data = await ProductDao.get_cart(session=session_without_commit, telegram_id=call.from_user.id)
+    product_data = await ProductDao.find_one_or_none(session=session_without_commit,
+                                                  filters=ProductCategoryIDModel(category_id=category_id, quantity=))
     count_products = len(product_data)
     if count_products:
         await call.message.edit_text(
@@ -51,7 +52,8 @@ async def page_catalog_products(call: CallbackQuery, session_without_commit: Asy
             
         # await call.message.answer(".", reply_markup=cancele_kb())
     else:
-        await call.message.edit_text(text="В данной категории нет товаров.\n\n Выберите категорию товаров:") # возврат
+        catalog_data = await CategoryDao.find_all(session=session_without_commit)
+        await call.message.edit_text(text="В данной категории нет товаров.\n\n Выберите категорию товаров:", reply_markup=catalog_kb(catalog_data)) # возврат
 
 @catalog_router.callback_query(F.data.startswith("taste_"))
 async def show_taste(call: CallbackQuery, session_without_commit: AsyncSession):

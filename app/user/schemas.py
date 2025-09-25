@@ -24,6 +24,7 @@ class TasteIDModel(BaseModel):
 
 class ProductCategoryIDModel(BaseModel):
     category_id: int
+    quantity: int
 
 class TasteProductIDModel(BaseModel):
     product_id: int

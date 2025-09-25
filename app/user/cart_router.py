@@ -38,12 +38,11 @@ cart_router = Router()
 # @catalog_router.message(F.content_type == ContentType.SUCCESSFUL_PAYMENT)
 @cart_router.callback_query(F.data.startswith('cart_'))
 async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
-    user_info = await UserDAO.find_one_or_none(
-        session=session_with_commit,
-        filters=TelegramIDModel(telegram_id=call.from_user.id)
-    )
     _, product_id, taste_id = call.data.split('_')
     user_id = call.from_user.id
+    await ProductDao.edit_quantity_product(product_id=product_id, do_less=True)
+    if taste_id != 0:
+        await TasteDao.edit_quantity_product(product_id=product_id, do_less=True)
     # logger.error(taste_id)
     payment_data = {
         'user_id': int(user_id),
@@ -123,15 +122,20 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
     cart_total=0
     # Для каждой покупки отправляем информацию
     for purchase in purchases:
-
+        
         # logger.error(purchase)
         product = purchase.product
         # logger.error(product)
         # file_text = "📦 <b>Товар включает файл:</b>" if product.file_id else "📄 <b>Товар не включает файлы:</b>"
-
-        product_text += (
-            f"🔹 {product.name} - {product.price} ₽\n"
+        if purchase.taste_id !=0:
+            taste = purchase.taste
+            product_text += (
+            f"🔹 {product.name} ({taste.taste_name}) - {product.price} ₽\n"
         )
+        else:
+            product_text += (
+                f"🔹 {product.name} - {product.price} ₽\n"
+            )
         cart_total +=product.price
     product_text += (
             f"━━━━━━━━━━━━━━━━━━\n"

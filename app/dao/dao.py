@@ -17,8 +17,74 @@ class CategoryDao(BaseDAO[Category]):
 class ProductDao(BaseDAO[Product]):
     model = Product
 
+    @classmethod
+    async def get_products(cls, session: AsyncSession, category_id: int) -> Optional[List[Product]]:
+        try:
+            # Запрос для получения продуктов
+            result = await session.execute(
+                select(Product)
+                .filter(Product.category_id == category_id and Product.quantity > 0)
+                )
+            products = result.scalar_one_or_none() 
+            # logger.error(user)
+            if products is None:
+                return None 
+            return products
+        except SQLAlchemyError as e:
+            # Обработка ошибок при работе с базой данных
+            print(f"Ошибка при получении корзины: {e}")
+            return None
+
+    @classmethod
+    async def edit_quantity_product(cls, session: AsyncSession, product_id: int, do_less: bool):
+        try:
+            # Запрос для уменьшения кол-во продукта
+            product = session.get(Product, product_id)
+            if product:
+                if do_less:
+                    product.quantity -= 1
+                else:
+                    product.quantity += 1
+        except SQLAlchemyError as e:
+            # Обработка ошибок при работе с базой данных
+            print(f"Ошибка при получении корзины: {e}")
+            return None
+        
 class TasteDao(BaseDAO[Taste]):
     model = Taste
+    
+    @classmethod
+    async def get_tastes(cls, session: AsyncSession, product_id: int) -> Optional[List[Taste]]:
+        try:
+            # Запрос для получения продуктов
+            result = await session.execute(
+                select(Taste)
+                .filter(Taste.product_id == product_id and Taste.quantity > 0)
+                )
+            tastes = result.scalar_one_or_none() 
+            # logger.error(user)
+            if tastes is None:
+                return None 
+            return tastes
+        except SQLAlchemyError as e:
+            # Обработка ошибок при работе с базой данных
+            print(f"Ошибка при получении корзины: {e}")
+            return None
+
+    @classmethod
+    async def edit_quantity_taste(cls, session: AsyncSession, taste_id: int, do_less: bool):
+        try:
+            # Запрос для уменьшения кол-во продукта
+            taste = session.get(Taste, taste_id)
+            if taste:
+                if do_less:
+                    taste.quantity -= 1
+                else:
+                    taste.quantity += 1
+        except SQLAlchemyError as e:
+            # Обработка ошибок при работе с базой данных
+            print(f"Ошибка при получении корзины: {e}")
+            return None
 
 class PurchaseDao(BaseDAO[Purchase]):
     model = Purchase
@@ -86,7 +152,7 @@ class UserDAO(BaseDAO[User]):
             # Запрос для получения корзины пользователя
             result = await session.execute(
                 select(User)
-                .options(selectinload(User.purchases).selectinload(Purchase.product).selectinload(Product.tastes))
+                .options(selectinload(User.purchases).selectinload(Purchase.product).Purchase(Purchase.taste))
                 .filter(User.telegram_id == telegram_id and Purchase.status == 'NEW')
                 )
             user = result.scalar_one_or_none() 
