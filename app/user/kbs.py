@@ -49,7 +49,7 @@ def product_kb(product_data: List[Product]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     logger.error(product_data)
     for product in product_data:
-        if product.category_id == 1:
+        if product:
             kb.button(text=f"{product.name} - {product.price} ₽", callback_data=f"taste_{product.id}")
         else:
             kb.button(text=f"{product.name} - {product.price} ₽", callback_data=f"cart_{product.id}_0")
