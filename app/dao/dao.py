@@ -21,10 +21,20 @@ class ProductDao(BaseDAO[Product]):
     async def get_products(cls, session: AsyncSession, category_id: int) -> Optional[List[Product]]:
         try:
             # Запрос для получения продуктов
+            logger.error(category_id)
+            result = await session.execute(
+                select(Product)
+                .filter(Product.category_id == category_id)
+                ) 
+            logger.error(result)
+            products = result.scalar_one_or_none() 
+            logger.error(products)
+
             result = await session.execute(
                 select(Product)
                 .filter(Product.category_id == category_id and Product.quantity > 0)
-                )
+                ) 
+            logger.error(result)
             products = result.scalar_one_or_none() 
             logger.error(products)
             if products is None:
