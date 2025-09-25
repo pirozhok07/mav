@@ -23,10 +23,7 @@ class ProductDao(BaseDAO[Product]):
             # Запрос для получения продуктов
             logger.error(category_id)
             result = await session.execute(
-                select(Product)
-                .options(selectinload(Product.category))
-                .where(Product.category_id == category_id)
-                ) 
+                select(Product)) 
             logger.error(result)
             products = result.scalar_one_or_none() 
             logger.error(products)
