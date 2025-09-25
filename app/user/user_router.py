@@ -3,9 +3,9 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
-from dao.dao import UserDAO, ProductDao
+from dao.dao import UserDAO, ProductDao, TasteDao
 from user.kbs import cart_kb, main_user_kb, purchases_kb
-from user.schemas import TelegramIDModel, UserModel, CartModel
+from user.schemas import TasteIDModel, TelegramIDModel, UserModel, CartModel
 
 user_router = Router()
 
@@ -166,8 +166,11 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
         # logger.error(product)
         # file_text = "📦 <b>Товар включает файл:</b>" if product.file_id else "📄 <b>Товар не включает файлы:</b>"
         if purchase.taste_id != 0:
-            taste_id=purchase.taste_id
-            product_text += (f"🔹 {product.name} ({product.taste_id.taste_name}) - {product.price} ₽\n")
+            taste = await TasteDao.find_one_or_none(
+                session=session_without_commit,
+                filters=TasteIDModel(taste_id=purchase.taste_id)
+            )
+            product_text += (f"🔹 {product.name} ({taste.taste_name}) - {product.price} ₽\n")
         else:
              product_text += (f"🔹 {product.name} - {product.price} ₽\n")
         cart_total +=product.price
