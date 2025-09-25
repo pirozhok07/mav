@@ -14,7 +14,10 @@ catalog_router = Router()
 async def page_catalog(call: CallbackQuery, session_without_commit: AsyncSession):
     await call.answer("Загрузка каталога...")
     catalog_data = await CategoryDao.find_all(session=session_without_commit)
-
+    # if catalog_data:                                  если нет каегорий
+    #         await call.message.edit_text(
+    #             text=f"В данной категории {count_products} товаров.",
+    #             reply_markup=product_kb(product_data)
     await call.message.edit_text(
         text="Выберите категорию товаров:",
         reply_markup=catalog_kb(catalog_data)
