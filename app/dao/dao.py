@@ -25,7 +25,7 @@ class ProductDao(BaseDAO[Product]):
                 select(Product)
                 .filter(Product.category_id == category_id and Product.quantity > 0)
                 ) 
-            products = result.all() 
+            products = result.scalars().all() 
             if products is None:
                 return None 
             return products
