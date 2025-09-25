@@ -23,6 +23,7 @@ def main_user_kb(user_id: int) -> InlineKeyboardMarkup:
 
 def catalog_kb(catalog_data: List[Category]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
+    logger.error(catalog_data)
     for category in catalog_data:
         kb.button(text=category.category_name, callback_data=f"category_{category.id}")
     kb.button(text="🏠 На главную", callback_data="home")
