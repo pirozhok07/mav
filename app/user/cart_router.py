@@ -151,10 +151,10 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
 async def edit_cart(call: CallbackQuery, session_without_commit: AsyncSession):
     await call.answer('Режим редактирования корзины')
 
-    all_items = await UserDAO.get_cart(session=session_without_commit, telegram_id=call.from_user.id)
+    purchases = await UserDAO.get_cart(session=session_without_commit, telegram_id=call.from_user.id)
     await call.message.answer(
         text="Выберите товар для удаления:",
-        reply_markup=delete_kb(all_items))
+        reply_markup=delete_kb(purchases))
 
     
 
