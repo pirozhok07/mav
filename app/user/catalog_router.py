@@ -21,6 +21,7 @@ catalog_router = Router()
 @catalog_router.callback_query(or_f(F.data =="catalog", StateFilter(NavState.catalog)))
 async def page_catalog(call: CallbackQuery | Message, session_without_commit: AsyncSession, state: FSMContext):
     await call.answer("Загрузка каталога...")
+    logger.error("True")
     catalog_data = await CategoryDao.find_all(session=session_without_commit)
     # if catalog_data:                                  если нет каегорий
     #         await call.message.edit_text(
