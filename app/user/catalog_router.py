@@ -32,7 +32,8 @@ async def page_catalog(call: CallbackQuery | Message, session_without_commit: As
             reply_markup=catalog_kb(catalog_data)
         )
     else:
-        await state.get_data.edit_text(
+        await bot.edit_message_text(
+            chat_id=state.get_data(),
             text="Выберите категорию товаров:",
             reply_markup=catalog_kb(catalog_data)
         )

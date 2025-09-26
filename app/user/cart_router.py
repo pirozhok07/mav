@@ -58,7 +58,7 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession, st
     # Добавляем информацию о покупке в базу данных
     await PurchaseDao.add(session=session_with_commit, values=ItemCartData(**payment_data))
     
-    await state.update_data(catalog=call.message)
+    await state.update_data(catalog=call.id)
     await state.set_state(NavState.catalog)
     # product_data = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=int(product_id))
 
