@@ -85,13 +85,17 @@ def taste_kb(taste_data: List[Taste]) -> InlineKeyboardMarkup:
     return kb.as_markup()
 
 async def delete_kb(purchase_data: List[Purchase]) -> InlineKeyboardMarkup:
+    logger.error(purchase_data)
     kb = InlineKeyboardBuilder()
     for purchase in purchase_data:
+        logger.error(purchase)
         product = purchase.product
+        logger.error(product)
         if purchase.taste_id != 0:
             taste = await TasteDao.find_one_or_none(
                 filters=TasteIDModel(id=purchase.taste_id)
             )
+            logger.error(taste)
             kb.button(text=f"{product.name} ({taste.taste_name}) - {product.price}₽", callback_data=f"item_dell_{purchase.id}")
         else:
             kb.button(text=f"{product.name} - {product.price}₽", callback_data=f"item_dell_{purchase.id}")
