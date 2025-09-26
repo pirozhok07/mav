@@ -2,7 +2,7 @@
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram import Router, F
-from aiogram.filters import and_f
+from aiogram.filters import or_f, StateFilter
 from aiogram.enums import ContentType
 from aiogram.types import Message, CallbackQuery, LabeledPrice, PreCheckoutQuery
 from loguru import logger
@@ -16,7 +16,9 @@ from user.schemas import TasteProductIDModel, TelegramIDModel, ProductCategoryID
 catalog_router = Router()
 
 
-@catalog_router.callback_query(CallbackStateFilter(data_pattern="catalog", fstate=NavState.catalog))
+# @catalog_router.callback_query(CallbackStateFilter(data_pattern="catalog", fstate=NavState.catalog))
+
+@catalog_router.callback_query(or_f(F.data =="catalog", StateFilter(NavState.catalog)))
 async def page_catalog(call: CallbackQuery, session_without_commit: AsyncSession, state: FSMContext):
     await call.answer("Загрузка каталога...")
     catalog_data = await CategoryDao.find_all(session=session_without_commit)
