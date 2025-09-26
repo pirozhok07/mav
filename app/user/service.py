@@ -9,9 +9,9 @@ class NavState(StatesGroup):
     catalog = State()
     
 class CallbackStateFilter(Filter):
-    def __init__(self, data_pattern: str = None, state:str = None):
+    def __init__(self, data_pattern: str = None, fstate:str = None):
         self.data_pattern = data_pattern
-        self.state=state
+        self.state=fstate
 
     async def __call__(self, callback: CallbackQuery, state: FSMContext) -> bool:
         logger.error(callback.data)
