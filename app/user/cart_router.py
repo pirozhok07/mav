@@ -1,8 +1,10 @@
 from aiogram import Router, F
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import StatesGroup, State
 from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 from loguru import logger
-from user.catalog_router import show_taste
+from user.catalog_router import NavState, page_catalog_products, show_taste
 from sqlalchemy.ext.asyncio import AsyncSession
 from dao.dao import TasteDao, UserDAO, ProductDao, PurchaseDao
 from user.kbs import cart_kb, delete_kb, main_user_kb, purchases_kb
@@ -38,7 +40,7 @@ cart_router = Router()
 
 # @catalog_router.message(F.content_type == ContentType.SUCCESSFUL_PAYMENT)
 @cart_router.callback_query(F.data.startswith('cart_'))
-async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
+async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession, state: FSMContext):
     _, product_id, taste_id = call.data.split('_')
     user_id = call.from_user.id
     await ProductDao.update_one_by_id(session=session_with_commit, data_id=product_id, in_cart=True)
@@ -55,7 +57,8 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
     # logger.error(payment_data)
     # Добавляем информацию о покупке в базу данных
     await PurchaseDao.add(session=session_with_commit, values=ItemCartData(**payment_data))
-    show_taste(call, session_with_commit)
+    
+    await state.set_state(NavState.catalog)
     # product_data = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=int(product_id))
 
     # # Формируем уведомление администраторам
