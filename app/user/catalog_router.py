@@ -16,7 +16,7 @@ from user.schemas import TasteProductIDModel, TelegramIDModel, ProductCategoryID
 catalog_router = Router()
 
 
-@catalog_router.callback_query(CallbackStateFilter(data_pattern="catalo", state=NavState.catalog))
+@catalog_router.callback_query(CallbackStateFilter(data_pattern="catalog", fstate=NavState.catalog))
 async def page_catalog(call: CallbackQuery, session_without_commit: AsyncSession, state: FSMContext):
     await call.answer("Загрузка каталога...")
     catalog_data = await CategoryDao.find_all(session=session_without_commit)
