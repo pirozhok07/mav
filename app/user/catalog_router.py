@@ -20,7 +20,6 @@ catalog_router = Router()
 @catalog_router.callback_query(F.data =="catalog")
 async def page_catalog(call: CallbackQuery, session_without_commit: AsyncSession):
     await call.answer("Загрузка каталога...")
-    logger.error("True")
     catalog_data = await CategoryDao.find_all(session=session_without_commit)
     # if catalog_data:                                  если нет каегорий
     #         await call.message.edit_text(
@@ -34,6 +33,7 @@ async def page_catalog(call: CallbackQuery, session_without_commit: AsyncSession
 
 @catalog_router.callback_query(F.data.startswith("category_"))
 async def page_catalog_products(call: CallbackQuery, session_without_commit: AsyncSession):
+    await call.answer("Загрузка товаров...")
     category_id = int(call.data.split("_")[-1])
     product_data = await ProductDao.get_products(session=session_without_commit, category_id=category_id)
     count_products = len(product_data)
@@ -67,6 +67,7 @@ async def page_catalog_products(call: CallbackQuery, session_without_commit: Asy
 
 @catalog_router.callback_query(F.data.startswith("taste_"))
 async def show_taste(call: CallbackQuery, session_without_commit: AsyncSession):
+    await call.answer("Загрузка вкусов...")
     product_id = int(call.data.split("_")[-1])    
     taste_data = await TasteDao.get_tastes(session=session_without_commit, product_id=product_id)
     await call.message.edit_text(

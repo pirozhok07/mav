@@ -42,6 +42,7 @@ cart_router = Router()
 # @catalog_router.message(F.content_type == ContentType.SUCCESSFUL_PAYMENT)
 @cart_router.callback_query(F.data.startswith('cart_'))
 async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
+
     _, product_id, taste_id = call.data.split('_')
     user_id = call.from_user.id
     await ProductDao.update_one_by_id(session=session_with_commit, data_id=product_id, in_cart=True)
@@ -180,5 +181,5 @@ async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
     if taste_id != 0:
         await TasteDao.update_one_by_id(session=session_with_commit, data_id=product_id, in_cart=False)
     # logger.error(taste_id)
-    await call.message.edit_text(f"Товар с ID {product_id} удален!", show_alert=True)
+    await call.message.answer(f"Товар с ID {product_id} удален!", show_alert=True)
     await call.message.delete()
