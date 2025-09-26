@@ -167,7 +167,7 @@ async def edit_cart(call: CallbackQuery, session_without_commit: AsyncSession):
     #     await call.message.answer(text=product_text, reply_markup=dell_cart_kb(product.id))
     # await call.message.answer("--", reply_markup=)
 
-@cart_router.callback_query(F.data.startswith('item_dell_'))
+@cart_router.callback_query(F.data.startswith('itemDell_'))
 async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
     _, product_id, taste_id = call.data.split('_')
     await PurchaseDao.delete(session=session_with_commit, filters=PurchaseIDModel(id=product_id))
