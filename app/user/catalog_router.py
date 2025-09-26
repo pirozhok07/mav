@@ -18,7 +18,7 @@ catalog_router = Router()
 
 # @catalog_router.callback_query(CallbackStateFilter(data_pattern="catalog", fstate=NavState.catalog))
 
-@catalog_router.callback_query(F.data =="catalog")
+@catalog_router.callback_query(or_f(F.data =="catalog", StateFilter(NavState.catalog)))
 async def page_catalog(call: CallbackQuery | Message, session_without_commit: AsyncSession, state: FSMContext):
     await call.answer("Загрузка каталога...")
     logger.error("True")
@@ -38,7 +38,8 @@ async def page_catalog(call: CallbackQuery | Message, session_without_commit: As
             text="Выберите категорию товаров:",
             reply_markup=catalog_kb(catalog_data)
         )
-        state.clear()
+        state.set_state(None)
+
 
 @catalog_router.callback_query(F.data.startswith("category_"))
 async def page_catalog_products(call: CallbackQuery, session_without_commit: AsyncSession):
