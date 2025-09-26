@@ -2,6 +2,7 @@ from aiogram import Router, F
 from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 from loguru import logger
+from app.user.catalog_router import show_taste
 from sqlalchemy.ext.asyncio import AsyncSession
 from dao.dao import TasteDao, UserDAO, ProductDao, PurchaseDao
 from user.kbs import cart_kb, delete_kb, main_user_kb, purchases_kb
@@ -54,6 +55,7 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
     # logger.error(payment_data)
     # Добавляем информацию о покупке в базу данных
     await PurchaseDao.add(session=session_with_commit, values=ItemCartData(**payment_data))
+    show_taste()
     # product_data = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=int(product_id))
 
     # # Формируем уведомление администраторам
@@ -152,7 +154,7 @@ async def edit_cart(call: CallbackQuery, session_without_commit: AsyncSession):
     await call.answer('Режим редактирования корзины')
 
     purchases = await UserDAO.get_cart(session=session_without_commit, telegram_id=call.from_user.id)
-    await call.message.answer(
+    await call.message.edit_text(
         text="Выберите товар для удаления:",
         reply_markup=delete_kb(purchases))
 
