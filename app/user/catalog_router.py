@@ -1,7 +1,12 @@
+
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import StatesGroup, State
 from aiogram import Router, F
+from aiogram.filters import and_f
 from aiogram.enums import ContentType
 from aiogram.types import Message, CallbackQuery, LabeledPrice, PreCheckoutQuery
 from loguru import logger
+from main import NavState
 from sqlalchemy.ext.asyncio import AsyncSession
 from config import bot, settings
 from dao.dao import TasteDao, UserDAO, CategoryDao, ProductDao, PurchaseDao
@@ -10,8 +15,9 @@ from user.schemas import TasteProductIDModel, TelegramIDModel, ProductCategoryID
 
 catalog_router = Router()
 
-@catalog_router.callback_query(F.data == "catalog")
-async def page_catalog(call: CallbackQuery, session_without_commit: AsyncSession):
+
+@catalog_router.callback_query(F.data == "catalog" | NavState.catalog)
+async def page_catalog(call: CallbackQuery, session_without_commit: AsyncSession, state: FSMContext):
     await call.answer("Загрузка каталога...")
     catalog_data = await CategoryDao.find_all(session=session_without_commit)
     # if catalog_data:                                  если нет каегорий
