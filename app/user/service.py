@@ -7,6 +7,7 @@ from loguru import logger
 
 class NavState(StatesGroup):
     catalog = State()
+    noState = State()
     
 class CallbackStateFilter(Filter):
     def __init__(self, data_pattern: str = None, fstate:str = None):
