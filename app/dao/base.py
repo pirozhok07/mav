@@ -19,7 +19,10 @@ class BaseDAO(Generic[T]):
     async def update_one_by_id(cls, session: AsyncSession, data_id: int, in_cart: bool):
         try:
             record = await session.get(cls.model, data_id)
-            setattr(record, 'quantity', record.quantity - 1)
+            if in_cart:
+                setattr(record, 'quantity', record.quantity - 1)
+            else:
+                setattr(record, 'quantity', record.quantity + 1)
             await session.flush()
         except SQLAlchemyError as e:
             print(e)

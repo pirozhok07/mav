@@ -156,9 +156,7 @@ class UserDAO(BaseDAO[User]):
                 .options(selectinload(User.purchases).selectinload(Purchase.taste))
                 .filter(User.telegram_id == telegram_id and Purchase.status == 'NEW')
                 )
-            logger.error(result)
             user = result.scalar_one_or_none() 
-            logger.error(result)
             # logger.error(user)
             if user is None:
                 return None 
