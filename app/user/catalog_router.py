@@ -38,6 +38,7 @@ async def page_catalog(call: CallbackQuery | Message, session_without_commit: As
             text="Выберите категорию товаров:",
             reply_markup=catalog_kb(catalog_data)
         )
+        state.clear()
 
 @catalog_router.callback_query(F.data.startswith("category_"))
 async def page_catalog_products(call: CallbackQuery, session_without_commit: AsyncSession):
