@@ -32,7 +32,7 @@ async def page_catalog(call: CallbackQuery | Message, session_without_commit: As
             reply_markup=catalog_kb(catalog_data)
         )
     else:
-        await call.edit_text(
+        await state.get_data.edit_text(
             text="Выберите категорию товаров:",
             reply_markup=catalog_kb(catalog_data)
         )
