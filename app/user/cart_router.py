@@ -2,7 +2,7 @@ from aiogram import Router, F
 from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 from loguru import logger
-from app.user.catalog_router import show_taste
+from user.catalog_router import show_taste
 from sqlalchemy.ext.asyncio import AsyncSession
 from dao.dao import TasteDao, UserDAO, ProductDao, PurchaseDao
 from user.kbs import cart_kb, delete_kb, main_user_kb, purchases_kb
