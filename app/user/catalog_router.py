@@ -16,10 +16,9 @@ from user.schemas import TasteProductIDModel, TelegramIDModel, ProductCategoryID
 catalog_router = Router()
 
 
-# @catalog_router.callback_query(CallbackStateFilter(data_pattern="catalog", fstate=NavState.catalog))
 
-@catalog_router.callback_query(or_f(F.data =="catalog", StateFilter(NavState.catalog)))
-async def page_catalog(call: CallbackQuery | Message, session_without_commit: AsyncSession, state: FSMContext):
+@catalog_router.callback_query(F.data =="catalog")
+async def page_catalog(call: CallbackQuery, session_without_commit: AsyncSession):
     await call.answer("Загрузка каталога...")
     logger.error("True")
     catalog_data = await CategoryDao.find_all(session=session_without_commit)
@@ -27,18 +26,10 @@ async def page_catalog(call: CallbackQuery | Message, session_without_commit: As
     #         await call.message.edit_text(
     #             text=f"В данной категории {count_products} товаров.",
     #             reply_markup=product_kb(product_data)
-    if isinstance(call, CallbackQuery):
-        await call.message.edit_text(
-            text="Выберите категорию товаров:",
-            reply_markup=catalog_kb(catalog_data)
-        )
-    else:
-        await bot.edit_message_text(
-            chat_id=state.get_data(),
-            text="Выберите категорию товаров:",
-            reply_markup=catalog_kb(catalog_data)
-        )
-    state.set_state(NavState.noState)
+    await call.message.edit_text(
+        text="Выберите категорию товаров:",
+        reply_markup=catalog_kb(catalog_data)
+    )
 
 
 @catalog_router.callback_query(F.data.startswith("category_"))
