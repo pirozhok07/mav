@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 
 class NavState(StatesGroup):
     catalog = State()
-    
+
 class CallbackStateFilter(Filter):
     def __init__(self, data_pattern: str = None, state:str = None):
         self.data_pattern = data_pattern
@@ -14,7 +14,7 @@ class CallbackStateFilter(Filter):
 
     async def __call__(self, callback: CallbackQuery, state: FSMContext) -> bool:
         if self.data_pattern:
-            if not callback.data.startswith(self.data_pattern):
+            if not callback.data == self.data_pattern:
                 return False
         if self.state:
             current_state = await state.get_state()
