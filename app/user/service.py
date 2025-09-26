@@ -14,8 +14,8 @@ class CallbackStateFilter(Filter):
         self.state=state
 
     async def __call__(self, callback: CallbackQuery, state: FSMContext) -> bool:
-        logger.error(callback)
-        logger.error(state)
+        logger.error(callback.data)
+        logger.error(state.get_state())
         if self.data_pattern:
             if not callback.data.startswith(self.data_pattern):
                 return False
