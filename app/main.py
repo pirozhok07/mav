@@ -8,11 +8,7 @@ from user.user_router import user_router
 from user.cart_router import cart_router
 from user.catalog_router import catalog_router
 
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import StatesGroup, State
 
-class NavState(StatesGroup):
-    catalog = State()
 
 # Функция, которая настроит командное меню (дефолтное для всех пользователей)
 async def set_commands():

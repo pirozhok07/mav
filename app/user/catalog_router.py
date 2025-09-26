@@ -6,7 +6,7 @@ from aiogram.filters import and_f
 from aiogram.enums import ContentType
 from aiogram.types import Message, CallbackQuery, LabeledPrice, PreCheckoutQuery
 from loguru import logger
-from main import NavState
+from user.service import NavState
 from sqlalchemy.ext.asyncio import AsyncSession
 from config import bot, settings
 from dao.dao import TasteDao, UserDAO, CategoryDao, ProductDao, PurchaseDao
