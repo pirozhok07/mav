@@ -157,7 +157,7 @@ class UserDAO(BaseDAO[User]):
                 .filter(User.telegram_id == telegram_id and Purchase.status == 'NEW')
                 )
             logger.error(result)
-            user = result.scalar_one_or_none() 
+            user = result.scalar().all() 
             logger.error(result)
             # logger.error(user)
             if user is None:
