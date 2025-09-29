@@ -208,12 +208,11 @@ async def get_adress(message: Message, state: FSMContext, session_without_commit
     purchases = await UserDAO.get_cart(session=session_without_commit, telegram_id=message.from_user.id)
     text=''
     for purchase in purchases:
-        text += f"{purchase.product_id.name}\n"
+        text += f"{purchase.product.name}\n"
+    username = message.from_user.username
+    user_info = f"@{username} ({message.from_user.id})" if username else f"c ID {message.from_user.id}"
     for admin_id in settings.ADMIN_IDS:
         try:
-            username = message.from_user.username
-            user_info = f"@{username} ({message.from_user.id})" if username else f"c ID {message.from_user.id}"
-
             await bot.send_message(
                 chat_id=admin_id,
                 text=(
