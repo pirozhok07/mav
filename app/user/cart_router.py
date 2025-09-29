@@ -176,9 +176,9 @@ async def edit_cart(call: CallbackQuery, session_without_commit: AsyncSession):
 @cart_router.callback_query(F.data.startswith('itemDell_'))
 async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
     _, product_id, taste_id = call.data.split('_')
+    await call.answer(f"Товар с ID {product_id} удален!")
     await PurchaseDao.delete(session=session_with_commit, filters=PurchaseIDModel(id=product_id))
     await ProductDao.update_one_by_id(session=session_with_commit, data_id=product_id, in_cart=False)
     if taste_id != 0:
         await TasteDao.update_one_by_id(session=session_with_commit, data_id=product_id, in_cart=False)
     # logger.error(taste_id)
-    await call.message.answer(f"Товар с ID {product_id} удален!", show_alert=True)

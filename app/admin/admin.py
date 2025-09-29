@@ -167,3 +167,7 @@ async def admin_process_confirm_add(call: CallbackQuery, state: FSMContext, sess
     del product_data["last_msg_id"]
     await ProductDao.add(session=session_with_commit, values=ProductModel(**product_data))
     await call.message.answer(text="Товар успешно добавлен в базу данных!", reply_markup=admin_kb())
+
+@admin_router.callback_query(F.data == "save_in_file", F.from_user.id.in_(settings.ADMIN_IDS))
+async def admin_save_in_file(call: CallbackQuery, session_without_commit: AsyncSession):
+    await CategoryDao.save_all(session=session_without_commit)

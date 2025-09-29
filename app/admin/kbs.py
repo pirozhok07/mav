@@ -25,6 +25,7 @@ def admin_kb() -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     kb.button(text="📊 Статистика", callback_data="statistic")
     kb.button(text="🛍️ Управлять товарами", callback_data="process_products")
+    kb.button(text="Загрузить в файл", callback_data="save_in_file")
     kb.button(text="🏠 На главную", callback_data="home")
     kb.adjust(2)
     return kb.as_markup()

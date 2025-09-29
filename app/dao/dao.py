@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import json
 from typing import Optional, List, Dict
 
 from loguru import logger
@@ -13,6 +14,17 @@ from dao.models import Taste, User, Purchase, Category, Product
 class CategoryDao(BaseDAO[Category]):
     model = Category
 
+    @classmethod
+    async def save_all(cls, session: AsyncSession) -> Optional[List[Product]]:
+        try:
+            results = session.query(Category).all()
+            json_data = [u._asdict() for u in results]
+            json_output = json.dumps(json_data)
+            print(json_output)
+        except SQLAlchemyError as e:
+            # Обработка ошибок при работе с базой данных
+            print(f"Ошибка при выгрузке в файл: {e}")
+            return None
 
 class ProductDao(BaseDAO[Product]):
     model = Product
@@ -33,6 +45,7 @@ class ProductDao(BaseDAO[Product]):
             # Обработка ошибок при работе с базой данных
             print(f"Ошибка при получении корзины: {e}")
             return None
+        
 
     @classmethod
     async def edit_quantity_product(cls, session: AsyncSession, product_id: int, do_less: bool):
