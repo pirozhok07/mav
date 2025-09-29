@@ -181,4 +181,4 @@ async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
     await ProductDao.update_one_by_id(session=session_with_commit, data_id=product_id, in_cart=False)
     if taste_id != "0":
         await TasteDao.update_one_by_id(session=session_with_commit, data_id=product_id, in_cart=False)
-    # logger.error(taste_id)
+    edit_cart(call, session_with_commit)
