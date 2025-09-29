@@ -8,10 +8,14 @@ from user.catalog_router import page_catalog
 from user.service import NavState
 from sqlalchemy.ext.asyncio import AsyncSession
 from dao.dao import TasteDao, UserDAO, ProductDao, PurchaseDao
-from user.kbs import cart_kb, delete_kb, main_user_kb, purchases_kb
+from user.kbs import cancele_kb, cart_kb, delete_kb, main_user_kb, order_kb, purchases_kb
 from user.schemas import ItemCartData, ProductIDModel, ProductUpdateIDModel, PurchaseIDModel, TasteIDModel, TelegramIDModel, UserModel, CartModel
+from config import bot
 
 cart_router = Router()
+
+class DoOrder(StatesGroup):
+    adress = State()
 
 # @cart_router.callback_query(F.data.startswith('taste_cart_'))
 # async def add_in_cart_taste(call: CallbackQuery, session_with_commit: AsyncSession):
@@ -182,3 +186,20 @@ async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
     if taste_id != "0":
         await TasteDao.update_one_by_id(session=session_with_commit, data_id=product_id, in_cart=False)
     await edit_cart(call, session_with_commit)
+
+@cart_router.callback_query(F.data == 'do_order')
+async def do_order(call: CallbackQuery, state: FSMContext):
+    await call.answer("Оформление заказа", show_alert=True)
+    await call.message.answer(f"Заказ будет доставлен ориентировочно сегодня после 19:30")
+    msg = await call.message.edit_text(text="Для начала укажите имя товара: ", reply_markup=cancele_kb())
+    await state.update_data(last_msg_id=msg.message_id)
+    await state.set_state(DoOrder.adress)
+    
+@cart_router.message(F.text, DoOrder.adress)
+async def get_adress(message: Message, state: FSMContext):
+    await state.update_data(name=message.text)
+    adress = await state.get_data()
+    last_msg_id = adress.get('last_msg_id')
+    await bot.delete_message(chat_id=message.from_user.id, message_id=last_msg_id)
+    msg = await message.answer(text="Выберите способ оплаты", reply_markup=order_kb())
+    await state.update_data(last_msg_id=msg.message_id)

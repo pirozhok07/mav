@@ -48,7 +48,7 @@ def purchases_kb() -> InlineKeyboardMarkup:
 def product_kb(product_data: List[Product]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     for product in product_data:
-        if product.category_id == 1:
+        if product.category_id == 3:
             kb.button(text=f"{product.name} - {product.price} ₽", callback_data=f"taste_{product.id}")
         else:
             kb.button(text=f"{product.name} - {product.price} ₽", callback_data=f"cart_{product.id}_0")
@@ -97,7 +97,7 @@ def delete_kb(purchase_data: List[Purchase]) -> InlineKeyboardMarkup:
 
 def cart_kb() -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    kb.button(text="💸 Оформить заказ", callback_data=f"do_order_")
+    kb.button(text="💸 Оформить заказ", callback_data=f"do_order")
     kb.button(text="💸 Редактировать корзину", callback_data=f"edit_cart")
     kb.button(text="🏠 На главную", callback_data="home")
     kb.adjust(1)
@@ -117,8 +117,16 @@ def cancele_kb(path)-> InlineKeyboardMarkup:
     kb.adjust(2)
     return kb.as_markup()
 
+def order_kb(path)-> InlineKeyboardMarkup:
+    kb = InlineKeyboardBuilder()
+    kb.button(text="🛍 Наличные", callback_data="money")
+    kb.button(text="🏠 Перевод", callback_data="cart")
+    kb.adjust(2)
+    return kb.as_markup()
+
 def get_product_buy_kb(price) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text=f'Оплатить {price}₽', pay=True)],
         [InlineKeyboardButton(text='Отменить', callback_data='home')]
     ])
+
