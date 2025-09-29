@@ -4,6 +4,7 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 from loguru import logger
+from app.user.user_router import page_home
 from user.catalog_router import page_catalog
 from user.service import NavState
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -189,9 +190,9 @@ async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
 
 @cart_router.callback_query(F.data == 'do_order')
 async def do_order(call: CallbackQuery, state: FSMContext):
-    await call.answer("Оформление заказа", show_alert=True)
+    await call.answer("Оформление заказа")
     await call.message.answer(f"Заказ будет доставлен ориентировочно сегодня после 19:30")
-    msg = await call.message.edit_text(text="Для начала укажите имя товара: ", reply_markup=cancele_kb())
+    msg = await call.message.edit_text(text="Для начала укажите адресс доставки: ", reply_markup=cancele_kb())
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(DoOrder.adress)
     
@@ -203,3 +204,14 @@ async def get_adress(message: Message, state: FSMContext):
     await bot.delete_message(chat_id=message.from_user.id, message_id=last_msg_id)
     msg = await message.answer(text="Выберите способ оплаты", reply_markup=order_kb())
     await state.update_data(last_msg_id=msg.message_id)
+
+@cart_router.callback_query(F.data == 'nal')
+async def nal(call: CallbackQuery):
+    await call.answer("Оплата наличными. \nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
+    await page_home(call)
+
+@cart_router.callback_query(F.data == 'nenal')
+async def nenal(call: CallbackQuery, session_without_commit: AsyncSession):
+    purchases = await UserDAO.get_total_cart(session=session_without_commit, telegram_id=call.from_user.id)
+    await call.answer(f"Оплата переводом.\nСумма к оплате: {purchases}₽\nРЕКВИЗИТЫ\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
+    await page_home(call)

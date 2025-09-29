@@ -180,6 +180,22 @@ class UserDAO(BaseDAO[User]):
             return None
         
     @classmethod
+    async def get_total_cart(cls, session: AsyncSession, telegram_id: int) -> Optional[List[Purchase]]:
+        try:
+            # Запрос для получения суммы корзины
+            result = await session.execute(
+                select(func.sum(cls.model.price).label('total_price'))
+                .options(selectinload(User.purchases).selectinload(Purchase.product))
+                .filter(User.telegram_id == telegram_id and Purchase.status == 'NEW')
+                )
+            total_price = result.scalars().one_or_none()
+            return total_price if total_price is not None else 0
+        except SQLAlchemyError as e:
+            logger.error(f"Ошибка при получении суммы заказа: {e}")
+            raise
+
+                
+    @classmethod
     async def get_statistics(cls, session: AsyncSession):
         try:
             now = datetime.now()
