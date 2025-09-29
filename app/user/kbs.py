@@ -110,17 +110,17 @@ def cart_kb() -> InlineKeyboardMarkup:
 #     return kb.as_markup()
 
 
-def cancele_kb(path)-> InlineKeyboardMarkup:
+def cancele_kb()-> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    kb.button(text="🛍 Назад", callback_data="catalog")
+    kb.button(text="🛍 Назад", callback_data="cart")
     kb.button(text="🏠 На главную", callback_data="home")
     kb.adjust(2)
     return kb.as_markup()
 
-def order_kb(path)-> InlineKeyboardMarkup:
+def order_kb()-> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     kb.button(text="🛍 Наличные", callback_data="money")
-    kb.button(text="🏠 Перевод", callback_data="cart")
+    kb.button(text="🏠 Перевод", callback_data="kart")
     kb.adjust(2)
     return kb.as_markup()
 
