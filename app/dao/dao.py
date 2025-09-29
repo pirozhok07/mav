@@ -184,7 +184,7 @@ class UserDAO(BaseDAO[User]):
         try:
             # Запрос для получения суммы корзины
             result = await session.execute(
-                select(func.sum(cls.model.price).label('total_price'))
+                select(func.sum(Product.price).label('total_price'))
                 .options(selectinload(User.purchases).selectinload(Purchase.product))
                 .filter(User.telegram_id == telegram_id and Purchase.status == 'NEW')
                 )
