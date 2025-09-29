@@ -70,3 +70,10 @@ def admin_confirm_kb() -> InlineKeyboardMarkup:
     kb.button(text="Отмена", callback_data="admin_panel")
     kb.adjust(1)
     return kb.as_markup()
+
+
+def admin_accept_kb() -> InlineKeyboardMarkup:
+    kb = InlineKeyboardBuilder()
+    kb.button(text="Подтвердить", callback_data="accept_order")
+    kb.adjust(1)
+    return kb.as_markup()

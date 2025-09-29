@@ -4,6 +4,7 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 from loguru import logger
+from admin.kbs import admin_accept_kb
 from user.user_router import page_home
 from user.catalog_router import page_catalog
 from user.service import NavState
@@ -204,13 +205,20 @@ async def get_adress(message: Message, state: FSMContext, session_without_commit
     await bot.delete_message(chat_id=message.from_user.id, message_id=last_msg_id)
     msg = await message.answer(text="Выберите способ оплаты", reply_markup=order_kb())
     await state.update_data(last_msg_id=msg.message_id)
-    total = await UserDAO.get_total_cart(session=session_without_commit, telegram_id=message.from_user.id)
-    purchases = await UserDAO.get_cart(session=session_without_commit, telegram_id=message.from_user.id)
+    
+
+@cart_router.callback_query(F.data == 'nal')
+async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
+    await call.answer("Оплата наличными. \nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
+    await page_home(call)
+
+    total = await UserDAO.get_total_cart(session=session_without_commit, telegram_id=call.from_user.id)
+    purchases = await UserDAO.get_cart(session=session_without_commit, telegram_id=call.from_user.id)
     text=''
     for purchase in purchases:
         text += f"{purchase.product.name}\n"
-    username = message.from_user.username
-    user_info = f"@{username}" if username else f"c ID {message.from_user.id}"
+    username = call.from_user.username
+    user_info = f"@{username}" if username else f"c ID {call.from_user.id}"
     for admin_id in settings.ADMIN_IDS:
         try:
             await bot.send_message(
@@ -219,19 +227,35 @@ async def get_adress(message: Message, state: FSMContext, session_without_commit
                     f"💲 Пользователь {user_info} оформил заказ\n"
                     f"-------------------------------------------"
                     f"{text}"
-                    f"за <b>{total} ₽</b>."
-                )
+                    f"за <b>{total} ₽</b> Оплата наличными."
+                ), reply_markup=admin_accept_kb()
             )
         except Exception as e:
             logger.error(f"Ошибка при отправке уведомления администраторам: {e}")
-
-@cart_router.callback_query(F.data == 'nal')
-async def nal(call: CallbackQuery):
-    await call.answer("Оплата наличными. \nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
-    await page_home(call)
 
 @cart_router.callback_query(F.data == 'nenal')
 async def nenal(call: CallbackQuery, session_without_commit: AsyncSession):
     total = await UserDAO.get_total_cart(session=session_without_commit, telegram_id=call.from_user.id)
     await call.answer(f"Оплата переводом.\nСумма к оплате: {total}₽\nРЕКВИЗИТЫ\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
     await page_home(call)
+
+    total = await UserDAO.get_total_cart(session=session_without_commit, telegram_id=call.from_user.id)
+    purchases = await UserDAO.get_cart(session=session_without_commit, telegram_id=call.from_user.id)
+    text=''
+    for purchase in purchases:
+        text += f"{purchase.product.name}\n"
+    username = call.from_user.username
+    user_info = f"@{username}" if username else f"c ID {call.from_user.id}"
+    for admin_id in settings.ADMIN_IDS:
+        try:
+            await bot.send_message(
+                chat_id=admin_id,
+                text=(
+                    f"💲 Пользователь {user_info} оформил заказ\n"
+                    f"-------------------------------------------"
+                    f"{text}"
+                    f"за <b>{total} ₽</b> Оплата переводом."
+                ), reply_markup=admin_accept_kb()
+            )
+        except Exception as e:
+            logger.error(f"Ошибка при отправке уведомления администраторам: {e}")
