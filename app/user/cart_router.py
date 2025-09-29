@@ -4,7 +4,7 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 from loguru import logger
-from app.user.user_router import page_home
+from user.user_router import page_home
 from user.catalog_router import page_catalog
 from user.service import NavState
 from sqlalchemy.ext.asyncio import AsyncSession
