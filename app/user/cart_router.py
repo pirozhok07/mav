@@ -42,6 +42,7 @@ cart_router = Router()
 # @catalog_router.message(F.content_type == ContentType.SUCCESSFUL_PAYMENT)
 @cart_router.callback_query(F.data.startswith('cart_'))
 async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
+    await call.answer("Товар добавлен в корзину", show_alert=True)
     _, product_id, taste_id = call.data.split('_')
     user_id = call.from_user.id
     await ProductDao.update_one_by_id(session=session_with_commit, data_id=product_id, in_cart=True)
