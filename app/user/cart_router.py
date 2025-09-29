@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from dao.dao import TasteDao, UserDAO, ProductDao, PurchaseDao
 from user.kbs import cancele_kb, cart_kb, delete_kb, main_user_kb, order_kb, purchases_kb
 from user.schemas import ItemCartData, ProductIDModel, ProductUpdateIDModel, PurchaseIDModel, TasteIDModel, TelegramIDModel, UserModel, CartModel
-from config import bot
+from config import bot, settings
 
 cart_router = Router()
 
@@ -196,14 +196,34 @@ async def do_order(call: CallbackQuery, state: FSMContext):
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(DoOrder.adress)
     
-@cart_router.message(F.text, DoOrder.adress)
-async def get_adress(message: Message, state: FSMContext):
+@cart_router.message(F.text, DoOrder.adress, )
+async def get_adress(message: Message, state: FSMContext, session_without_commit: AsyncSession):
     await state.update_data(name=message.text)
     adress = await state.get_data()
     last_msg_id = adress.get('last_msg_id')
     await bot.delete_message(chat_id=message.from_user.id, message_id=last_msg_id)
     msg = await message.answer(text="Выберите способ оплаты", reply_markup=order_kb())
     await state.update_data(last_msg_id=msg.message_id)
+    total = await UserDAO.get_total_cart(session=session_without_commit, telegram_id=message.from_user.id)
+    purchases = await UserDAO.get_cart(session=session_without_commit, telegram_id=message.from_user.id)
+    text=''
+    for purchase in purchases:
+        text += f"{purchase.product_id.name}\n"
+    for admin_id in settings.ADMIN_IDS:
+        try:
+            username = message.from_user.username
+            user_info = f"@{username} ({message.from_user.id})" if username else f"c ID {message.from_user.id}"
+
+            await bot.send_message(
+                chat_id=admin_id,
+                text=(
+                    f"💲 Пользователь {user_info} оформил заказ\n"
+                    f"{text}"
+                    f"за <b>{total} ₽</b>."
+                )
+            )
+        except Exception as e:
+            logger.error(f"Ошибка при отправке уведомления администраторам: {e}")
 
 @cart_router.callback_query(F.data == 'nal')
 async def nal(call: CallbackQuery):
@@ -212,6 +232,6 @@ async def nal(call: CallbackQuery):
 
 @cart_router.callback_query(F.data == 'nenal')
 async def nenal(call: CallbackQuery, session_without_commit: AsyncSession):
-    purchases = await UserDAO.get_total_cart(session=session_without_commit, telegram_id=call.from_user.id)
-    await call.answer(f"Оплата переводом.\nСумма к оплате: {purchases}₽\nРЕКВИЗИТЫ\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
+    total = await UserDAO.get_total_cart(session=session_without_commit, telegram_id=call.from_user.id)
+    await call.answer(f"Оплата переводом.\nСумма к оплате: {total}₽\nРЕКВИЗИТЫ\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
     await page_home(call)
