@@ -44,12 +44,12 @@ cart_router = Router()
 async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
 
     _, product_id, taste_id = call.data.split('_')
+    logger.error(taste_id)
     user_id = call.from_user.id
     await ProductDao.update_one_by_id(session=session_with_commit, data_id=product_id, in_cart=True)
     # await ProductDao.edit_quantity_product(session=session_with_commit, product_id=product_id, do_less=True)
     if taste_id != 0:
         await TasteDao.update_one_by_id(session=session_with_commit, data_id=product_id, in_cart=True)
-    # logger.error(taste_id)
     payment_data = {
         'user_id': int(user_id),
         'taste_id': int(taste_id),
