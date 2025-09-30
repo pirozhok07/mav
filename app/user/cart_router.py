@@ -255,7 +255,7 @@ async def nenal(call: CallbackQuery, session_without_commit: AsyncSession):
                     f"-------------------------------------------"
                     f"{text}"
                     f"за <b>{total} ₽</b> Оплата переводом."
-                ), reply_markup=admin_accept_kb()
+                ), reply_markup=admin_accept_kb(call.from_user.id)
             )
         except Exception as e:
             logger.error(f"Ошибка при отправке уведомления администраторам: {e}")

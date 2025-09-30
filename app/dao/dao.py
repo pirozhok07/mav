@@ -63,6 +63,23 @@ class ProductDao(BaseDAO[Product]):
             print(f"Ошибка при получении корзины: {e}")
             return None
         
+    @classmethod
+    async def get_purchases(cls, session: AsyncSession, telegram_id: int) -> Optional[List[Purchase]]:
+        try:
+            # Запрос для получения пользователя с его покупками и связанными продуктами
+            result = await session.execute(
+                select(Purchase)
+                .filter(Purchase.user_id == telegram_id, Purchase.status == "NEW")
+                )
+            purchases = result.scalar_one_or_none() 
+            if purchases is None:
+                return None 
+            return purchases 
+        except SQLAlchemyError as e:
+            # Обработка ошибок при работе с базой данных
+            print(f"Ошибка при получении информации о покупках пользователя: {e}")
+            return None
+        
 class TasteDao(BaseDAO[Taste]):
     model = Taste
     
@@ -109,6 +126,18 @@ class PurchaseDao(BaseDAO[Purchase]):
         result = await session.execute(query)
         total_price = result.scalars().one_or_none()
         return total_price if total_price is not None else 0
+    
+    @classmethod
+    async def change_status (cls, session: AsyncSession, purchase_id: int):
+        try:
+            # Запрос для уменьшения кол-во продукта
+            purchase = session.get(Purchase, purchase_id)
+            if purchase:
+                purchase.status = "CONFIRM"
+        except SQLAlchemyError as e:
+            # Обработка ошибок при работе с базой данных
+            print(f"Ошибка при получении корзины: {e}")
+            return None
 
 class UserDAO(BaseDAO[User]):
     model = User
@@ -138,6 +167,8 @@ class UserDAO(BaseDAO[User]):
             # Обработка ошибок при работе с базой данных
             print(f"Ошибка при получении статистики покупок пользователя: {e}")
             return None
+        
+
         
     @classmethod
     async def get_purchased_products(cls, session: AsyncSession, telegram_id: int) -> Optional[List[Purchase]]:
