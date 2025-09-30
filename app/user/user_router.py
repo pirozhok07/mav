@@ -69,7 +69,7 @@ async def page_about(call: CallbackQuery, session_without_commit: AsyncSession):
     else:
         text = (
             f"🛍 <b>Ваш профиль:</b>\n\n"
-            f"Количество покупок: <b>{total_purchases}</b>\n"
+            f"Количество купленных товаров: <b>{total_purchases}</b>\n"
             f"Общая сумма: <b>{total_amount}₽</b>\n\n"
             "Хотите просмотреть детали ваших покупок?"
         )
@@ -92,34 +92,20 @@ async def page_user_purchases(call: CallbackQuery, session_without_commit: Async
             reply_markup=main_user_kb(call.from_user.id)
         )
         return
-
+    product_text = (
+            f"🛒 <b>Информация о ваших покупках:</b>\n"
+            f"━━━━━━━━━━━━━━━━━━\n")
     # Для каждой покупки отправляем информацию
     for purchase in purchases:
         product = purchase.product
-        file_text = "📦 <b>Товар включает файл:</b>" if product.file_id else "📄 <b>Товар не включает файлы:</b>"
-
-        product_text = (
-            f"🛒 <b>Информация о вашем товаре:</b>\n"
-            f"━━━━━━━━━━━━━━━━━━\n"
-            f"🔹 <b>Название:</b> <i>{product.name}</i>\n"
-            f"🔹 <b>Описание:</b>\n<i>{product.description}</i>\n"
-            f"🔹 <b>Цена:</b> <b>{product.price} ₽</b>\n"
-            f"🔹 <b>Закрытое описание:</b>\n<i>{product.hidden_content}</i>\n"
-            f"━━━━━━━━━━━━━━━━━━\n"
-            f"{file_text}\n"
-        )
-
-        if product.file_id:
-            # Отправляем файл с текстом
-            await call.message.answer_document(
-                document=product.file_id,
-                caption=product_text,
+        if purchase.taste_id != 0:
+            taste = await TasteDao.find_one_or_none(
+                session=session_without_commit,
+                filters=TasteIDModel(id=purchase.taste_id)
             )
+            product_text += (f"🔹 {product.name} ({taste.taste_name}) - {product.price} ₽\n")
         else:
-            # Отправляем только текст
-            await call.message.edit_text(
-                text=product_text,
-            )
+             product_text += (f"🔹 {product.name} - {product.price} ₽\n")
 
     await call.message.edit_text(
         text="🙏 Спасибо за доверие!",
