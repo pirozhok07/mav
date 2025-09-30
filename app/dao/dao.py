@@ -122,7 +122,20 @@ class PurchaseDao(BaseDAO[Purchase]):
             # Обработка ошибок при работе с базой данных
             print(f"Ошибка при получении информации о покупках пользователя: {e}")
             return None
-    
+            
+    @classmethod
+    async def get_total(cls, session: AsyncSession, telegram_id: int) -> Optional[List[Purchase]]:
+        try:
+            # Запрос для получения суммы корзины
+            result = await session.execute(
+                select(func.sum(Product.price).label('total_price'))
+                .join(Product).filter(Purchase.user_id == telegram_id, Purchase.status == "NEW")
+                )
+            total_price = result.scalars().one_or_none()
+            return total_price if total_price is not None else 0
+        except SQLAlchemyError as e:
+            logger.error(f"Ошибка при получении суммы заказа: {e}")
+            raise
         
     @classmethod
     async def get_full_summ(cls, session: AsyncSession) -> int:
@@ -194,22 +207,6 @@ class UserDAO(BaseDAO[User]):
             # Обработка ошибок при работе с базой данных
             print(f"Ошибка при получении информации о покупках пользователя: {e}")
             return None
-    
-    
-        
-    @classmethod
-    async def get_total_cart(cls, session: AsyncSession, telegram_id: int) -> Optional[List[Purchase]]:
-        try:
-            # Запрос для получения суммы корзины
-            result = await session.execute(
-                select(func.sum(Product.price).label('total_price'))
-                .join(Purchase).join(User).filter(User.telegram_id == telegram_id)
-                )
-            total_price = result.scalars().one_or_none()
-            return total_price if total_price is not None else 0
-        except SQLAlchemyError as e:
-            logger.error(f"Ошибка при получении суммы заказа: {e}")
-            raise
 
                 
     @classmethod

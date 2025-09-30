@@ -117,7 +117,7 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
 async def edit_cart(call: CallbackQuery, session_without_commit: AsyncSession):
     await call.answer('Режим редактирования корзины')
 
-    purchases = await UserDAO.get_cart(session=session_without_commit, telegram_id=call.from_user.id)
+    purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id)
     await call.message.edit_text(
         text="Выберите товар для удаления:",
         reply_markup=delete_kb(purchases))
@@ -167,7 +167,7 @@ async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
     await call.answer("Оплата наличными. \nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
     await page_home(call)
 
-    total = await UserDAO.get_total_cart(session=session_without_commit, telegram_id=call.from_user.id)
+    total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=call.from_user.id)
     purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id)
     text=''
     for purchase in purchases:
