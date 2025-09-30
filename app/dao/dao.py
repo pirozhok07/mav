@@ -133,7 +133,7 @@ class PurchaseDao(BaseDAO[Purchase]):
     async def change_status (cls, session: AsyncSession, purchase_id: int):
         try:
             # Запрос для уменьшения кол-во продукта
-            purchase = session.get(Purchase, purchase_id)
+            purchase = await session.get(Purchase, purchase_id)
             if purchase:
                 setattr(purchase, 'status', "CONFIRM")
         except SQLAlchemyError as e:
