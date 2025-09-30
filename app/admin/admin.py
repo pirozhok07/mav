@@ -7,7 +7,7 @@ from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 from config import settings, bot
 from dao.dao import UserDAO, ProductDao, CategoryDao, PurchaseDao
-from admin.kbs import admin_kb, admin_kb_back, product_management_kb, cancel_kb_inline, catalog_admin_kb, \
+from admin.kbs import admin_delivery_kb, admin_kb, admin_kb_back, product_management_kb, cancel_kb_inline, catalog_admin_kb, \
     admin_send_file_kb, admin_confirm_kb, dell_product_kb
 from admin.schemas import ProductModel, ProductIDModel
 from admin.utils import process_dell_text_msg
@@ -177,10 +177,25 @@ async def accept_order(call: CallbackQuery, session_with_commit: AsyncSession):
     await call.message.answer(text="Заказ подтвержден")
 
 @admin_router.callback_query(F.data.startswith("delivery"), F.from_user.id.in_(settings.ADMIN_IDS))
-async def show_delivery(call: CallbackQuery, session_with_commit: AsyncSession):
-    users = await PurchaseDao.get_user_today(session=session_with_commit)
+async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSession):
+    users = await PurchaseDao.get_user_today(session=session_without_commit)
     
     for user in users:
+        text = ""
         logger.error(user)
-        # purchases = await PurchaseDao.get_delivery(session=session_with_commit)
-     
+        purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=user)
+        for purchase in purchases:
+            text += f"{purchase.product.name}\n"
+        user_info = f"@{user.username}" if user.username else f"c ID {user.telegram_id}"
+        total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=user)
+        try:
+            await bot.send_message(
+                text=(
+                    f"💲 Пользователь {user_info} оформил заказ\n"
+                    f"-------------------------------------------"
+                    f"{text}"
+                    f"за <b>{total} ₽</b> Оплата переводом."
+                ), reply_markup=admin_delivery_kb(user)
+            )
+        except Exception as e:
+            logger.error(f"Ошибка при отправке уведомления администраторам: {e}") 

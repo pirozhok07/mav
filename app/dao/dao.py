@@ -157,7 +157,8 @@ class PurchaseDao(BaseDAO[Purchase]):
         try:
             # Запрос для получения доставок сегодня
             result = await session.execute(
-                select(Purchase.user_id)
+                select(User)
+                .join(Purchase)
                 .filter(Purchase.status == "NEW")
                 .order_by(Purchase.user_id)
                 .group_by(Purchase.user_id)
