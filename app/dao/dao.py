@@ -143,7 +143,7 @@ class PurchaseDao(BaseDAO[Purchase]):
             # Запрос для получения доставок сегодня
             result = await session.execute(
                 select(Purchase)
-                .join(Purchase).filter(Purchase.status == "NEW")
+                .filter(Purchase.status == "NEW")
                 .order_by(Purchase.user_id)
                 )
             total_price = result.scalars().one_or_none()
