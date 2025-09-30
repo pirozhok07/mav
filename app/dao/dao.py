@@ -134,6 +134,7 @@ class PurchaseDao(BaseDAO[Purchase]):
         try:
             # Запрос для уменьшения кол-во продукта
             purchase = session.get(Purchase, purchase_id)
+            logger.error(purchase)
             if purchase:
                 purchase.status = "CONFIRM"
         except SQLAlchemyError as e:
