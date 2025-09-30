@@ -145,7 +145,21 @@ class PurchaseDao(BaseDAO[Purchase]):
                 select(Purchase)
                 .filter(Purchase.status == "NEW")
                 .order_by(Purchase.user_id)
-                .group_by(Purchase.user_id)
+                )
+            total_price = result.scalars().all()
+            return total_price if total_price is not None else 0
+        except SQLAlchemyError as e:
+            logger.error(f"Ошибка при получении суммы заказа: {e}")
+            raise
+
+    @classmethod
+    async def get_user_today(cls, session: AsyncSession) -> Optional[List[Purchase]]:
+        try:
+            # Запрос для получения доставок сегодня
+            result = await session.execute(
+                select(Purchase.user_id)
+                .filter(Purchase.status == "NEW")
+                .order_by(Purchase.user_id)
                 )
             total_price = result.scalars().all()
             return total_price if total_price is not None else 0
