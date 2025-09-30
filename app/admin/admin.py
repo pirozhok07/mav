@@ -182,12 +182,12 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
     
     for user in users:
         text = ""
-        purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=user.id)
+        purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=user.telegram_id)
+        logger.error(purchases)
         for purchase in purchases:
-            logger.error(purchase)
             text += f"{purchase.product.name}\n"
         user_info = f"@{user.username}" if user.username else f"c ID {user.telegram_id}"
-        total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=user.id)
+        total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=user.telegram_id)
         try:
             await bot.send_message(
                 chat_id=call.from_user.id,
@@ -196,7 +196,7 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
                     f"-------------------------------------------"
                     f"{text}"
                     f"за <b>{total} ₽</b> Оплата переводом."
-                ), reply_markup=admin_delivery_kb(user.id)
+                ), reply_markup=admin_delivery_kb(user.telegram_id)
             )
         except Exception as e:
             logger.error(f"Ошибка при отправке уведомления администраторам: {e}") 
