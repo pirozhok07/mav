@@ -110,6 +110,8 @@ class PurchaseDao(BaseDAO[Purchase]):
             # Запрос для получения пользователя с его покупками и связанными продуктами
             result = await session.execute(
                 select(Purchase)
+                .options(selectinload(Purchase.product))
+                .options(selectinload(Purchase.taste))
                 .filter(Purchase.user_id == telegram_id, Purchase.status == "NEW")
                 )
             purchases = result.scalars().all() 
