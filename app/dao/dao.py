@@ -138,7 +138,7 @@ class PurchaseDao(BaseDAO[Purchase]):
             raise
 
     @classmethod
-    async def get_delivery(cls, session: AsyncSession, telegram_id: int) -> Optional[List[Purchase]]:
+    async def get_delivery(cls, session: AsyncSession) -> Optional[List[Purchase]]:
         try:
             # Запрос для получения доставок сегодня
             result = await session.execute(
