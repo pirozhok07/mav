@@ -63,22 +63,7 @@ class ProductDao(BaseDAO[Product]):
             print(f"Ошибка при получении корзины: {e}")
             return None
         
-    @classmethod
-    async def get_purchases(cls, session: AsyncSession, telegram_id: int) -> Optional[List[Purchase]]:
-        try:
-            # Запрос для получения пользователя с его покупками и связанными продуктами
-            result = await session.execute(
-                select(Purchase)
-                .filter(Purchase.user_id == telegram_id, Purchase.status == "NEW")
-                )
-            purchases = result.scalar_one_or_none() 
-            if purchases is None:
-                return None 
-            return purchases 
-        except SQLAlchemyError as e:
-            # Обработка ошибок при работе с базой данных
-            print(f"Ошибка при получении информации о покупках пользователя: {e}")
-            return None
+
         
 class TasteDao(BaseDAO[Taste]):
     model = Taste
@@ -119,6 +104,23 @@ class TasteDao(BaseDAO[Taste]):
 class PurchaseDao(BaseDAO[Purchase]):
     model = Purchase
 
+    @classmethod
+    async def get_purchases(cls, session: AsyncSession, telegram_id: int) -> Optional[List[Purchase]]:
+        try:
+            # Запрос для получения пользователя с его покупками и связанными продуктами
+            result = await session.execute(
+                select(Purchase)
+                .filter(Purchase.user_id == telegram_id, Purchase.status == "NEW")
+                )
+            purchases = result.scalar_one_or_none() 
+            if purchases is None:
+                return None 
+            return purchases 
+        except SQLAlchemyError as e:
+            # Обработка ошибок при работе с базой данных
+            print(f"Ошибка при получении информации о покупках пользователя: {e}")
+            return None
+        
     @classmethod
     async def get_full_summ(cls, session: AsyncSession) -> int:
         """Получить общую сумму покупок."""

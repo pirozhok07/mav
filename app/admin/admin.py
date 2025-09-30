@@ -166,7 +166,6 @@ async def admin_process_confirm_add(call: CallbackQuery, state: FSMContext, sess
     await bot.delete_message(chat_id=call.from_user.id, message_id=product_data["last_msg_id"])
     del product_data["last_msg_id"]
     await ProductDao.add(session=session_with_commit, values=ProductModel(**product_data))
-    await call.message.answer(text="Товар успешно добавлен в базу данных!", reply_markup=admin_kb())
 
 @admin_router.callback_query(F.data.startswith("accept_order_"), F.from_user.id.in_(settings.ADMIN_IDS))
 async def accept_order(call: CallbackQuery, session_with_commit: AsyncSession):
@@ -174,3 +173,4 @@ async def accept_order(call: CallbackQuery, session_with_commit: AsyncSession):
     purchases = await PurchaseDao.get_purchases(session=session_with_commit, telegram_id=user_id)
     for purchase in purchases:
         await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id)
+    await call.message.answer(text="Заказ подтвержден")
