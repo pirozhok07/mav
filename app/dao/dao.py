@@ -143,9 +143,8 @@ class PurchaseDao(BaseDAO[Purchase]):
             # Запрос для получения доставок сегодня
             result = await session.execute(
                 select(Purchase)
-                .join(Purchase).filter( Purchase.status == "NEW")
-                .group_by(Purchase.user_id)
-                )
+                .join(Purchase).filter(Purchase.status == "NEW")
+                ).group_by(Purchase.user_id)
             total_price = result.scalars().one_or_none()
             return total_price if total_price is not None else 0
         except SQLAlchemyError as e:
