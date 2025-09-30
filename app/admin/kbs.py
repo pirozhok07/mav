@@ -8,15 +8,7 @@ def catalog_admin_kb(catalog_data: List[Category]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     for category in catalog_data:
         kb.button(text=category.category_name, callback_data=f"add_category_{category.id}")
-    kb.button(text="Отмена", callback_data="admin_panel")
-    kb.adjust(2)
-    return kb.as_markup()
-
-
-def admin_send_file_kb() -> InlineKeyboardMarkup:
-    kb = InlineKeyboardBuilder()
-    kb.button(text="Без файла", callback_data="without_file")
-    kb.button(text="Отмена", callback_data="admin_panel")
+    kb.button(text="❌ Отмена", callback_data="admin_panel")
     kb.adjust(2)
     return kb.as_markup()
 
@@ -25,7 +17,7 @@ def admin_kb() -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     kb.button(text="📊 Статистика", callback_data="statistic")
     kb.button(text="🛍️ Управлять товарами", callback_data="process_products")
-    kb.button(text="Доставки сегодня", callback_data="delivery")
+    kb.button(text="✅ Доставки сегодня", callback_data="delivery")
     kb.button(text="🏠 На главную", callback_data="home")
     kb.adjust(2)
     return kb.as_markup()
@@ -74,12 +66,12 @@ def admin_confirm_kb() -> InlineKeyboardMarkup:
 
 def admin_accept_kb(user_id: int) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    kb.button(text="Подтвердить", callback_data=f"accept_order_{user_id}")
+    kb.button(text="✔ Подтвердить", callback_data=f"accept_order_{user_id}")
     kb.adjust(1)
     return kb.as_markup()
 
 def admin_delivery_kb(user_id: int) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    kb.button(text="Доставлен", callback_data=f"deliver_order_{user_id}")
+    kb.button(text="✔ Доставлен", callback_data=f"deliver_order_{user_id}")
     kb.adjust(1)
     return kb.as_markup()
