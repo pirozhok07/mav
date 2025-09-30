@@ -145,6 +145,7 @@ class PurchaseDao(BaseDAO[Purchase]):
                 select(Purchase)
                 .filter(Purchase.status == "NEW")
                 .order_by(Purchase.user_id)
+                .group_by(Purchase.user_id)
                 )
             total_price = result.scalars().all()
             return total_price if total_price is not None else 0
