@@ -202,8 +202,8 @@ class UserDAO(BaseDAO[User]):
                 .options(selectinload(User.purchases).selectinload(Purchase.taste))
                 .filter(User.telegram_id == telegram_id, Purchase.status == 'NEW')
                 )
-            user = result.scalars().all()
-            # logger.error(user)
+            user = result.scalar_one_or_none() 
+            # logger.error(user)scalar_one_or_none() 
             if user is None:
                 return None 
             return user.purchases
