@@ -146,7 +146,7 @@ class PurchaseDao(BaseDAO[Purchase]):
                 .filter(Purchase.status == "NEW")
                 .order_by(Purchase.user_id)
                 )
-            total_price = result.scalars().one_or_none()
+            total_price = result.scalars().all()
             return total_price if total_price is not None else 0
         except SQLAlchemyError as e:
             logger.error(f"Ошибка при получении суммы заказа: {e}")
