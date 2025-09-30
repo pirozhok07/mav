@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from config import settings, bot
 from dao.dao import UserDAO, ProductDao, CategoryDao, PurchaseDao
 from admin.kbs import admin_delivery_kb, admin_kb, admin_kb_back, product_management_kb, cancel_kb_inline, catalog_admin_kb, \
-    admin_send_file_kb, admin_confirm_kb, dell_product_kb
+    admin_confirm_kb, dell_product_kb
 from admin.schemas import ProductModel, ProductIDModel
 from admin.utils import process_dell_text_msg
 
