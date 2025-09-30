@@ -168,10 +168,9 @@ async def admin_process_confirm_add(call: CallbackQuery, state: FSMContext, sess
     await ProductDao.add(session=session_with_commit, values=ProductModel(**product_data))
     await call.message.answer(text="Товар успешно добавлен в базу данных!", reply_markup=admin_kb())
 
-@admin_router.callback_query(F.data == "save_in_file", F.from_user.id.in_(settings.ADMIN_IDS))
-async def admin_save_in_file(call: CallbackQuery, session_without_commit: AsyncSession):
-    await CategoryDao.save_all(session=session_without_commit)
-
-@admin_router.callback_query(F.data == "accept_order", F.from_user.id.in_(settings.ADMIN_IDS))
-async def accept_order(call: CallbackQuery, session_without_commit: AsyncSession):
-    await CategoryDao.save_all(session=session_without_commit)
+@admin_router.callback_query(F.data.startswith("accept_order_"), F.from_user.id.in_(settings.ADMIN_IDS))
+async def accept_order(call: CallbackQuery, session_with_commit: AsyncSession):
+    user_id = int(call.data.split("_")[-1])
+    purchases = await PurchaseDao.get_purchases(session=session_with_commit, telegram_id=user_id)
+    for purchase in purchases:
+        await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id)
