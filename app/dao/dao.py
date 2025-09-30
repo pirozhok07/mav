@@ -233,10 +233,11 @@ class UserDAO(BaseDAO[User]):
                 )
                 .filter(User.telegram_id == telegram_id)
                 )
-            user = result.scalar_one_or_none() 
+            user = result.scalar_one_or_none()
+            logger.error(user) 
             if user is None:
                 return None 
-            return user.purchase 
+            return user.purchases 
         except SQLAlchemyError as e:
             # Обработка ошибок при работе с базой данных
             print(f"Ошибка при получении информации о покупках пользователя: {e}")
