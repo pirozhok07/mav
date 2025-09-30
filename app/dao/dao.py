@@ -129,7 +129,6 @@ class PurchaseDao(BaseDAO[Purchase]):
             # Запрос для получения суммы корзины
             result = await session.execute(
                 select(func.sum(Product.price).label('total_price'))
-                .options(selectinload(Purchase.product))
                 .filter(Purchase.user_id == telegram_id, Purchase.status == "NEW")
                 )
             total_price = result.scalars().one_or_none()
