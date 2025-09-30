@@ -171,9 +171,8 @@ async def admin_process_confirm_add(call: CallbackQuery, state: FSMContext, sess
 async def accept_order(call: CallbackQuery, session_with_commit: AsyncSession):
     user_id = int(call.data.split("_")[-1])
     purchases = await PurchaseDao.get_purchases(session=session_with_commit, telegram_id=user_id)
-    logger.error(purchases)
     for purchase in purchases:
-        await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id)
+        await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id, status = "CONFIRM")
     await call.message.answer(text="Заказ подтвержден")
 
 @admin_router.callback_query(F.data.startswith("delivery"), F.from_user.id.in_(settings.ADMIN_IDS))
@@ -183,7 +182,6 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
     for user in users:
         text = ""
         purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=user.telegram_id)
-        logger.error(purchases)
         for purchase in purchases:
             text += f"{purchase.product.name}\n"
         user_info = f"@{user.username}" if user.username else f"c ID {user.telegram_id}"
@@ -200,3 +198,11 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
             )
         except Exception as e:
             logger.error(f"Ошибка при отправке уведомления администраторам: {e}") 
+
+@admin_router.callback_query(F.data.startswith("deliver_order_"), F.from_user.id.in_(settings.ADMIN_IDS))
+async def deliver_order(call: CallbackQuery, session_with_commit: AsyncSession):
+    user_id = int(call.data.split("_")[-1])
+    purchases = await PurchaseDao.get_purchases(session=session_with_commit, telegram_id=user_id)
+    for purchase in purchases:
+        await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id, status = "DONE")
+    await call.message.answer(text="Заказ подтвержден")

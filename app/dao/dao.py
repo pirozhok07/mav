@@ -159,7 +159,7 @@ class PurchaseDao(BaseDAO[Purchase]):
             result = await session.execute(
                 select(User)
                 .join(Purchase)
-                .filter(Purchase.status == "NEW")
+                .filter(Purchase.status == "CONFIRM")
                 .order_by(Purchase.user_id)
                 .group_by(Purchase.user_id)
                 )
@@ -178,12 +178,12 @@ class PurchaseDao(BaseDAO[Purchase]):
         return total_price if total_price is not None else 0
     
     @classmethod
-    async def change_status (cls, session: AsyncSession, purchase_id: int):
+    async def change_status (cls, session: AsyncSession, purchase_id: int, status:str):
         try:
             # Запрос для уменьшения кол-во продукта
             purchase = await session.get(Purchase, purchase_id)
             if purchase:
-                setattr(purchase, 'status', "CONFIRM")
+                setattr(purchase, 'status', status)
         except SQLAlchemyError as e:
             # Обработка ошибок при работе с базой данных
             print(f"Ошибка при получении корзины: {e}")
