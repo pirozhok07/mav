@@ -2593,3 +2593,142 @@ WHERE users.telegram_id = ?]
 2025-09-30 at 10:18:44 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
 2025-09-30 at 10:18:44 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
 2025-09-30 at 10:18:51 | ERROR | Бот остановлен!
+2025-09-30 at 10:23:12 | INFO | Бот успешно запущен.
+2025-09-30 at 10:23:24 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 10:23:24 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 10:23:27 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-09-30 at 10:23:27 | INFO | Найдено 8 записей.
+2025-09-30 at 10:23:29 | INFO | Добавление записи Purchase с параметрами: {'user_id': 1330085937, 'product_id': 94, 'taste_id': 0, 'status': 'NEW'}
+2025-09-30 at 10:23:29 | INFO | Запись Purchase успешно добавлена.
+2025-09-30 at 10:23:29 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-09-30 at 10:23:29 | INFO | Найдено 8 записей.
+2025-09-30 at 11:04:07 | ERROR | [<Purchase(id=1, user_id=1330085937, product_id=52, taste_id=0, date=2025-09-30 06:31:37)>, <Purchase(id=2, user_id=1330085937, product_id=132, taste_id=0, date=2025-09-30 06:31:40)>, <Purchase(id=3, user_id=1330085937, product_id=135, taste_id=0, date=2025-09-30 06:46:17)>, <Purchase(id=4, user_id=1330085937, product_id=94, taste_id=0, date=2025-09-30 07:23:29)>]
+2025-09-30 at 11:04:08 | INFO | Удаление записей Purchase по фильтру: {'id': 1}
+2025-09-30 at 11:04:08 | INFO | Удалено 1 записей.
+2025-09-30 at 11:04:08 | ERROR | [<Purchase(id=2, user_id=1330085937, product_id=132, taste_id=0, date=2025-09-30 06:31:40)>, <Purchase(id=3, user_id=1330085937, product_id=135, taste_id=0, date=2025-09-30 06:46:17)>, <Purchase(id=4, user_id=1330085937, product_id=94, taste_id=0, date=2025-09-30 07:23:29)>]
+2025-09-30 at 11:04:09 | INFO | Удаление записей Purchase по фильтру: {'id': 2}
+2025-09-30 at 11:04:09 | INFO | Удалено 1 записей.
+2025-09-30 at 11:04:09 | ERROR | [<Purchase(id=3, user_id=1330085937, product_id=135, taste_id=0, date=2025-09-30 06:46:17)>, <Purchase(id=4, user_id=1330085937, product_id=94, taste_id=0, date=2025-09-30 07:23:29)>]
+2025-09-30 at 11:04:11 | INFO | Удаление записей Purchase по фильтру: {'id': 3}
+2025-09-30 at 11:04:11 | INFO | Удалено 1 записей.
+2025-09-30 at 11:04:11 | ERROR | [<Purchase(id=4, user_id=1330085937, product_id=94, taste_id=0, date=2025-09-30 07:23:29)>]
+2025-09-30 at 11:04:12 | INFO | Удаление записей Purchase по фильтру: {'id': 4}
+2025-09-30 at 11:04:12 | INFO | Удалено 1 записей.
+2025-09-30 at 11:04:12 | ERROR | None
+2025-09-30 at 11:04:15 | INFO | Удаление записей Purchase по фильтру: {'id': 4}
+2025-09-30 at 11:04:15 | INFO | Удалено 1 записей.
+2025-09-30 at 11:04:15 | ERROR | None
+2025-09-30 at 11:04:20 | ERROR | [<Purchase(id=4, user_id=1330085937, product_id=94, taste_id=0, date=2025-09-30 07:23:29)>]
+2025-09-30 at 11:04:21 | INFO | Удаление записей Purchase по фильтру: {'id': 4}
+2025-09-30 at 11:04:21 | INFO | Удалено 1 записей.
+2025-09-30 at 11:04:21 | ERROR | None
+2025-09-30 at 11:04:45 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 11:04:45 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 11:04:58 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 11:04:58 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 11:05:04 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-09-30 at 11:05:04 | INFO | Найдено 8 записей.
+2025-09-30 at 11:05:31 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 11:05:31 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 11:05:33 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-09-30 at 11:05:33 | INFO | Найдено 8 записей.
+2025-09-30 at 11:05:53 | INFO | Добавление записи Purchase с параметрами: {'user_id': 1330085937, 'product_id': 51, 'taste_id': 0, 'status': 'NEW'}
+2025-09-30 at 11:05:53 | INFO | Запись Purchase успешно добавлена.
+2025-09-30 at 11:05:53 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-09-30 at 11:05:53 | INFO | Найдено 8 записей.
+2025-09-30 at 11:06:02 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-09-30 at 11:06:02 | INFO | Найдено 8 записей.
+2025-09-30 at 11:06:05 | INFO | Добавление записи Purchase с параметрами: {'user_id': 1330085937, 'product_id': 50, 'taste_id': 0, 'status': 'NEW'}
+2025-09-30 at 11:06:05 | INFO | Запись Purchase успешно добавлена.
+2025-09-30 at 11:06:05 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-09-30 at 11:06:05 | INFO | Найдено 8 записей.
+2025-09-30 at 11:07:26 | ERROR | Бот остановлен!
+2025-09-30 at 11:07:41 | INFO | Бот успешно запущен.
+2025-09-30 at 11:07:43 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-09-30 at 11:07:44 | INFO | Найдено 8 записей.
+2025-09-30 at 11:07:45 | INFO | Добавление записи Purchase с параметрами: {'user_id': 1330085937, 'product_id': 95, 'taste_id': 0, 'status': 'NEW'}
+2025-09-30 at 11:07:45 | INFO | Запись Purchase успешно добавлена.
+2025-09-30 at 11:07:45 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-09-30 at 11:07:45 | INFO | Найдено 8 записей.
+2025-09-30 at 11:12:11 | ERROR | Бот остановлен!
+2025-09-30 at 11:12:18 | INFO | Бот успешно запущен.
+2025-09-30 at 11:12:27 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 11:12:27 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 11:12:30 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-09-30 at 11:12:30 | INFO | Найдено 8 записей.
+2025-09-30 at 11:12:32 | INFO | Добавление записи Purchase с параметрами: {'user_id': 1330085937, 'product_id': 127, 'taste_id': 0, 'status': 'NEW'}
+2025-09-30 at 11:12:32 | INFO | Запись Purchase успешно добавлена.
+2025-09-30 at 11:12:32 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-09-30 at 11:12:32 | INFO | Найдено 8 записей.
+2025-09-30 at 11:16:01 | ERROR | Бот остановлен!
+2025-09-30 at 11:16:07 | INFO | Бот успешно запущен.
+2025-09-30 at 11:16:11 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-09-30 at 11:16:11 | INFO | Найдено 8 записей.
+2025-09-30 at 11:16:14 | INFO | Добавление записи Purchase с параметрами: {'user_id': 1330085937, 'product_id': 97, 'taste_id': 0, 'status': 'NEW'}
+2025-09-30 at 11:16:14 | INFO | Запись Purchase успешно добавлена.
+2025-09-30 at 11:16:14 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-09-30 at 11:16:14 | INFO | Найдено 8 записей.
+2025-09-30 at 11:17:56 | ERROR | Бот остановлен!
+2025-09-30 at 11:18:02 | INFO | Бот успешно запущен.
+2025-09-30 at 11:18:10 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-09-30 at 11:18:10 | INFO | Найдено 8 записей.
+2025-09-30 at 11:18:12 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-09-30 at 11:18:12 | INFO | Найдено 8 записей.
+2025-09-30 at 11:19:52 | ERROR | Бот остановлен!
+2025-09-30 at 11:19:58 | INFO | Бот успешно запущен.
+2025-09-30 at 12:47:58 | ERROR | Бот остановлен!
+2025-09-30 at 12:48:05 | INFO | Бот успешно запущен.
+2025-09-30 at 12:49:40 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 12:49:40 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 12:54:02 | ERROR | Бот остановлен!
+2025-09-30 at 12:54:08 | INFO | Бот успешно запущен.
+2025-09-30 at 12:54:09 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 12:54:10 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 12:54:12 | ERROR | [<Purchase(id=4, user_id=1330085937, product_id=94, taste_id=0, date=2025-09-30 07:23:29)>, <Purchase(id=5, user_id=1330085937, product_id=51, taste_id=0, date=2025-09-30 08:05:53)>, <Purchase(id=6, user_id=1330085937, product_id=50, taste_id=0, date=2025-09-30 08:06:05)>, <Purchase(id=7, user_id=1330085937, product_id=95, taste_id=0, date=2025-09-30 08:07:45)>, <Purchase(id=8, user_id=1330085937, product_id=127, taste_id=0, date=2025-09-30 08:12:32)>, <Purchase(id=9, user_id=1330085937, product_id=97, taste_id=0, date=2025-09-30 08:16:14)>]
+2025-09-30 at 12:54:14 | INFO | Удаление записей Purchase по фильтру: {'id': 6}
+2025-09-30 at 12:54:14 | INFO | Удалено 1 записей.
+2025-09-30 at 12:54:14 | ERROR | [<Purchase(id=4, user_id=1330085937, product_id=94, taste_id=0, date=2025-09-30 07:23:29)>, <Purchase(id=5, user_id=1330085937, product_id=51, taste_id=0, date=2025-09-30 08:05:53)>, <Purchase(id=7, user_id=1330085937, product_id=95, taste_id=0, date=2025-09-30 08:07:45)>, <Purchase(id=8, user_id=1330085937, product_id=127, taste_id=0, date=2025-09-30 08:12:32)>, <Purchase(id=9, user_id=1330085937, product_id=97, taste_id=0, date=2025-09-30 08:16:14)>]
+2025-09-30 at 12:54:17 | INFO | Удаление записей Purchase по фильтру: {'id': 9}
+2025-09-30 at 12:54:17 | INFO | Удалено 1 записей.
+2025-09-30 at 12:54:17 | ERROR | [<Purchase(id=4, user_id=1330085937, product_id=94, taste_id=0, date=2025-09-30 07:23:29)>, <Purchase(id=5, user_id=1330085937, product_id=51, taste_id=0, date=2025-09-30 08:05:53)>, <Purchase(id=7, user_id=1330085937, product_id=95, taste_id=0, date=2025-09-30 08:07:45)>, <Purchase(id=8, user_id=1330085937, product_id=127, taste_id=0, date=2025-09-30 08:12:32)>]
+2025-09-30 at 12:54:19 | INFO | Удаление записей Purchase по фильтру: {'id': 8}
+2025-09-30 at 12:54:19 | INFO | Удалено 1 записей.
+2025-09-30 at 12:54:19 | ERROR | [<Purchase(id=4, user_id=1330085937, product_id=94, taste_id=0, date=2025-09-30 07:23:29)>, <Purchase(id=5, user_id=1330085937, product_id=51, taste_id=0, date=2025-09-30 08:05:53)>, <Purchase(id=7, user_id=1330085937, product_id=95, taste_id=0, date=2025-09-30 08:07:45)>]
+2025-09-30 at 12:54:20 | INFO | Удаление записей Purchase по фильтру: {'id': 7}
+2025-09-30 at 12:54:20 | INFO | Удалено 1 записей.
+2025-09-30 at 12:54:20 | ERROR | [<Purchase(id=4, user_id=1330085937, product_id=94, taste_id=0, date=2025-09-30 07:23:29)>, <Purchase(id=5, user_id=1330085937, product_id=51, taste_id=0, date=2025-09-30 08:05:53)>]
+2025-09-30 at 12:54:22 | INFO | Удаление записей Purchase по фильтру: {'id': 5}
+2025-09-30 at 12:54:22 | INFO | Удалено 1 записей.
+2025-09-30 at 12:54:22 | ERROR | [<Purchase(id=4, user_id=1330085937, product_id=94, taste_id=0, date=2025-09-30 07:23:29)>]
+2025-09-30 at 12:54:27 | INFO | Удаление записей Purchase по фильтру: {'id': 4}
+2025-09-30 at 12:54:27 | INFO | Удалено 1 записей.
+2025-09-30 at 12:54:27 | ERROR | []
+2025-09-30 at 12:54:34 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-09-30 at 12:54:34 | INFO | Найдено 8 записей.
+2025-09-30 at 12:54:36 | INFO | Добавление записи Purchase с параметрами: {'user_id': 1330085937, 'product_id': 90, 'taste_id': 0, 'status': 'NEW'}
+2025-09-30 at 12:54:36 | INFO | Запись Purchase успешно добавлена.
+2025-09-30 at 12:54:36 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-09-30 at 12:54:36 | INFO | Найдено 8 записей.
+2025-09-30 at 12:56:12 | ERROR | Бот остановлен!
+2025-09-30 at 12:56:20 | INFO | Бот успешно запущен.
+2025-09-30 at 12:56:22 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 12:56:22 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 12:56:29 | ERROR | Ошибка при получении суммы заказа: Don't know how to join to <Mapper at 0x7f65aef846a0; Product>. Please use the .select_from() method to establish an explicit left side, as well as providing an explicit ON clause if not present already to help resolve the ambiguity.
+2025-09-30 at 12:56:30 | ERROR | Ошибка при получении суммы заказа: Don't know how to join to <Mapper at 0x7f65aef846a0; Product>. Please use the .select_from() method to establish an explicit left side, as well as providing an explicit ON clause if not present already to help resolve the ambiguity.
+2025-09-30 at 12:57:44 | ERROR | Бот остановлен!
+2025-09-30 at 12:59:12 | INFO | Бот успешно запущен.
+2025-09-30 at 12:59:14 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 12:59:14 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 12:59:22 | ERROR | Ошибка при получении суммы заказа: Query has only expression-based entities; attribute loader options for Mapper[Purchase(purchases)] can't be applied here.
+2025-09-30 at 12:59:34 | ERROR | Ошибка при получении суммы заказа: Query has only expression-based entities; attribute loader options for Mapper[Purchase(purchases)] can't be applied here.
+2025-09-30 at 12:59:45 | ERROR | Бот остановлен!
+2025-09-30 at 13:00:30 | INFO | Бот успешно запущен.
+2025-09-30 at 13:00:32 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 13:00:32 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 13:01:12 | ERROR | Бот остановлен!
+2025-09-30 at 13:01:19 | INFO | Бот успешно запущен.
+2025-09-30 at 13:07:03 | ERROR | Бот остановлен!
+2025-09-30 at 13:07:16 | INFO | Бот успешно запущен.
+2025-09-30 at 13:07:25 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 13:07:25 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-09-30 at 13:07:43 | ERROR | Бот остановлен!
