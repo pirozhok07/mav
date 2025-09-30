@@ -190,7 +190,7 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
         total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=user.id)
         try:
             await bot.send_message(
-                chat_id=call.id,
+                chat_id=call.from_user.id,
                 text=(
                     f"💲 Пользователь {user_info} оформил заказ\n"
                     f"-------------------------------------------"
