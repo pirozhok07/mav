@@ -3,7 +3,7 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
-from dao.dao import UserDAO, ProductDao, TasteDao
+from dao.dao import PurchaseDao, UserDAO, ProductDao, TasteDao
 from user.kbs import cart_kb, main_user_kb, purchases_kb
 from user.schemas import TasteIDModel, TelegramIDModel, UserModel, CartModel
 
@@ -145,7 +145,7 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
     # cart = await ProductDao.find_all(session=session_without_commit,
                                                 #   filters=CartModel(id=call.from_user.id))
     # count_products = len(products_category)
-    purchases = await UserDAO.get_cart(session=session_without_commit, telegram_id=call.from_user.id)
+    purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id)
     # logger.error(purchases)
     if not purchases:
         await call.message.edit_text(
