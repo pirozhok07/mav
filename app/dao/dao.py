@@ -112,7 +112,7 @@ class PurchaseDao(BaseDAO[Purchase]):
                 select(Purchase)
                 .filter(Purchase.user_id == telegram_id, Purchase.status == "NEW")
                 )
-            purchases = result.scalar_one_or_none() 
+            purchases = result.scalars().all() 
             if purchases is None:
                 return None 
             return purchases 

@@ -171,6 +171,7 @@ async def admin_process_confirm_add(call: CallbackQuery, state: FSMContext, sess
 async def accept_order(call: CallbackQuery, session_with_commit: AsyncSession):
     user_id = int(call.data.split("_")[-1])
     purchases = await PurchaseDao.get_purchases(session=session_with_commit, telegram_id=user_id)
+    logger.error(purchases)
     for purchase in purchases:
         await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id)
     await call.message.answer(text="Заказ подтвержден")
