@@ -199,8 +199,10 @@ class UserDAO(BaseDAO[User]):
             result = await session.execute(
                 select(
                     func.count(Purchase.id).label('total_purchases'),
-                    func.sum(Purchase.price).label('total_amount')
-                ).join(User).filter(User.telegram_id == telegram_id)
+                    func.sum(Product.price).label('total_amount')
+                )
+                .join(User).filter(User.telegram_id == telegram_id)
+                .join(Product).filter(Product.id == Purchase.product_id)
             )
             stats = result.one_or_none()
 
