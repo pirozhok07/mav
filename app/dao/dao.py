@@ -136,6 +136,21 @@ class PurchaseDao(BaseDAO[Purchase]):
         except SQLAlchemyError as e:
             logger.error(f"Ошибка при получении суммы заказа: {e}")
             raise
+
+    @classmethod
+    async def get_delivery(cls, session: AsyncSession, telegram_id: int) -> Optional[List[Purchase]]:
+        try:
+            # Запрос для получения доставок сегодня
+            result = await session.execute(
+                select(Purchase)
+                .join(Purchase).filter( Purchase.status == "NEW")
+                .group_by(Purchase.user_id)
+                )
+            total_price = result.scalars().one_or_none()
+            return total_price if total_price is not None else 0
+        except SQLAlchemyError as e:
+            logger.error(f"Ошибка при получении суммы заказа: {e}")
+            raise
         
     @classmethod
     async def get_full_summ(cls, session: AsyncSession) -> int:

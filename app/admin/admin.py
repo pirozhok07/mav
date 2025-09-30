@@ -175,3 +175,10 @@ async def accept_order(call: CallbackQuery, session_with_commit: AsyncSession):
     for purchase in purchases:
         await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id)
     await call.message.answer(text="Заказ подтвержден")
+
+@admin_router.callback_query(F.data.startswith("delivery"), F.from_user.id.in_(settings.ADMIN_IDS))
+async def show_delivery(call: CallbackQuery, session_with_commit: AsyncSession):
+    user_id = int(call.data.split("_")[-1])
+    purchases = await PurchaseDao.get_delivery(session=session_with_commit, telegram_id=user_id)
+    logger.error(purchases)
+     
