@@ -84,7 +84,6 @@ async def page_user_purchases(call: CallbackQuery, session_without_commit: Async
 
     # Получаем список покупок пользователя
     purchases = await UserDAO.get_purchased_products(session=session_without_commit, telegram_id=call.from_user.id)
-    logger.error(purchases)
     if not purchases:
         await call.message.edit_text(
             text=f"🔍 <b>У вас пока нет покупок.</b>\n\n"
@@ -108,7 +107,7 @@ async def page_user_purchases(call: CallbackQuery, session_without_commit: Async
              product_text += (f"🔹 {product.name} - {product.price} ₽\n")
 
     await call.message.edit_text(
-        text="🙏 Спасибо за доверие!",
+        text=product_text,
         reply_markup=main_user_kb(call.from_user.id)
     )
 
