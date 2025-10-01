@@ -35,6 +35,8 @@ class ItemCartData(BaseModel):
     product_id: int = Field(..., description="ID товара")
     taste_id: int = Field(default=0, description="ID вкуса")
     status: str = Field(..., description="Статус товара")
+    description: str = Field(..., description="Описание товара")
+    adres: str = Field(..., description="Адресс")
 
 class CartModel(BaseModel):
     id:int
