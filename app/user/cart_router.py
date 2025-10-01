@@ -156,6 +156,7 @@ async def do_order(call: CallbackQuery, state: FSMContext):
     await call.answer("Оформление заказа")
     # await call.message.answer(f"Заказ будет доставлен ориентировочно сегодня после 19:30")
     msg = await call.message.edit_text(text="Для начала укажите адресс доставки: ", reply_markup=cancele_kb())
+    await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(DoOrder.adress)
     
 @cart_router.message(F.text, DoOrder.adress )
