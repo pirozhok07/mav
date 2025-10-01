@@ -194,7 +194,7 @@ async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
                     f"{text}"
                     f"за <b>{total} ₽</b> Оплата наличными.\n"
                     f"адресс: {purchases[0].adress}\n"
-                ), reply_markup=admin_accept_kb()
+                ), reply_markup=admin_accept_kb(call.from_user.id)
             )
         except Exception as e:
             logger.error(f"Ошибка при отправке уведомления администраторам: {e}")
