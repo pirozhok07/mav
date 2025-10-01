@@ -191,10 +191,11 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
             await bot.send_message(
                 chat_id=call.from_user.id,
                 text=(
-                    f"💲 Пользователь {user_info} оформил заказ\n"
-                    f"-------------------------------------------"
+                    f"💲 Пользователь {user_info}\n"
+                    f"-------------------------------------------\n"
                     f"{text}"
-                    f"за <b>{total} ₽</b> Оплата переводом."
+                    f"за <b>{total} ₽</b> Оплата переводом.\n"
+                    f"адресс: {purchases[0].adress}\n"
                 ), reply_markup=admin_delivery_kb(user.telegram_id)
             )
         except Exception as e:
