@@ -87,9 +87,9 @@ def delete_kb(purchase_data: List[Purchase]) -> InlineKeyboardMarkup:
         product = purchase.product
         if purchase.taste_id != 0:
             taste = purchase.taste
-            kb.button(text=f"{product.name} ({taste.taste_name}) - {product.price}₽", callback_data=f"itemDell_{purchase.id}_{purchase.taste_id}")
+            kb.button(text=f"{product.name} ({taste.taste_name}) - {product.price}₽", callback_data=f"itemDell_{purchase.id}_{purchase.product_id}_{purchase.taste_id}")
         else:
-            kb.button(text=f"{product.name} - {product.price}₽", callback_data=f"itemDell_{purchase.id}_0")
+            kb.button(text=f"{product.name} - {product.price}₽", callback_data=f"itemDell_{purchase.id}_{purchase.product_id}_0")
     kb.button(text="🛍 Назад", callback_data="cart")
     kb.button(text="🏠 На главную", callback_data="home")
     kb.adjust(1)
