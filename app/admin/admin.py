@@ -178,11 +178,9 @@ async def accept_order(call: CallbackQuery, session_with_commit: AsyncSession):
 @admin_router.callback_query(F.data.startswith("delivery"), F.from_user.id.in_(settings.ADMIN_IDS))
 async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSession):
     users = await PurchaseDao.get_user_today(session=session_without_commit)
-    logger.error(users)
     for user in users:
         text = ""
         purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=user.telegram_id)
-        logger.error(purchases)
         for purchase in purchases:
             text += f"{purchase.product.name}\n"
         user_info = f"@{user.username}" if user.username else f"c ID {user.telegram_id}"
