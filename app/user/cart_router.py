@@ -163,7 +163,7 @@ async def do_order(call: CallbackQuery, state: FSMContext):
 async def get_adress(message: Message, state: FSMContext, session_with_commit: AsyncSession):
     await state.update_data(name=message.text)
     adress = await state.get_data()
-    last_msg_id = adress.get('last_msg_id')
+    last_msg_id = state.get('last_msg_id')
     await bot.delete_message(chat_id=message.from_user.id, message_id=last_msg_id)
     purchases = await UserDAO.get_purchased_products(session=session_with_commit, telegram_id=message.from_user.id)
     for purchase in purchases:
