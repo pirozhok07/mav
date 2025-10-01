@@ -154,17 +154,19 @@ async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
 @cart_router.callback_query(F.data == 'do_order')
 async def do_order(call: CallbackQuery, state: FSMContext):
     await call.answer("Оформление заказа")
-    await call.message.answer(f"Заказ будет доставлен ориентировочно сегодня после 19:30")
+    # await call.message.answer(f"Заказ будет доставлен ориентировочно сегодня после 19:30")
     msg = await call.message.edit_text(text="Для начала укажите адресс доставки: ", reply_markup=cancele_kb())
-    await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(DoOrder.adress)
     
-@cart_router.message(F.text, DoOrder.adress, )
-async def get_adress(message: Message, state: FSMContext, session_without_commit: AsyncSession):
+@cart_router.message(F.text, DoOrder.adress )
+async def get_adress(message: Message, state: FSMContext, session_with_commit: AsyncSession):
     await state.update_data(name=message.text)
     adress = await state.get_data()
     last_msg_id = adress.get('last_msg_id')
     await bot.delete_message(chat_id=message.from_user.id, message_id=last_msg_id)
+    purchases = await UserDAO.get_purchased_products(session=session_with_commit, telegram_id=message.from_user.id)
+    for purchase in purchases:
+        await PurchaseDao.set_adress(session_with_commit, purchase.id, adress)
     msg = await message.answer(text="Выберите способ оплаты", reply_markup=order_kb())
     await state.update_data(last_msg_id=msg.message_id)
     
@@ -190,6 +192,7 @@ async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
                     f"-------------------------------------------"
                     f"{text}"
                     f"за <b>{total} ₽</b> Оплата наличными."
+                    f"адресс: {purchases[0].adress}"
                 ), reply_markup=admin_accept_kb()
             )
         except Exception as e:
@@ -215,6 +218,7 @@ async def nenal(call: CallbackQuery, session_without_commit: AsyncSession):
                     f"-------------------------------------------"
                     f"{text}"
                     f"за <b>{total} ₽</b> Оплата переводом."
+                    f"адресс: {purchases[0].adress}"
                 ), reply_markup=admin_accept_kb(call.from_user.id)
             )
         except Exception as e:
