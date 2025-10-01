@@ -52,14 +52,15 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
     _, product_id, taste_id = call.data.split('_')
     user_id = call.from_user.id
     product = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=product_id)
-    logger.error(product)
     descr = product.name
+    logger.error(product.name)
     await ProductDao.update_one_by_id(session=session_with_commit, data_id=product_id, in_cart=True)
     # await ProductDao.edit_quantity_product(session=session_with_commit, product_id=product_id, do_less=True)
     if taste_id != '0':
         await TasteDao.update_one_by_id(session=session_with_commit, data_id=taste_id, in_cart=True)
         taste = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=product_id)
-        descr +=f" ({taste.name})"
+        descr +=f" ({taste.taste_name})"
+        logger.error(taste.taste_name)
     payment_data = {
         'user_id': int(user_id),
         'taste_id': int(taste_id),
