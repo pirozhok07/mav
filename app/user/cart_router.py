@@ -53,7 +53,7 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
     user_id = call.from_user.id
     product = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=product_id)
     descr = product.name
-    logger.error(product.name)
+    logger.error(await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=product_id))
     await ProductDao.update_one_by_id(session=session_with_commit, data_id=product_id, in_cart=True)
     # await ProductDao.edit_quantity_product(session=session_with_commit, product_id=product_id, do_less=True)
     if taste_id != '0':
@@ -66,12 +66,13 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
         'taste_id': int(taste_id),
         'product_id': int(product_id),
         'status': 'NEW',
-        'description': f"{descr} - {product.price}",
+        'description': f"{descr} - {product.price} ₽",
         'adress': 'NEW',
     }
     # logger.error(payment_data)
     # Добавляем информацию о покупке в базу данных
     await PurchaseDao.add(session=session_with_commit, values=ItemCartData(**payment_data))
+    logger.error(await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=product_id))
     await page_catalog(call, session_with_commit)
     # product_data = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=int(product_id))
 
@@ -150,6 +151,7 @@ async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
     await ProductDao.update_one_by_id(session=session_with_commit, data_id=product_id, in_cart=False)
     if taste_id != "0":
         await TasteDao.update_one_by_id(session=session_with_commit, data_id=product_id, in_cart=False)
+    logger.error(await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=product_id))
     await edit_cart(call, session_with_commit)
 
 @cart_router.callback_query(F.data == 'do_order')
