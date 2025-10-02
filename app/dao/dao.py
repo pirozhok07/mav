@@ -105,33 +105,14 @@ class PurchaseDao(BaseDAO[Purchase]):
     model = Purchase
 
     @classmethod
-    async def get_purchases_confirm(cls, session: AsyncSession, telegram_id: int) -> Optional[List[Purchase]]:
+    async def get_purchases(cls, session: AsyncSession, telegram_id: int, isFlag:str) -> Optional[List[Purchase]]:
         try:
             # Запрос для получения пользователя с его покупками и связанными продуктами
             result = await session.execute(
                 select(Purchase)
                 .options(selectinload(Purchase.product))
                 .options(selectinload(Purchase.taste))
-                .filter(Purchase.user_id == telegram_id, Purchase.status == "CONFIRM")
-                )
-            purchases = result.scalars().all() 
-            if purchases is None:
-                return None 
-            return purchases 
-        except SQLAlchemyError as e:
-            # Обработка ошибок при работе с базой данных
-            print(f"Ошибка при получении информации о покупках пользователя: {e}")
-            return None
-            
-    @classmethod
-    async def get_purchases_new(cls, session: AsyncSession, telegram_id: int) -> Optional[List[Purchase]]:
-        try:
-            # Запрос для получения пользователя с его покупками и связанными продуктами
-            result = await session.execute(
-                select(Purchase)
-                .options(selectinload(Purchase.product))
-                .options(selectinload(Purchase.taste))
-                .filter(Purchase.user_id == telegram_id, Purchase.status == "NEW")
+                .filter(Purchase.user_id == telegram_id, Purchase.status == isFlag)
                 )
             purchases = result.scalars().all() 
             if purchases is None:
@@ -143,12 +124,12 @@ class PurchaseDao(BaseDAO[Purchase]):
             return None
         
     @classmethod
-    async def get_total(cls, session: AsyncSession, telegram_id: int) -> Optional[List[Purchase]]:
+    async def get_total(cls, session: AsyncSession, telegram_id: int, isFlag: str) -> Optional[List[Purchase]]:
         try:
             # Запрос для получения суммы корзины
             result = await session.execute(
                 select(func.sum(Product.price).label('total_price'))
-                .join(Purchase).filter(Purchase.user_id == telegram_id, Purchase.status == "CONFIRM")
+                .join(Purchase).filter(Purchase.user_id == telegram_id, Purchase.status == isFlag)
                 )
             total_price = result.scalars().one_or_none()
             return total_price if total_price is not None else 0

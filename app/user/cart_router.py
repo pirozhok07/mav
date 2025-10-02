@@ -177,8 +177,8 @@ async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
     await call.answer("Оплата наличными. \nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
     await page_home(call)
 
-    total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=call.from_user.id)
-    purchases = await PurchaseDao.get_purchases_new(session=session_without_commit, telegram_id=call.from_user.id)
+    total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW")
+    purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW")
     text=''
     for purchase in purchases:
         text += f"{purchase.product.name}\n"
@@ -201,10 +201,10 @@ async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
 
 @cart_router.callback_query(F.data == 'nenal')
 async def nenal(call: CallbackQuery, session_without_commit: AsyncSession):
-    total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=call.from_user.id)
+    total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW")
     await call.answer(f"Оплата переводом.\nСумма к оплате: {total}₽\nРЕКВИЗИТЫ\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
     await page_home(call)
-    purchases = await PurchaseDao.get_purchases_new(session=session_without_commit, telegram_id=call.from_user.id)
+    purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW")
     text=''
     for purchase in purchases:
         text += f"{purchase.product.name}\n"

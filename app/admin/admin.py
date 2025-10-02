@@ -170,7 +170,7 @@ async def admin_process_confirm_add(call: CallbackQuery, state: FSMContext, sess
 @admin_router.callback_query(F.data.startswith("accept_order_"), F.from_user.id.in_(settings.ADMIN_IDS))
 async def accept_order(call: CallbackQuery, session_with_commit: AsyncSession):
     user_id = int(call.data.split("_")[-1])
-    purchases = await PurchaseDao.get_purchases_new(session=session_with_commit, telegram_id=user_id)
+    purchases = await PurchaseDao.get_purchases(session=session_with_commit, telegram_id=user_id, isFlag="NEW")
     for purchase in purchases:
         await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id, status = "CONFIRM")
     await call.message.edit_text(text=f"{call.message.text}\n <b>Подтвержден</b>.")
@@ -180,11 +180,11 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
     users = await PurchaseDao.get_user_today(session=session_without_commit)
     for user in users:
         text = ""
-        purchases = await PurchaseDao.get_purchases_confirm(session=session_without_commit, telegram_id=user.telegram_id)
+        purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=user.telegram_id, isFlag="CONFIRM")
         for purchase in purchases:
             text += f"🔹 {purchase.product.name}\n"
         user_info = f"@{user.username}" if user.username else f"c ID {user.telegram_id}"
-        total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=user.telegram_id)
+        total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=user.telegram_id, isFlag="CONFIRM")
         try:
             await bot.send_message(
                 chat_id=call.from_user.id,

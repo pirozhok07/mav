@@ -119,7 +119,7 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
     # cart = await ProductDao.find_all(session=session_without_commit,
                                                 #   filters=CartModel(id=call.from_user.id))
     # count_products = len(products_category)
-    purchases = await PurchaseDao.get_purchases_new(session=session_without_commit, telegram_id=call.from_user.id)
+    purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW")
     # logger.error(purchases)
     if not purchases:
         await call.message.edit_text(
