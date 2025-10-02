@@ -180,7 +180,7 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
     users = await PurchaseDao.get_user_today(session=session_without_commit)
     for user in users:
         text = ""
-        purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=user.telegram_id)
+        purchases = await PurchaseDao.get_purchases_confirm(session=session_without_commit, telegram_id=user.telegram_id)
         for purchase in purchases:
             text += f"🔹 {purchase.product.name}\n"
         user_info = f"@{user.username}" if user.username else f"c ID {user.telegram_id}"
