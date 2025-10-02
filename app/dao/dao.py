@@ -105,7 +105,7 @@ class PurchaseDao(BaseDAO[Purchase]):
     model = Purchase
 
     @classmethod
-    async def get_purchases(cls, session: AsyncSession, telegram_id: int) -> Optional[List[Purchase]]:
+    async def get_purchases_confirm(cls, session: AsyncSession, telegram_id: int) -> Optional[List[Purchase]]:
         try:
             # Запрос для получения пользователя с его покупками и связанными продуктами
             result = await session.execute(
@@ -123,6 +123,25 @@ class PurchaseDao(BaseDAO[Purchase]):
             print(f"Ошибка при получении информации о покупках пользователя: {e}")
             return None
             
+    @classmethod
+    async def get_purchases_new(cls, session: AsyncSession, telegram_id: int) -> Optional[List[Purchase]]:
+        try:
+            # Запрос для получения пользователя с его покупками и связанными продуктами
+            result = await session.execute(
+                select(Purchase)
+                .options(selectinload(Purchase.product))
+                .options(selectinload(Purchase.taste))
+                .filter(Purchase.user_id == telegram_id, Purchase.status == "NEW")
+                )
+            purchases = result.scalars().all() 
+            if purchases is None:
+                return None 
+            return purchases 
+        except SQLAlchemyError as e:
+            # Обработка ошибок при работе с базой данных
+            print(f"Ошибка при получении информации о покупках пользователя: {e}")
+            return None
+        
     @classmethod
     async def get_total(cls, session: AsyncSession, telegram_id: int) -> Optional[List[Purchase]]:
         try:
