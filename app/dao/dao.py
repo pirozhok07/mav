@@ -135,7 +135,9 @@ class PurchaseDao(BaseDAO[Purchase]):
                 .filter(Purchase.user_id == telegram_id, Purchase.status == isFlag)
                 )
             
+            logger.error(result)
             purchases = result.scalars().all() 
+            logger.error(purchases)
             if purchases is None:
                 return None 
             return purchases 
