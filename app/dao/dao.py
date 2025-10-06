@@ -121,15 +121,20 @@ class PurchaseDao(BaseDAO[Purchase]):
         try:
             # Запрос для получения пользователя с его покупками и связанными продуктами
             if get_date != None:
-                filter = Purchase.user_id == telegram_id, Purchase.status == isFlag, Purchase.date == get_date
-            else: 
-                filter = Purchase.user_id == telegram_id, Purchase.status == isFlag
-            result = await session.execute(
+                result = await session.execute(
                 select(Purchase)
                 .options(selectinload(Purchase.product))
                 .options(selectinload(Purchase.taste))
-                .filter(filter)
+                .filter(Purchase.user_id == telegram_id, Purchase.status == isFlag, Purchase.date == get_date)
                 )
+            else: 
+                result = await session.execute(
+                select(Purchase)
+                .options(selectinload(Purchase.product))
+                .options(selectinload(Purchase.taste))
+                .filter(Purchase.user_id == telegram_id, Purchase.status == isFlag)
+                )
+            
             purchases = result.scalars().all() 
             if purchases is None:
                 return None 
