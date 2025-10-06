@@ -121,9 +121,9 @@ class PurchaseDao(BaseDAO[Purchase]):
         try:
             # Запрос для получения пользователя с его покупками и связанными продуктами
             if get_date != None:
-                filter = "Purchase.user_id == telegram_id, Purchase.status == isFlag, Purchase.date == get_date"
+                filter = Purchase.user_id == telegram_id, Purchase.status == isFlag, Purchase.date == get_date
             else: 
-                filter = "Purchase.user_id == telegram_id, Purchase.status == isFlag"
+                filter = Purchase.user_id == telegram_id, Purchase.status == isFlag
             result = await session.execute(
                 select(Purchase)
                 .options(selectinload(Purchase.product))
