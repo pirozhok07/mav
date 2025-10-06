@@ -11,6 +11,7 @@ from admin.kbs import admin_delivery_kb, admin_kb, admin_kb_back, product_manage
     admin_confirm_kb, dell_product_kb
 from admin.schemas import ProductModel, ProductIDModel
 from admin.utils import process_dell_text_msg
+from datetime import date
 
 admin_router = Router()
 
@@ -180,7 +181,7 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
     users = await PurchaseDao.get_user_today(session=session_without_commit)
     for user in users:
         text = ""
-        purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=user.telegram_id, isFlag="CONFIRM")
+        purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=user.telegram_id, isFlag="CONFIRM", get_date=date.today())
         for purchase in purchases:
             text += f"🔹 {purchase.product.name}\n"
         user_info = f"@{user.username}" if user.username else f"c ID {user.telegram_id}"
