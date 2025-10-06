@@ -6,7 +6,7 @@ from dao.dao import TasteDao
 from user.schemas import TasteIDModel
 from config import settings
 from dao.models import Category, Product, Purchase, Taste
-
+from datetime import datetime
 
 def main_user_kb(user_id: int) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
@@ -103,11 +103,14 @@ def cart_kb() -> InlineKeyboardMarkup:
     kb.adjust(1)
     return kb.as_markup()
 
-# def dell_cart_kb(purchase_id: int) -> InlineKeyboardMarkup:
-#     kb = InlineKeyboardBuilder()
-#     kb.button(text="🗑️ Удалить", callback_data=f"item_dell_{purchase_id}")
-#     kb.adjust(1)
-#     return kb.as_markup()
+def date_kb() -> InlineKeyboardMarkup:
+    kb = InlineKeyboardBuilder()
+    f = datetime.now()
+    ff = datetime.now()+1
+    kb.button(text=f, callback_data=f"item_dell_")
+    kb.button(text=ff, callback_data=f"item_dell_")
+    kb.adjust(1)
+    return kb.as_markup()
 
 
 def cancele_kb()-> InlineKeyboardMarkup:

@@ -10,7 +10,7 @@ from user.catalog_router import page_catalog
 from user.service import NavState
 from sqlalchemy.ext.asyncio import AsyncSession
 from dao.dao import TasteDao, UserDAO, ProductDao, PurchaseDao
-from user.kbs import cancele_kb, cart_kb, delete_kb, main_user_kb, order_kb, purchases_kb
+from user.kbs import cancele_kb, cart_kb, date_kb, delete_kb, main_user_kb, order_kb, purchases_kb
 from user.schemas import ItemCartData, ProductIDModel, ProductUpdateIDModel, PurchaseIDModel, TasteIDModel, TelegramIDModel, UserModel, CartModel
 from config import bot, settings
 
@@ -18,6 +18,7 @@ cart_router = Router()
 
 class DoOrder(StatesGroup):
     adress = State()
+    date = State()
 
 # @cart_router.callback_query(F.data.startswith('taste_cart_'))
 # async def add_in_cart_taste(call: CallbackQuery, session_with_commit: AsyncSession):
@@ -151,16 +152,24 @@ async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
     await PurchaseDao.delete(session=session_with_commit, filters=PurchaseIDModel(id=purchase_id))
     await edit_cart(call, session_with_commit)
 
-@cart_router.callback_query(F.data == 'do_order')
-async def do_order(call: CallbackQuery, state: FSMContext):
+@cart_router.callback_query(F.data == 'get_date')
+async def get_date(call: CallbackQuery, state: FSMContext):
+    await call.answer("Оформление заказа")
+    # await call.message.answer(f"Заказ будет доставлен ориентировочно сегодня после 19:30")
+    msg = await call.message.edit_text(text="Для начала укажите адресс доставки: ", reply_markup=date_kb())
+    await state.update_data(last_msg_id=msg.message_id)
+    await state.set_state(DoOrder.data)
+
+@cart_router.callback_query(F.text, DoOrder.date)
+async def get_adress(call: CallbackQuery, state: FSMContext):
     await call.answer("Оформление заказа")
     # await call.message.answer(f"Заказ будет доставлен ориентировочно сегодня после 19:30")
     msg = await call.message.edit_text(text="Для начала укажите адресс доставки: ", reply_markup=cancele_kb())
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(DoOrder.adress)
-    
-@cart_router.message(F.text, DoOrder.adress )
-async def get_adress(message: Message, state: FSMContext, session_with_commit: AsyncSession):
+
+@cart_router.message(F.text, DoOrder.adress)
+async def do_order(message: Message, state: FSMContext, session_with_commit: AsyncSession):
     await state.update_data(name=message.text)
     adress = await state.get_data()
     await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
