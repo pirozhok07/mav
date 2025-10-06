@@ -152,7 +152,7 @@ async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
     await PurchaseDao.delete(session=session_with_commit, filters=PurchaseIDModel(id=purchase_id))
     await edit_cart(call, session_with_commit)
 
-@cart_router.callback_query(F.data == 'get_date')
+@cart_router.callback_query(F.data == 'do_order')
 async def get_date(call: CallbackQuery, state: FSMContext):
     await call.answer("Оформление заказа")
     # await call.message.answer(f"Заказ будет доставлен ориентировочно сегодня после 19:30")
@@ -161,7 +161,7 @@ async def get_date(call: CallbackQuery, state: FSMContext):
     await state.set_state(DoOrder.data)
 
 @cart_router.callback_query(F.text, DoOrder.date)
-async def get_adress(call: CallbackQuery, state: FSMContext):
+async def get_date(call: CallbackQuery, state: FSMContext):
     await call.answer("Оформление заказа")
     # await call.message.answer(f"Заказ будет доставлен ориентировочно сегодня после 19:30")
     msg = await call.message.edit_text(text="Для начала укажите адресс доставки: ", reply_markup=cancele_kb())
@@ -169,7 +169,7 @@ async def get_adress(call: CallbackQuery, state: FSMContext):
     await state.set_state(DoOrder.adress)
 
 @cart_router.message(F.text, DoOrder.adress)
-async def do_order(message: Message, state: FSMContext, session_with_commit: AsyncSession):
+async def get_adress(message: Message, state: FSMContext, session_with_commit: AsyncSession):
     await state.update_data(name=message.text)
     adress = await state.get_data()
     await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
