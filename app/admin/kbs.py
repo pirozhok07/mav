@@ -66,7 +66,7 @@ def admin_confirm_kb() -> InlineKeyboardMarkup:
 
 def admin_accept_kb(user_id: int, date:str) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    kb.button(text="✔ Подтвердить", callback_data=f"accept_order_{date}_{user_id}")
+    kb.button(text="✔ Подтвердить", callback_data=f"acceptOrder_{date}_{user_id}")
     kb.adjust(1)
     return kb.as_markup()
 
