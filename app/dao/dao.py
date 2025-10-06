@@ -108,7 +108,7 @@ class PurchaseDao(BaseDAO[Purchase]):
     async def set_order(cls, session: AsyncSession, data_id: int, getdate: int, adress: str):
         try:
             record = await session.get(cls.model, data_id)
-            setDate=datetime.strptime(getdate, "%d/%m/%Y").date()
+            setDate=datetime.strptime(getdate, "%d.%m.%Y").date()
             setattr(record, 'date', setDate)
             setattr(record, 'adress', adress)
             await session.flush()
