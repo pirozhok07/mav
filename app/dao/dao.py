@@ -120,20 +120,13 @@ class PurchaseDao(BaseDAO[Purchase]):
     async def get_purchases(cls, session: AsyncSession, telegram_id: int, isFlag:str, get_date:date = None) -> Optional[List[Purchase]]:
         try:
             # Запрос для получения пользователя с его покупками и связанными продуктами
-            if get_date != None:
-                result = await session.execute(
-                select(Purchase)
-                .options(selectinload(Purchase.product))
-                .options(selectinload(Purchase.taste))
-                .filter(Purchase.user_id == telegram_id, Purchase.status == isFlag, Purchase.date == get_date)
-                )
-            else: 
-                result = await session.execute(
-                select(Purchase)
-                .options(selectinload(Purchase.product))
-                .options(selectinload(Purchase.taste))
-                .filter(Purchase.user_id == telegram_id, Purchase.status == isFlag)
-                )
+            logger.error(get_date)
+            result = await session.execute(
+            select(Purchase)
+            .options(selectinload(Purchase.product))
+            .options(selectinload(Purchase.taste))
+            .filter(Purchase.user_id == telegram_id, Purchase.status == isFlag, Purchase.date == get_date)
+            )
             
             logger.error(result)
             purchases = result.scalars().all() 
