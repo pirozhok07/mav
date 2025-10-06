@@ -107,8 +107,8 @@ def date_kb() -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     f = date.today()
     for i in range(0,7):
-        date = f.timedelta(days=i).strftime("%d.%m.%Y")
-        kb.button(text=date, callback_data=f"item_dell_{date}")
+        btn = f.timedelta(days=i).strftime("%d.%m.%Y")
+        kb.button(text=btn, callback_data=f"item_dell_{btn}")
     kb.adjust(1)
     return kb.as_markup()
 
