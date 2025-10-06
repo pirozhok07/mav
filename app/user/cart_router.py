@@ -172,12 +172,11 @@ async def get_date(call: CallbackQuery, state: FSMContext):
 
 @cart_router.message(F.text, DoOrder.adress)
 async def get_adress(message: Message, state: FSMContext, session_with_commit: AsyncSession):
-    await state.update_data(name=message.text)
+    await state.update_data(adress=message.text)
     order = await state.get_data()
     await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
     await bot.delete_message(chat_id=message.from_user.id, message_id=order["last_msg_id"])
     purchases = await UserDAO.get_purchased_products(session=session_with_commit, telegram_id=message.from_user.id)
-    logger.error(order)
     for purchase in purchases:
         await PurchaseDao.set_order(session_with_commit, purchase.id, order["date"], order["adress"])
     msg = await message.answer(text="Выберите способ оплаты", reply_markup=order_kb())
@@ -205,6 +204,7 @@ async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
                     f"-------------------------------------------\n"
                     f"{text}"
                     f"за <b>{total} ₽</b> Оплата наличными.\n"
+                    f"дата: {purchases[0].date.strftime("%d.%m.%Y")}\n"
                     f"адресс: {purchases[0].adress}\n"
                 ), reply_markup=admin_accept_kb(call.from_user.id)
             )
@@ -231,6 +231,7 @@ async def nenal(call: CallbackQuery, session_without_commit: AsyncSession):
                     f"-------------------------------------------\n"
                     f"{text}"
                     f"за <b>{total} ₽</b> Оплата переводом.\n"
+                    f"дата: {purchases[0].date.strftime("%d.%m.%Y")}\n"
                     f"адресс: {purchases[0].adress}\n"
                 ), reply_markup=admin_accept_kb(call.from_user.id)
             )
