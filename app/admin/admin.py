@@ -176,7 +176,7 @@ async def admin_process_confirm_add(call: CallbackQuery, state: FSMContext, sess
 
 @admin_router.callback_query(F.data.startswith("acceptOrder_"), F.from_user.id.in_(settings.ADMIN_IDS))
 async def accept_order(call: CallbackQuery, session_with_commit: AsyncSession):
-    order_date, user_id = call.data.split("_")
+    _, order_date, user_id = call.data.split("_")
     purchases = await PurchaseDao.get_purchases(session=session_with_commit, telegram_id=int(user_id), isFlag="NEW", get_date=datetime.strptime(order_date, "%d.%m.%Y").date())
     for purchase in purchases:
         await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id, status = "CONFIRM")
