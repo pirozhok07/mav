@@ -13,7 +13,7 @@ from dao.dao import TasteDao, UserDAO, ProductDao, PurchaseDao
 from user.kbs import cancele_kb, cart_kb, date_kb, delete_kb, main_user_kb, order_kb, purchases_kb
 from user.schemas import ItemCartData, ProductIDModel, ProductUpdateIDModel, PurchaseIDModel, TasteIDModel, TelegramIDModel, UserModel, CartModel
 from config import bot, settings
-from datetime import date
+from datetime import date, datetime
 
 cart_router = Router()
 
@@ -192,7 +192,7 @@ async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
     await page_home(call)
 
     total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW")
-    purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW", get_date=order_date)
+    purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW", get_date=datetime.strptime(order_date, "%d.%m.%Y").date())
     text=''
     for purchase in purchases:
         text += f"{purchase.product.name}\n"
@@ -222,7 +222,8 @@ async def nenal(call: CallbackQuery, session_without_commit: AsyncSession):
     await call.answer(f"Оплата переводом.\nСумма к оплате: {total}₽\nРЕКВИЗИТЫ\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
     order_date = call.data.split('_')
     await page_home(call)
-    purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW", get_date=order_date)
+
+    purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW", get_date=datetime.strptime(order_date, "%d.%m.%Y").date())
     text=''
     for purchase in purchases:
         text += f"{purchase.product.name}\n"
