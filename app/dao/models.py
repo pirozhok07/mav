@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from typing import List
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import BigInteger, Text, ForeignKey, Integer, TIMESTAMP
@@ -61,7 +61,7 @@ class Purchase(Base):
     status: Mapped[str] = mapped_column(Text)
     description: Mapped[str] = mapped_column(Text)
     adress: Mapped[str] = mapped_column(Text, nullable=True)
-    date: Mapped[datetime] = mapped_column(TIMESTAMP, nullable=True)
+    date: Mapped[date] = mapped_column(TIMESTAMP, nullable=True)
     user: Mapped["User"] = relationship("User", back_populates="purchases")
     product: Mapped["Product"] = relationship("Product", back_populates="purchases")
     taste: Mapped["Taste"] = relationship("Taste", back_populates="purchases")
