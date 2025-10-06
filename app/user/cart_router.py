@@ -181,24 +181,24 @@ async def get_adress(message: Message, state: FSMContext, session_with_commit: A
     logger.error(purchases)
     for purchase in purchases:
         await PurchaseDao.set_order(session_with_commit, purchase.id, order["date"], order["adress"])
-    msg = await message.answer(text="Выберите способ оплаты", reply_markup=order_kb())
+    msg = await message.answer(text="Выберите способ оплаты", reply_markup=order_kb(order["date"]))
     await state.update_data(last_msg_id=msg.message_id)
     
 
-@cart_router.callback_query(F.data == 'nal')
+@cart_router.callback_query(F.data.startswith("nal_"))
 async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
     await call.answer("Оплата наличными. \nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
+    order_date = call.data.split('_')
     await page_home(call)
 
     total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW")
-    purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW", get_date=date.today())
+    purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW", get_date=order_date)
     text=''
     for purchase in purchases:
         text += f"{purchase.product.name}\n"
     username = call.from_user.username
     user_info = f"@{username}" if username else f"c ID {call.from_user.id}"
     logger.error(purchases[0].date)
-    getdate = purchases[0].date.strftime("%d.%m.%Y")
     for admin_id in settings.ADMIN_IDS:
         try:
             
@@ -209,25 +209,25 @@ async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
                     f"-------------------------------------------\n"
                     f"{text}"
                     f"за <b>{total} ₽</b> Оплата наличными.\n"
-                    f"дата: {getdate}\n"
+                    f"дата: {order_date}\n"
                     f"адресс: {purchases[0].adress}\n"
                 ), reply_markup=admin_accept_kb(call.from_user.id)
             )
         except Exception as e:
             logger.error(f"Ошибка при отправке уведомления администраторам: {e}")
 
-@cart_router.callback_query(F.data == 'nenal')
+@cart_router.callback_query(F.data.startswith("nenal_"))
 async def nenal(call: CallbackQuery, session_without_commit: AsyncSession):
     total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW")
     await call.answer(f"Оплата переводом.\nСумма к оплате: {total}₽\nРЕКВИЗИТЫ\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
+    order_date = call.data.split('_')
     await page_home(call)
-    purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW")
+    purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW", get_date=order_date)
     text=''
     for purchase in purchases:
         text += f"{purchase.product.name}\n"
     username = call.from_user.username
     user_info = f"@{username}" if username else f"c ID {call.from_user.id}"
-    date = purchases[0].date.strftime("%d.%m.%Y")
     for admin_id in settings.ADMIN_IDS:
         try:
             await bot.send_message(
@@ -237,7 +237,7 @@ async def nenal(call: CallbackQuery, session_without_commit: AsyncSession):
                     f"-------------------------------------------\n"
                     f"{text}"
                     f"за <b>{total} ₽</b> Оплата переводом.\n"
-                    f"дата: {date}\n"
+                    f"дата: {order_date}\n"
                     f"адресс: {purchases[0].adress}\n"
                 ), reply_markup=admin_accept_kb(call.from_user.id)
             )
