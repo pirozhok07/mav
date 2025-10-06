@@ -196,7 +196,8 @@ async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
         text += f"{purchase.product.name}\n"
     username = call.from_user.username
     user_info = f"@{username}" if username else f"c ID {call.from_user.id}"
-    date = purchases[0].date.strftime("%d.%m.%Y")
+    logger.error(purchases[0].date)
+    getdate = purchases[0].date.strftime("%d.%m.%Y")
     for admin_id in settings.ADMIN_IDS:
         try:
             
@@ -207,7 +208,7 @@ async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
                     f"-------------------------------------------\n"
                     f"{text}"
                     f"за <b>{total} ₽</b> Оплата наличными.\n"
-                    f"дата: {date}\n"
+                    f"дата: {getdate}\n"
                     f"адресс: {purchases[0].adress}\n"
                 ), reply_markup=admin_accept_kb(call.from_user.id)
             )
