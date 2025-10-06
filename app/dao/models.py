@@ -67,4 +67,4 @@ class Purchase(Base):
     taste: Mapped["Taste"] = relationship("Taste", back_populates="purchases")
 
     def __repr__(self):
-        return f"<Purchase(id={self.id}, user_id={self.user_id}, product_id={self.product_id}, taste_id={self.taste_id}, date={self.date})>"
+        return f"<Purchase(id={self.id}, user_id={self.user_id}, product_id={self.product_id}, taste_id={self.taste_id}, date={self.date}, satus={self.status})>"

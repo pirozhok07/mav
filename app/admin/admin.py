@@ -33,6 +33,11 @@ async def admin_process_cancel(call: CallbackQuery, state: FSMContext):
         reply_markup=admin_kb_back()
     )
 
+@admin_router.callback_query(F.data == "all_p", F.from_user.id.in_(settings.ADMIN_IDS))
+async def all_p(call: CallbackQuery, session_without_commit: AsyncSession):
+    purchases = await PurchaseDao.find_all(session=session_without_commit)
+    logger.error(purchases)
+
 @admin_router.callback_query(F.data == "admin_panel", F.from_user.id.in_(settings.ADMIN_IDS))
 async def start_admin(call: CallbackQuery):
     await call.answer('Доступ в админ-панель разрешен!')
