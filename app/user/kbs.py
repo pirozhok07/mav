@@ -106,9 +106,7 @@ def cart_kb() -> InlineKeyboardMarkup:
 def date_kb() -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     f = datetime.now()
-    ff = datetime.now()+1
     kb.button(text=f, callback_data=f"item_dell_")
-    kb.button(text=ff, callback_data=f"item_dell_")
     kb.adjust(1)
     return kb.as_markup()
 
