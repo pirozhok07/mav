@@ -6,7 +6,7 @@ from dao.dao import TasteDao
 from user.schemas import TasteIDModel
 from config import settings
 from dao.models import Category, Product, Purchase, Taste
-from datetime import date
+from datetime import date, timedelta
 
 def main_user_kb(user_id: int) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
@@ -107,7 +107,8 @@ def date_kb() -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     f = date.today()
     for i in range(0,7):
-        btn = f.timedelta(days=i).strftime("%d.%m.%Y")
+        nextday=timedelta(i)
+        btn = (f+nextday).strftime("%d.%m.%Y")
         kb.button(text=btn, callback_data=f"item_dell_{btn}")
     kb.adjust(1)
     return kb.as_markup()
