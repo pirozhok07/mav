@@ -28,15 +28,7 @@ class BaseDAO(Generic[T]):
             print(e)
             raise e
     
-    @classmethod
-    async def set_adress(cls, session: AsyncSession, data_id: int, adress: str):
-        try:
-            record = await session.get(cls.model, data_id)
-            setattr(record, 'adress', adress)
-            await session.flush()
-        except SQLAlchemyError as e:
-            print(e)
-            raise e
+
         
     @classmethod
     async def find_one_or_none_by_id(cls, data_id: int, session: AsyncSession):

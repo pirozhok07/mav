@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import json
 from typing import Optional, List, Dict
 
@@ -104,6 +104,17 @@ class TasteDao(BaseDAO[Taste]):
 class PurchaseDao(BaseDAO[Purchase]):
     model = Purchase
 
+    @classmethod
+    async def set_order(cls, session: AsyncSession, data_id: int, date: date, adress: str):
+        try:
+            record = await session.get(cls.model, data_id)
+            setattr(record, 'date', date)
+            setattr(record, 'adress', adress)
+            await session.flush()
+        except SQLAlchemyError as e:
+            print(e)
+            raise e
+        
     @classmethod
     async def get_purchases(cls, session: AsyncSession, telegram_id: int, isFlag:str) -> Optional[List[Purchase]]:
         try:
