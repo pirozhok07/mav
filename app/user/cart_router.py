@@ -173,6 +173,7 @@ async def get_date(call: CallbackQuery, state: FSMContext):
 @cart_router.message(F.text, DoOrder.adress)
 async def get_adress(message: Message, state: FSMContext, session_with_commit: AsyncSession):
     await state.update_data(name=message.text)
+    adress = await state.get_data()
     await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
     await bot.delete_message(chat_id=message.from_user.id, message_id=adress["last_msg_id"])
     purchases = await UserDAO.get_purchased_products(session=session_with_commit, telegram_id=message.from_user.id)
