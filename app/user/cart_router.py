@@ -211,7 +211,7 @@ async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
                     f"за <b>{total} ₽</b> Оплата наличными.\n"
                     f"дата: {order_date}\n"
                     f"адресс: {purchases[0].adress}\n"
-                ), reply_markup=admin_accept_kb(call.from_user.id)
+                ), reply_markup=admin_accept_kb(user_id=call.from_user.id, date=order_date)
             )
         except Exception as e:
             logger.error(f"Ошибка при отправке уведомления администраторам: {e}")
@@ -240,7 +240,7 @@ async def nenal(call: CallbackQuery, session_without_commit: AsyncSession):
                     f"за <b>{total} ₽</b> Оплата переводом.\n"
                     f"дата: {order_date}\n"
                     f"адресс: {purchases[0].adress}\n"
-                ), reply_markup=admin_accept_kb(call.from_user.id)
+                ), reply_markup=admin_accept_kb(user_id=call.from_user.id, date=order_date)
             )
         except Exception as e:
             logger.error(f"Ошибка при отправке уведомления администраторам: {e}")

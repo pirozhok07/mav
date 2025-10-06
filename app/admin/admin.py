@@ -11,7 +11,7 @@ from admin.kbs import admin_delivery_kb, admin_kb, admin_kb_back, product_manage
     admin_confirm_kb, dell_product_kb
 from admin.schemas import ProductModel, ProductIDModel
 from admin.utils import process_dell_text_msg
-from datetime import date
+from datetime import date, datetime
 
 admin_router = Router()
 
@@ -174,10 +174,10 @@ async def admin_process_confirm_add(call: CallbackQuery, state: FSMContext, sess
     del product_data["last_msg_id"]
     await ProductDao.add(session=session_with_commit, values=ProductModel(**product_data))
 
-@admin_router.callback_query(F.data.startswith("accept_order_"), F.from_user.id.in_(settings.ADMIN_IDS))
+@admin_router.callback_query(F.data.startswith("acceptOrder_"), F.from_user.id.in_(settings.ADMIN_IDS))
 async def accept_order(call: CallbackQuery, session_with_commit: AsyncSession):
-    user_id = int(call.data.split("_")[-1])
-    purchases = await PurchaseDao.get_purchases(session=session_with_commit, telegram_id=user_id, isFlag="NEW")
+    order_date, user_id = call.data.split("_")
+    purchases = await PurchaseDao.get_purchases(session=session_with_commit, telegram_id=int(user_id), isFlag="NEW", get_date=datetime.strptime(order_date, "%d.%m.%Y").date())
     for purchase in purchases:
         await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id, status = "CONFIRM")
     await call.message.edit_text(text=f"{call.message.text}\n <b>Подтвержден</b>.")
