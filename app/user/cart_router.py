@@ -190,6 +190,7 @@ async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
 
     total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW")
     purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW")
+    logger.error(purchases)
     text=''
     for purchase in purchases:
         text += f"{purchase.product.name}\n"
