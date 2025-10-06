@@ -73,5 +73,6 @@ def admin_accept_kb(user_id: int, date:str) -> InlineKeyboardMarkup:
 def admin_delivery_kb(user_id: int) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     kb.button(text="✔ Доставлен", callback_data=f"deliver_order_{user_id}")
+    kb.button(text="Перенести", callback_data=f"deliver_transferred_{user_id}")
     kb.adjust(1)
     return kb.as_markup()

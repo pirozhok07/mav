@@ -182,6 +182,8 @@ async def accept_order(call: CallbackQuery, session_with_commit: AsyncSession):
         await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id, status = "CONFIRM")
     await call.message.edit_text(text=f"{call.message.text}\n <b>Подтвержден</b>.")
 
+
+
 @admin_router.callback_query(F.data.startswith("delivery"), F.from_user.id.in_(settings.ADMIN_IDS))
 async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSession):
     users = await PurchaseDao.get_user_today(session=session_without_commit)
@@ -191,7 +193,7 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
         for purchase in purchases:
             text += f"🔹 {purchase.product.name}\n"
         user_info = f"@{user.username}" if user.username else f"c ID {user.telegram_id}"
-        total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=user.telegram_id, isFlag="CONFIRM")
+        total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=user.telegram_id, isFlag="CONFIRM", get_date=date.today())
         try:
             await bot.send_message(
                 chat_id=call.from_user.id,
@@ -212,4 +214,12 @@ async def deliver_order(call: CallbackQuery, session_with_commit: AsyncSession):
     purchases = await PurchaseDao.get_purchases(session=session_with_commit, telegram_id=user_id)
     for purchase in purchases:
         await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id, status = "DONE")
-    await call.message.answer(text="Заказ подтвержден")
+    await call.message.answer(text="Заказ доставлен")
+
+@admin_router.callback_query(F.data.startswith("deliver_transferred_"), F.from_user.id.in_(settings.ADMIN_IDS))
+async def deliver_transferred(call: CallbackQuery, session_with_commit: AsyncSession):
+    user_id = int(call.data.split("_")[-1])
+    purchases = await PurchaseDao.get_purchases(session=session_with_commit, telegram_id=user_id)
+    for purchase in purchases:
+        await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id, status = "DONE")
+    await call.message.answer(text="Заказ доставлен")
