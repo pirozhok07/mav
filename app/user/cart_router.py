@@ -13,6 +13,7 @@ from dao.dao import TasteDao, UserDAO, ProductDao, PurchaseDao
 from user.kbs import cancele_kb, cart_kb, date_kb, delete_kb, main_user_kb, order_kb, purchases_kb
 from user.schemas import ItemCartData, ProductIDModel, ProductUpdateIDModel, PurchaseIDModel, TasteIDModel, TelegramIDModel, UserModel, CartModel
 from config import bot, settings
+from datetime import date
 
 cart_router = Router()
 
@@ -190,7 +191,7 @@ async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
     await page_home(call)
 
     total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW")
-    purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW")
+    purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW", get_date=date.today())
     text=''
     for purchase in purchases:
         text += f"{purchase.product.name}\n"
