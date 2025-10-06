@@ -140,12 +140,12 @@ class PurchaseDao(BaseDAO[Purchase]):
             return None
         
     @classmethod
-    async def get_total(cls, session: AsyncSession, telegram_id: int, isFlag: str) -> Optional[List[Purchase]]:
+    async def get_total(cls, session: AsyncSession, telegram_id: int, isFlag: str, get_date:date = None) -> Optional[List[Purchase]]:
         try:
             # Запрос для получения суммы корзины
             result = await session.execute(
                 select(func.sum(Product.price).label('total_price'))
-                .join(Purchase).filter(Purchase.user_id == telegram_id, Purchase.status == isFlag)
+                .join(Purchase).filter(Purchase.user_id == telegram_id, Purchase.status == isFlag, Purchase.date == get_date)
                 )
             total_price = result.scalars().one_or_none()
             return total_price if total_price is not None else 0
