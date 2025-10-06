@@ -188,7 +188,7 @@ async def get_adress(message: Message, state: FSMContext, session_with_commit: A
 @cart_router.callback_query(F.data.startswith("nal_"))
 async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
     await call.answer("Оплата наличными. \nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
-    order_date = call.data.split('_')
+    _, order_date = call.data.split('_')
     await page_home(call)
 
     total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW")
@@ -220,7 +220,7 @@ async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
 async def nenal(call: CallbackQuery, session_without_commit: AsyncSession):
     total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW")
     await call.answer(f"Оплата переводом.\nСумма к оплате: {total}₽\nРЕКВИЗИТЫ\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
-    order_date = call.data.split('_')
+    _, order_date = call.data.split('_')
     await page_home(call)
 
     purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW", get_date=datetime.strptime(order_date, "%d.%m.%Y").date())
