@@ -1,7 +1,7 @@
 from datetime import datetime, date
 from typing import List
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import BigInteger, Text, ForeignKey, Integer, TIMESTAMP
+from sqlalchemy import BigInteger, Text, ForeignKey, Integer, DATE
 from dao.database import Base
 
 
@@ -61,10 +61,10 @@ class Purchase(Base):
     status: Mapped[str] = mapped_column(Text)
     description: Mapped[str] = mapped_column(Text)
     adress: Mapped[str] = mapped_column(Text, nullable=True)
-    date: Mapped[date] = mapped_column(TIMESTAMP, nullable=True)
+    date: Mapped[date] = mapped_column(DATE, nullable=True)
     user: Mapped["User"] = relationship("User", back_populates="purchases")
     product: Mapped["Product"] = relationship("Product", back_populates="purchases")
     taste: Mapped["Taste"] = relationship("Taste", back_populates="purchases")
 
     def __repr__(self):
-        return f"<Purchase(id={self.id}, user_id={self.user_id}, product_id={self.product_id}, taste_id={self.taste_id}, date={self.created_at})>"
+        return f"<Purchase(id={self.id}, user_id={self.user_id}, product_id={self.product_id}, taste_id={self.taste_id}, date={self.date})>"
