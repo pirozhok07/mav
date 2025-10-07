@@ -122,7 +122,7 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
                               status="NEW")
     )
 
-    if not purchases:
+    if not purchase:
         await call.message.edit_text(
             text=f"🔍 <b>У вас пока нет покупок.</b>\n\n"
                  f"Откройте каталог и выберите что-нибудь интересное!",
