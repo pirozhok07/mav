@@ -3147,3 +3147,208 @@ WHERE users.telegram_id = ?]
 2025-10-06 at 15:59:15 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7f2fc99677c0>
 2025-10-06 at 15:59:15 | ERROR | []
 2025-10-06 at 16:01:33 | ERROR | Бот остановлен!
+2025-10-06 at 16:37:08 | INFO | Бот успешно запущен.
+2025-10-06 at 16:37:09 | INFO | Поиск всех записей Purchase по фильтрам: {}
+2025-10-06 at 16:37:09 | INFO | Найдено 0 записей.
+2025-10-06 at 16:37:13 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-10-06 at 16:37:13 | INFO | Найдено 8 записей.
+2025-10-06 at 16:37:15 | INFO | Поиск Product с ID: 52
+2025-10-06 at 16:37:15 | INFO | Запись с ID 52 найдена.
+2025-10-06 at 16:37:15 | INFO | Добавление записи Purchase с параметрами: {'user_id': 1330085937, 'product_id': 52, 'taste_id': 0, 'status': 'NEW', 'description': 'VOOM 18000 - 1000 ₽', 'adress': 'NEW'}
+2025-10-06 at 16:37:15 | INFO | Запись Purchase успешно добавлена.
+2025-10-06 at 16:37:15 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-10-06 at 16:37:15 | INFO | Найдено 8 записей.
+2025-10-06 at 16:37:18 | INFO | Поиск всех записей Purchase по фильтрам: {}
+2025-10-06 at 16:37:18 | INFO | Найдено 1 записей.
+2025-10-06 at 16:37:18 | ERROR | <Purchase(id=1, user_id=1330085937, product_id=52, taste_id=0, date=None, satus=NEW)>
+2025-10-06 at 16:37:22 | ERROR | None
+2025-10-06 at 16:37:22 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7ff5777eecc0>
+2025-10-06 at 16:37:22 | ERROR | [<Purchase(id=1, user_id=1330085937, product_id=52, taste_id=0, date=None, satus=NEW)>]
+2025-10-06 at 16:37:29 | ERROR | None
+2025-10-06 at 16:37:29 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7ff57c90af80>
+2025-10-06 at 16:37:29 | ERROR | [<Purchase(id=1, user_id=1330085937, product_id=52, taste_id=0, date=None, satus=NEW)>]
+2025-10-06 at 16:37:29 | ERROR | [<Purchase(id=1, user_id=1330085937, product_id=52, taste_id=0, date=None, satus=NEW)>]
+2025-10-06 at 16:37:37 | ERROR | 2025-10-06
+2025-10-06 at 16:37:37 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7ff577643280>
+2025-10-06 at 16:37:37 | ERROR | [<Purchase(id=1, user_id=1330085937, product_id=52, taste_id=0, date=2025-10-06, satus=NEW)>]
+2025-10-06 at 16:37:37 | ERROR | 2025-10-06
+2025-10-06 at 16:37:53 | ERROR | None
+2025-10-06 at 16:37:53 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7ff57762cec0>
+2025-10-06 at 16:37:53 | ERROR | []
+2025-10-06 at 16:37:59 | INFO | Поиск всех записей Purchase по фильтрам: {}
+2025-10-06 at 16:37:59 | INFO | Найдено 1 записей.
+2025-10-06 at 16:37:59 | ERROR | <Purchase(id=1, user_id=1330085937, product_id=52, taste_id=0, date=2025-10-06, satus=NEW)>
+2025-10-06 at 16:42:01 | ERROR | Бот остановлен!
+2025-10-06 at 16:50:42 | INFO | Бот успешно запущен.
+2025-10-06 at 16:50:43 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-10-06 at 16:50:43 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-10-06 at 16:50:45 | ERROR | None
+2025-10-06 at 16:50:45 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7fb348154400>
+2025-10-06 at 16:50:45 | ERROR | []
+2025-10-06 at 16:50:47 | INFO | Поиск всех записей Purchase по фильтрам: {}
+2025-10-06 at 16:50:47 | INFO | Найдено 1 записей.
+2025-10-06 at 16:50:47 | ERROR | <Purchase(id=1, user_id=1330085937, product_id=52, taste_id=0, date=2025-10-06, satus=NEW)>
+2025-10-06 at 16:50:51 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-10-06 at 16:50:51 | INFO | Найдено 8 записей.
+2025-10-06 at 16:50:53 | INFO | Поиск Product с ID: 50
+2025-10-06 at 16:50:53 | INFO | Запись с ID 50 найдена.
+2025-10-06 at 16:50:53 | INFO | Добавление записи Purchase с параметрами: {'user_id': 1330085937, 'product_id': 50, 'taste_id': 0, 'status': 'NEW', 'description': 'Elf Bar BC 10000 - 1000 ₽', 'adress': 'NEW'}
+2025-10-06 at 16:50:53 | INFO | Запись Purchase успешно добавлена.
+2025-10-06 at 16:50:53 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-10-06 at 16:50:53 | INFO | Найдено 8 записей.
+2025-10-06 at 16:50:58 | ERROR | None
+2025-10-06 at 16:50:58 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7fb34371e400>
+2025-10-06 at 16:50:58 | ERROR | [<Purchase(id=2, user_id=1330085937, product_id=50, taste_id=0, date=None, satus=NEW)>]
+2025-10-06 at 16:51:05 | ERROR | None
+2025-10-06 at 16:51:05 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7fb34371e5c0>
+2025-10-06 at 16:51:05 | ERROR | [<Purchase(id=2, user_id=1330085937, product_id=50, taste_id=0, date=None, satus=NEW)>]
+2025-10-06 at 16:51:05 | ERROR | [<Purchase(id=2, user_id=1330085937, product_id=50, taste_id=0, date=None, satus=NEW)>]
+2025-10-06 at 16:51:07 | ERROR | 2025-10-06
+2025-10-06 at 16:51:07 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7fb34372bac0>
+2025-10-06 at 16:51:07 | ERROR | [<Purchase(id=1, user_id=1330085937, product_id=52, taste_id=0, date=2025-10-06, satus=NEW)>, <Purchase(id=2, user_id=1330085937, product_id=50, taste_id=0, date=2025-10-06, satus=NEW)>]
+2025-10-06 at 16:51:07 | ERROR | 2025-10-06
+2025-10-06 at 16:51:53 | ERROR | Бот остановлен!
+2025-10-06 at 16:52:03 | INFO | Бот успешно запущен.
+2025-10-06 at 16:52:05 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-10-06 at 16:52:05 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-10-06 at 16:52:07 | INFO | Поиск всех записей Purchase по фильтрам: {}
+2025-10-06 at 16:52:07 | INFO | Найдено 2 записей.
+2025-10-06 at 16:52:07 | ERROR | <Purchase(id=1, user_id=1330085937, product_id=52, taste_id=0, date=2025-10-06, satus=NEW)>
+2025-10-06 at 16:52:07 | ERROR | <Purchase(id=2, user_id=1330085937, product_id=50, taste_id=0, date=2025-10-06, satus=NEW)>
+2025-10-06 at 16:52:11 | ERROR | None
+2025-10-06 at 16:52:11 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7fefa517a9c0>
+2025-10-06 at 16:52:11 | ERROR | []
+2025-10-06 at 16:52:12 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-10-06 at 16:52:12 | INFO | Найдено 8 записей.
+2025-10-06 at 16:52:14 | INFO | Поиск Product с ID: 133
+2025-10-06 at 16:52:14 | INFO | Запись с ID 133 найдена.
+2025-10-06 at 16:52:14 | INFO | Добавление записи Purchase с параметрами: {'user_id': 1330085937, 'product_id': 133, 'taste_id': 0, 'status': 'NEW', 'description': 'LG 18650 - 1000 ₽', 'adress': 'NEW'}
+2025-10-06 at 16:52:14 | INFO | Запись Purchase успешно добавлена.
+2025-10-06 at 16:52:15 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-10-06 at 16:52:15 | INFO | Найдено 8 записей.
+2025-10-06 at 16:52:22 | ERROR | None
+2025-10-06 at 16:52:22 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7fefa4fedc40>
+2025-10-06 at 16:52:22 | ERROR | [<Purchase(id=3, user_id=1330085937, product_id=133, taste_id=0, date=None, satus=NEW)>]
+2025-10-06 at 16:52:28 | ERROR | None
+2025-10-06 at 16:52:28 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7fefa4fec440>
+2025-10-06 at 16:52:28 | ERROR | [<Purchase(id=3, user_id=1330085937, product_id=133, taste_id=0, date=None, satus=NEW)>]
+2025-10-06 at 16:52:28 | ERROR | [<Purchase(id=3, user_id=1330085937, product_id=133, taste_id=0, date=None, satus=NEW)>]
+2025-10-06 at 16:52:30 | ERROR | 2025-10-06
+2025-10-06 at 16:52:30 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7fefa502afc0>
+2025-10-06 at 16:52:30 | ERROR | [<Purchase(id=1, user_id=1330085937, product_id=52, taste_id=0, date=2025-10-06, satus=NEW)>, <Purchase(id=2, user_id=1330085937, product_id=50, taste_id=0, date=2025-10-06, satus=NEW)>, <Purchase(id=3, user_id=1330085937, product_id=133, taste_id=0, date=2025-10-06, satus=NEW)>]
+2025-10-06 at 16:52:30 | ERROR | 2025-10-06
+2025-10-06 at 16:53:06 | ERROR | Бот остановлен!
+2025-10-06 at 16:53:19 | INFO | Бот успешно запущен.
+2025-10-06 at 16:53:21 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-10-06 at 16:53:21 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-10-06 at 16:53:22 | INFO | Поиск всех записей Purchase по фильтрам: {}
+2025-10-06 at 16:53:22 | INFO | Найдено 3 записей.
+2025-10-06 at 16:53:22 | ERROR | <Purchase(id=1, user_id=1330085937, product_id=52, taste_id=0, date=2025-10-06, satus=NEW)>
+2025-10-06 at 16:53:22 | ERROR | <Purchase(id=2, user_id=1330085937, product_id=50, taste_id=0, date=2025-10-06, satus=NEW)>
+2025-10-06 at 16:53:22 | ERROR | <Purchase(id=3, user_id=1330085937, product_id=133, taste_id=0, date=2025-10-06, satus=NEW)>
+2025-10-06 at 16:53:29 | ERROR | None
+2025-10-06 at 16:53:29 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7f899f0c6600>
+2025-10-06 at 16:53:29 | ERROR | []
+2025-10-06 at 16:54:05 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-10-06 at 16:54:05 | INFO | Найдено 8 записей.
+2025-10-06 at 16:54:08 | INFO | Поиск Product с ID: 135
+2025-10-06 at 16:54:08 | INFO | Запись с ID 135 найдена.
+2025-10-06 at 16:54:08 | INFO | Добавление записи Purchase с параметрами: {'user_id': 1330085937, 'product_id': 135, 'taste_id': 0, 'status': 'NEW', 'description': 'New Coils - 1000 ₽', 'adress': 'NEW'}
+2025-10-06 at 16:54:08 | INFO | Запись Purchase успешно добавлена.
+2025-10-06 at 16:54:08 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-10-06 at 16:54:08 | INFO | Найдено 8 записей.
+2025-10-06 at 16:54:10 | ERROR | None
+2025-10-06 at 16:54:10 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7f899ef32680>
+2025-10-06 at 16:54:10 | ERROR | [<Purchase(id=4, user_id=1330085937, product_id=135, taste_id=0, date=None, satus=NEW)>]
+2025-10-06 at 16:54:19 | ERROR | None
+2025-10-06 at 16:54:19 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7f899f0fd680>
+2025-10-06 at 16:54:19 | ERROR | [<Purchase(id=4, user_id=1330085937, product_id=135, taste_id=0, date=None, satus=NEW)>]
+2025-10-06 at 16:54:19 | ERROR | [<Purchase(id=4, user_id=1330085937, product_id=135, taste_id=0, date=None, satus=NEW)>]
+2025-10-06 at 16:54:21 | ERROR | 2025-10-06
+2025-10-06 at 16:54:21 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7f899ef72d00>
+2025-10-06 at 16:54:21 | ERROR | [<Purchase(id=1, user_id=1330085937, product_id=52, taste_id=0, date=2025-10-06, satus=NEW)>, <Purchase(id=2, user_id=1330085937, product_id=50, taste_id=0, date=2025-10-06, satus=NEW)>, <Purchase(id=3, user_id=1330085937, product_id=133, taste_id=0, date=2025-10-06, satus=NEW)>, <Purchase(id=4, user_id=1330085937, product_id=135, taste_id=0, date=2025-10-06, satus=NEW)>]
+2025-10-06 at 16:54:21 | ERROR | 2025-10-06
+2025-10-06 at 16:54:29 | ERROR | 2025-10-06
+2025-10-06 at 16:54:29 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7f899ef39580>
+2025-10-06 at 16:54:29 | ERROR | [<Purchase(id=1, user_id=1330085937, product_id=52, taste_id=0, date=2025-10-06, satus=NEW)>, <Purchase(id=2, user_id=1330085937, product_id=50, taste_id=0, date=2025-10-06, satus=NEW)>, <Purchase(id=3, user_id=1330085937, product_id=133, taste_id=0, date=2025-10-06, satus=NEW)>, <Purchase(id=4, user_id=1330085937, product_id=135, taste_id=0, date=2025-10-06, satus=NEW)>]
+2025-10-06 at 16:54:33 | INFO | Поиск всех записей Purchase по фильтрам: {}
+2025-10-06 at 16:54:33 | INFO | Найдено 4 записей.
+2025-10-06 at 16:54:33 | ERROR | <Purchase(id=1, user_id=1330085937, product_id=52, taste_id=0, date=2025-10-06, satus=CONFIRM)>
+2025-10-06 at 16:54:33 | ERROR | <Purchase(id=2, user_id=1330085937, product_id=50, taste_id=0, date=2025-10-06, satus=CONFIRM)>
+2025-10-06 at 16:54:33 | ERROR | <Purchase(id=3, user_id=1330085937, product_id=133, taste_id=0, date=2025-10-06, satus=CONFIRM)>
+2025-10-06 at 16:54:33 | ERROR | <Purchase(id=4, user_id=1330085937, product_id=135, taste_id=0, date=2025-10-06, satus=CONFIRM)>
+2025-10-06 at 16:54:38 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-10-06 at 16:54:38 | INFO | Найдено 8 записей.
+2025-10-06 at 16:54:41 | INFO | Поиск Product с ID: 130
+2025-10-06 at 16:54:41 | INFO | Запись с ID 130 найдена.
+2025-10-06 at 16:54:41 | INFO | Добавление записи Purchase с параметрами: {'user_id': 1330085937, 'product_id': 130, 'taste_id': 0, 'status': 'NEW', 'description': 'Twisted Messes TM30 RDA  - 1000 ₽', 'adress': 'NEW'}
+2025-10-06 at 16:54:41 | INFO | Запись Purchase успешно добавлена.
+2025-10-06 at 16:54:41 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-10-06 at 16:54:41 | INFO | Найдено 8 записей.
+2025-10-06 at 16:54:44 | ERROR | None
+2025-10-06 at 16:54:44 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7f89a01aefc0>
+2025-10-06 at 16:54:44 | ERROR | [<Purchase(id=5, user_id=1330085937, product_id=130, taste_id=0, date=None, satus=NEW)>]
+2025-10-06 at 16:54:52 | ERROR | None
+2025-10-06 at 16:54:52 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7f899ef4b1c0>
+2025-10-06 at 16:54:52 | ERROR | [<Purchase(id=5, user_id=1330085937, product_id=130, taste_id=0, date=None, satus=NEW)>]
+2025-10-06 at 16:54:52 | ERROR | [<Purchase(id=5, user_id=1330085937, product_id=130, taste_id=0, date=None, satus=NEW)>]
+2025-10-06 at 16:54:54 | ERROR | 2025-10-11
+2025-10-06 at 16:54:54 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7f899f109ec0>
+2025-10-06 at 16:54:54 | ERROR | [<Purchase(id=5, user_id=1330085937, product_id=130, taste_id=0, date=2025-10-11, satus=NEW)>]
+2025-10-06 at 16:54:54 | ERROR | 2025-10-11
+2025-10-06 at 16:54:56 | ERROR | 2025-10-11
+2025-10-06 at 16:54:56 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7f899efa37c0>
+2025-10-06 at 16:54:56 | ERROR | [<Purchase(id=5, user_id=1330085937, product_id=130, taste_id=0, date=2025-10-11, satus=NEW)>]
+2025-10-06 at 16:54:57 | INFO | Поиск всех записей Purchase по фильтрам: {}
+2025-10-06 at 16:54:57 | INFO | Найдено 5 записей.
+2025-10-06 at 16:54:57 | ERROR | <Purchase(id=1, user_id=1330085937, product_id=52, taste_id=0, date=2025-10-06, satus=CONFIRM)>
+2025-10-06 at 16:54:57 | ERROR | <Purchase(id=2, user_id=1330085937, product_id=50, taste_id=0, date=2025-10-06, satus=CONFIRM)>
+2025-10-06 at 16:54:57 | ERROR | <Purchase(id=3, user_id=1330085937, product_id=133, taste_id=0, date=2025-10-06, satus=CONFIRM)>
+2025-10-06 at 16:54:57 | ERROR | <Purchase(id=4, user_id=1330085937, product_id=135, taste_id=0, date=2025-10-06, satus=CONFIRM)>
+2025-10-06 at 16:54:57 | ERROR | <Purchase(id=5, user_id=1330085937, product_id=130, taste_id=0, date=2025-10-11, satus=CONFIRM)>
+2025-10-06 at 16:55:05 | ERROR | 2025-10-06
+2025-10-06 at 16:55:05 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7f899ef6b000>
+2025-10-06 at 16:55:05 | ERROR | [<Purchase(id=1, user_id=1330085937, product_id=52, taste_id=0, date=2025-10-06, satus=CONFIRM)>, <Purchase(id=2, user_id=1330085937, product_id=50, taste_id=0, date=2025-10-06, satus=CONFIRM)>, <Purchase(id=3, user_id=1330085937, product_id=133, taste_id=0, date=2025-10-06, satus=CONFIRM)>, <Purchase(id=4, user_id=1330085937, product_id=135, taste_id=0, date=2025-10-06, satus=CONFIRM)>]
+2025-10-06 at 17:05:48 | ERROR | Бот остановлен!
+2025-10-06 at 17:05:59 | INFO | Бот успешно запущен.
+2025-10-06 at 17:06:10 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-10-06 at 17:06:10 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-10-06 at 17:06:15 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-10-06 at 17:06:15 | INFO | Найдено 8 записей.
+2025-10-06 at 17:06:19 | INFO | Поиск Product с ID: 41
+2025-10-06 at 17:06:19 | INFO | Запись с ID 41 найдена.
+2025-10-06 at 17:06:19 | INFO | Добавление записи Purchase с параметрами: {'user_id': 1330085937, 'product_id': 41, 'taste_id': 0, 'status': 'NEW', 'description': 'Brusko Minican 3 Pro - 1000 ₽', 'adress': 'NEW'}
+2025-10-06 at 17:06:19 | INFO | Запись Purchase успешно добавлена.
+2025-10-06 at 17:06:19 | INFO | Поиск всех записей Category по фильтрам: {}
+2025-10-06 at 17:06:19 | INFO | Найдено 8 записей.
+2025-10-06 at 17:06:22 | INFO | Поиск всех записей Purchase по фильтрам: {}
+2025-10-06 at 17:06:22 | INFO | Найдено 6 записей.
+2025-10-06 at 17:06:22 | ERROR | <Purchase(id=1, user_id=1330085937, product_id=52, taste_id=0, date=2025-10-06, satus=CONFIRM)>
+2025-10-06 at 17:06:22 | ERROR | <Purchase(id=2, user_id=1330085937, product_id=50, taste_id=0, date=2025-10-06, satus=CONFIRM)>
+2025-10-06 at 17:06:22 | ERROR | <Purchase(id=3, user_id=1330085937, product_id=133, taste_id=0, date=2025-10-06, satus=CONFIRM)>
+2025-10-06 at 17:06:22 | ERROR | <Purchase(id=4, user_id=1330085937, product_id=135, taste_id=0, date=2025-10-06, satus=CONFIRM)>
+2025-10-06 at 17:06:22 | ERROR | <Purchase(id=5, user_id=1330085937, product_id=130, taste_id=0, date=2025-10-11, satus=CONFIRM)>
+2025-10-06 at 17:06:22 | ERROR | <Purchase(id=6, user_id=1330085937, product_id=41, taste_id=0, date=None, satus=NEW)>
+2025-10-06 at 17:06:32 | ERROR | None
+2025-10-06 at 17:06:32 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7f305319bf80>
+2025-10-06 at 17:06:32 | ERROR | [<Purchase(id=6, user_id=1330085937, product_id=41, taste_id=0, date=None, satus=NEW)>]
+2025-10-06 at 17:06:39 | ERROR | None
+2025-10-06 at 17:06:39 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7f3053362c40>
+2025-10-06 at 17:06:39 | ERROR | [<Purchase(id=6, user_id=1330085937, product_id=41, taste_id=0, date=None, satus=NEW)>]
+2025-10-06 at 17:06:39 | ERROR | [<Purchase(id=6, user_id=1330085937, product_id=41, taste_id=0, date=None, satus=NEW)>]
+2025-10-06 at 17:06:40 | ERROR | 2025-10-06
+2025-10-06 at 17:06:40 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7f30531c6d40>
+2025-10-06 at 17:06:40 | ERROR | [<Purchase(id=6, user_id=1330085937, product_id=41, taste_id=0, date=2025-10-06, satus=NEW)>]
+2025-10-06 at 17:06:40 | ERROR | 2025-10-06
+2025-10-06 at 17:07:19 | ERROR | 2025-10-06
+2025-10-06 at 17:07:19 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7f3053353cc0>
+2025-10-06 at 17:07:19 | ERROR | [<Purchase(id=6, user_id=1330085937, product_id=41, taste_id=0, date=2025-10-06, satus=NEW)>]
+2025-10-06 at 17:07:23 | ERROR | 2025-10-06
+2025-10-06 at 17:07:23 | ERROR | <sqlalchemy.engine.result.ChunkedIteratorResult object at 0x7f30531c7480>
+2025-10-06 at 17:07:23 | ERROR | [<Purchase(id=1, user_id=1330085937, product_id=52, taste_id=0, date=2025-10-06, satus=CONFIRM)>, <Purchase(id=2, user_id=1330085937, product_id=50, taste_id=0, date=2025-10-06, satus=CONFIRM)>, <Purchase(id=3, user_id=1330085937, product_id=133, taste_id=0, date=2025-10-06, satus=CONFIRM)>, <Purchase(id=4, user_id=1330085937, product_id=135, taste_id=0, date=2025-10-06, satus=CONFIRM)>, <Purchase(id=6, user_id=1330085937, product_id=41, taste_id=0, date=2025-10-06, satus=CONFIRM)>]
+2025-10-06 at 17:23:08 | INFO | Бот успешно запущен.
+2025-10-07 at 08:40:22 | INFO | Поиск одной записи User по фильтрам: {'telegram_id': 1330085937}
+2025-10-07 at 08:40:22 | INFO | Запись найдена по фильтрам: {'telegram_id': 1330085937}
+2025-10-07 at 08:59:01 | ERROR | Бот остановлен!
+2025-10-07 at 09:01:15 | INFO | Бот успешно запущен.
+2025-10-07 at 09:01:20 | ERROR | Бот остановлен!
