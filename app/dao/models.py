@@ -10,6 +10,7 @@ class User(Base):
     username: Mapped[str | None]
     first_name: Mapped[str | None]
     last_name: Mapped[str | None]
+    count_total: Mapped[int] = mapped_column(Integer, default=0)
     purchases: Mapped[List['Purchase']] = relationship("Purchase", back_populates="user")
 
     def __repr__(self):
