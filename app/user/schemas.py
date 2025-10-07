@@ -34,7 +34,7 @@ class PurchaseModel(BaseModel):
 class ItemCartData(BaseModel):
     user_id: int = Field(..., description="ID пользователя Telegram")
     goods_id: str = Field(..., description="ID товаров")
-    price: int = Field(..., description="Цена товара")
+    total: int = Field(..., description="Цена товара")
     status: str = Field(..., description="Статус товара")
 
 class CartModel(BaseModel):
