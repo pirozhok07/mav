@@ -188,6 +188,8 @@ async def get_adress(message: Message, state: FSMContext, session_with_commit: A
 @cart_router.callback_query(F.data.startswith("money_"))
 async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
     _, order_date, money_flag = call.data.split('_')
+    total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW", get_date=datetime.strptime(order_date, "%d.%m.%Y").date())
+    purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW", get_date=datetime.strptime(order_date, "%d.%m.%Y").date())
     if money_flag:
         await call.answer(f"Оплата переводом.\nСумма к оплате: {total}₽\nРЕКВИЗИТЫ\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
         money_text = f"Оплата переводом.\n"
@@ -196,8 +198,6 @@ async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
         money_text = f"Оплата наличными.\n"
     
     await page_home(call)
-    total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW", get_date=datetime.strptime(order_date, "%d.%m.%Y").date())
-    purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW", get_date=datetime.strptime(order_date, "%d.%m.%Y").date())
     text=''
     for purchase in purchases:
         await PurchaseDao.set_order(session_without_commit, data_id=purchase.id, money=money_flag)
