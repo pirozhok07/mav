@@ -76,6 +76,7 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
                                        data_id=purchase.id,
                                        goods=text_data,
                                        total=total_price)
+                                       
     else:
         payment_data = {
             'user_id': int(user_id),
@@ -83,8 +84,7 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
             'total': product.price,
             'status': 'NEW',
         }
-    
-    await PurchaseDao.add(session=session_with_commit, values=ItemCartData(**payment_data))
+        await PurchaseDao.add(session=session_with_commit, values=ItemCartData(**payment_data))
     await page_catalog(call, session_with_commit)
 
 
