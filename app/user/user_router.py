@@ -5,7 +5,7 @@ from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 from dao.dao import PurchaseDao, UserDAO, ProductDao, TasteDao
 from user.kbs import cart_kb, main_user_kb, purchases_kb
-from user.schemas import TasteIDModel, TelegramIDModel, UserModel, CartModel
+from user.schemas import PurchaseModel, TasteIDModel, TelegramIDModel, UserModel, CartModel
 
 user_router = Router()
 
@@ -115,12 +115,13 @@ async def page_user_purchases(call: CallbackQuery, session_without_commit: Async
 async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSession):
     await call.answer("Моя корзина")
 
-    # Получаем список покупок пользователя
-    # cart = await ProductDao.find_all(session=session_without_commit,
-                                                #   filters=CartModel(id=call.from_user.id))
-    # count_products = len(products_category)
-    purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW")
-    # logger.error(purchases)
+    user_id = call.from_user.id
+    purchase = await PurchaseDao.find_one_or_none(
+        session=session_without_commit,
+        filters=PurchaseModel(user_id=user_id,
+                              status="NEW")
+    )
+
     if not purchases:
         await call.message.edit_text(
             text=f"🔍 <b>У вас пока нет покупок.</b>\n\n"
@@ -128,29 +129,26 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
             reply_markup=main_user_kb(call.from_user.id)
         )
         return
+    
+    purchases = purchase.goods_id.split(', ')
     product_text = (
             f"🛒 <b>Информация о вашей корзине:</b>\n"
             f"━━━━━━━━━━━━━━━━━━\n")
-    cart_total=0
+    
     # Для каждой покупки отправляем информацию
-    for purchase in purchases:
-
-        # logger.error(purchase)
-        product = purchase.product
-        # logger.error(product)
-        # file_text = "📦 <b>Товар включает файл:</b>" if product.file_id else "📄 <b>Товар не включает файлы:</b>"
-        if purchase.taste_id != 0:
-            taste = await TasteDao.find_one_or_none(
-                session=session_without_commit,
-                filters=TasteIDModel(id=purchase.taste_id)
-            )
+    for good in purchases:
+        if good.find('_') != -1:
+            product_id, taste_id = good.split('_')
+            taste = await TasteDao.find_one_or_none_by_id(session=session_without_commit, data_id=taste_id)
+            product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=product_id)
             product_text += (f"🔹 {product.name} ({taste.taste_name}) - {product.price} ₽\n")
-        else:
-             product_text += (f"🔹 {product.name} - {product.price} ₽\n")
-        cart_total +=product.price
+        else: 
+            product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=good)
+            product_text += (f"🔹 {product.name} - {product.price} ₽\n")
+        
     product_text += (
             f"━━━━━━━━━━━━━━━━━━\n"
-            f"сумма заказа: {cart_total}₽\n")
+            f"сумма заказа: {purchase.total}₽\n")
 
     await call.message.edit_text(
         text=product_text,

@@ -27,16 +27,14 @@ class TasteIDModel(BaseModel):
 class ProductCategoryIDModel(BaseModel):
     category_id: int
 
-class TasteProductIDModel(BaseModel):
-    product_id: int
+class PurchaseModel(BaseModel):
+    user_id: int
+    status: str
 
 class ItemCartData(BaseModel):
     user_id: int = Field(..., description="ID пользователя Telegram")
-    product_id: int = Field(..., description="ID товара")
-    taste_id: int = Field(default=0, description="ID вкуса")
+    goods_id: int = Field(..., description="ID товаров")
     status: str = Field(..., description="Статус товара")
-    description: str = Field(..., description="Описание товара")
-    adress: str = Field(..., description="Адресс")
 
 class CartModel(BaseModel):
     id:int

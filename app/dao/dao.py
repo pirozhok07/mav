@@ -105,13 +105,22 @@ class PurchaseDao(BaseDAO[Purchase]):
     model = Purchase
 
     @classmethod
-    async def set_order(cls, session: AsyncSession, data_id: int, getdate: int = None, adress: str= None, money:bool=None):
+    async def set_order(cls, session: AsyncSession, 
+                        data_id: int, 
+                        getdate: int = None, 
+                        adress: str= None, 
+                        money:bool=None,
+                        goods:str = None,
+                        total:int=None):
         try:
             record = await session.get(cls.model, data_id)
+            if adress is not None: setattr(record, 'adress', adress)
+            if goods is not None: setattr(record, 'goods_id', goods)
+            if total is not None: setattr(record, 'total', total)
             if getdate is not None: 
                 setDate=datetime.strptime(getdate, "%d.%m.%Y").date()
                 setattr(record, 'date', setDate)
-            if adress is not None: setattr(record, 'adress', adress)
+            
             if money is not None: 
                 if money == "1":
                     setattr(record, 'money', True)
@@ -122,11 +131,12 @@ class PurchaseDao(BaseDAO[Purchase]):
             print(e)
             raise e
         
+ 
+        
     @classmethod
     async def get_purchases(cls, session: AsyncSession, telegram_id: int, isFlag:str, get_date:date = None) -> Optional[List[Purchase]]:
         try:
             # Запрос для получения пользователя с его покупками и связанными продуктами
-            logger.error(get_date)
             result = await session.execute(
             select(Purchase)
             .options(selectinload(Purchase.product))
@@ -134,9 +144,7 @@ class PurchaseDao(BaseDAO[Purchase]):
             .filter(Purchase.user_id == telegram_id, Purchase.status == isFlag, Purchase.date == get_date)
             )
             
-            logger.error(result)
             purchases = result.scalars().all() 
-            logger.error(purchases)
             if purchases is None:
                 return None 
             return purchases 
