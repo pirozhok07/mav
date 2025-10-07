@@ -112,7 +112,11 @@ class PurchaseDao(BaseDAO[Purchase]):
                 setDate=datetime.strptime(getdate, "%d.%m.%Y").date()
                 setattr(record, 'date', setDate)
             if adress is not None: setattr(record, 'adress', adress)
-            if money is not None: setattr(record, 'money', money)
+            if money is not None: 
+                if money == "1":
+                    setattr(record, 'money', True)
+                else:
+                    setattr(record, 'money', False)
             await session.flush()
         except SQLAlchemyError as e:
             print(e)
