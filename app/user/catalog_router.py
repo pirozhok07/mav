@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from config import bot, settings
 from dao.dao import TasteDao, UserDAO, CategoryDao, ProductDao, PurchaseDao
 from user.kbs import cancele_kb, main_user_kb, catalog_kb, product_kb, get_product_buy_kb, taste_kb
-from user.schemas import TasteProductIDModel, TelegramIDModel, ProductCategoryIDModel, ItemCartData
+from user.schemas import TelegramIDModel, ProductCategoryIDModel, ItemCartData
 
 catalog_router = Router()
 
