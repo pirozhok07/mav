@@ -180,25 +180,30 @@ async def get_adress(message: Message, state: FSMContext, session_with_commit: A
     purchases = await PurchaseDao.get_purchases(session=session_with_commit, telegram_id=message.from_user.id, isFlag="NEW")
     logger.error(purchases)
     for purchase in purchases:
-        await PurchaseDao.set_order(session_with_commit, purchase.id, order["date"], order["adress"])
+        await PurchaseDao.set_order(session_with_commit, data_id=purchase.id, getdate=order["date"], adress=order["adress"])
     msg = await message.answer(text="Выберите способ оплаты", reply_markup=order_kb(order["date"]))
     await state.update_data(last_msg_id=msg.message_id)
     
 
-@cart_router.callback_query(F.data.startswith("nal_"))
+@cart_router.callback_query(F.data.startswith("money_"))
 async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
-    await call.answer("Оплата наличными. \nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
-    _, order_date = call.data.split('_')
+    _, order_date, money_flag = call.data.split('_')
+    if money_flag:
+        await call.answer(f"Оплата переводом.\nСумма к оплате: {total}₽\nРЕКВИЗИТЫ\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
+        money_text = f"Оплата переводом.\n"
+    else:
+        await call.answer("Оплата наличными. \nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
+        money_text = f"Оплата наличными.\n"
+    
     await page_home(call)
-
     total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW", get_date=datetime.strptime(order_date, "%d.%m.%Y").date())
     purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW", get_date=datetime.strptime(order_date, "%d.%m.%Y").date())
     text=''
     for purchase in purchases:
+        await PurchaseDao.set_order(session_without_commit, data_id=purchase.id, money=money_flag)
         text += f"{purchase.product.name}\n"
     username = call.from_user.username
     user_info = f"@{username}" if username else f"c ID {call.from_user.id}"
-    logger.error(purchases[0].date)
     for admin_id in settings.ADMIN_IDS:
         try:
             
@@ -208,36 +213,7 @@ async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
                     f"💲 Пользователь {user_info} оформил заказ\n"
                     f"-------------------------------------------\n"
                     f"{text}"
-                    f"за <b>{total} ₽</b> Оплата наличными.\n"
-                    f"дата: {order_date}\n"
-                    f"адресс: {purchases[0].adress}\n"
-                ), reply_markup=admin_accept_kb(user_id=call.from_user.id, date=order_date)
-            )
-        except Exception as e:
-            logger.error(f"Ошибка при отправке уведомления администраторам: {e}")
-
-@cart_router.callback_query(F.data.startswith("nenal_"))
-async def nenal(call: CallbackQuery, session_without_commit: AsyncSession):
-    total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW", get_date=datetime.strptime(order_date, "%d.%m.%Y").date())
-    await call.answer(f"Оплата переводом.\nСумма к оплате: {total}₽\nРЕКВИЗИТЫ\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
-    _, order_date = call.data.split('_')
-    await page_home(call)
-
-    purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW", get_date=datetime.strptime(order_date, "%d.%m.%Y").date())
-    text=''
-    for purchase in purchases:
-        text += f"{purchase.product.name}\n"
-    username = call.from_user.username
-    user_info = f"@{username}" if username else f"c ID {call.from_user.id}"
-    for admin_id in settings.ADMIN_IDS:
-        try:
-            await bot.send_message(
-                chat_id=admin_id,
-                text=(
-                    f"💲 Пользователь {user_info} оформил заказ\n"
-                    f"-------------------------------------------\n"
-                    f"{text}"
-                    f"за <b>{total} ₽</b> Оплата переводом.\n"
+                    f"за <b>{total} ₽</b> {money_text}"
                     f"дата: {order_date}\n"
                     f"адресс: {purchases[0].adress}\n"
                 ), reply_markup=admin_accept_kb(user_id=call.from_user.id, date=order_date)

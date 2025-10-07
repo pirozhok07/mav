@@ -105,12 +105,14 @@ class PurchaseDao(BaseDAO[Purchase]):
     model = Purchase
 
     @classmethod
-    async def set_order(cls, session: AsyncSession, data_id: int, getdate: int, adress: str):
+    async def set_order(cls, session: AsyncSession, data_id: int, getdate: int = None, adress: str= None, money:bool=None):
         try:
             record = await session.get(cls.model, data_id)
-            setDate=datetime.strptime(getdate, "%d.%m.%Y").date()
-            setattr(record, 'date', setDate)
-            setattr(record, 'adress', adress)
+            if getdate is not None: 
+                setDate=datetime.strptime(getdate, "%d.%m.%Y").date()
+                setattr(record, 'date', setDate)
+            if adress is not None: setattr(record, 'adress', adress)
+            if money is not None: setattr(record, 'money', money)
             await session.flush()
         except SQLAlchemyError as e:
             print(e)
