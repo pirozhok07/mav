@@ -182,8 +182,8 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession, st
         text_data=(f"В наличие <b>{product.quantity}</b> шт.\n"
                    f"{product.name}"
         )
-        await state.update_data(id_date=product_id)
         await state.update_data(isTaste=None)
+    await state.update_data(id_date=product_id)
     msg = await call.message.edit_text(text=(f"{text_data}\n"
                                        f"Укажите количество товара: ")
     )
