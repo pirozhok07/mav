@@ -155,7 +155,7 @@ async def nal(call: CallbackQuery, session_with_commit: AsyncSession, state: FSM
     )
     order = await state.get_data()
     await PurchaseDao.set_order(session_with_commit, data_id=purchase.id, getdate=order["date"], adress=order["adress"], status="WAIT", money=money_flag)
-    await order.clear()
+    await state.clear()
 
     if money_flag == "1":
         await call.answer(f"Оплата переводом.\nСумма к оплате: {purchase.total}₽\nРЕКВИЗИТЫ\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)

@@ -107,7 +107,7 @@ def cart_kb() -> InlineKeyboardMarkup:
 def date_kb() -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     f = date.today()
-    for i in range(0,7):
+    for i in range(0,3):
         nextday=timedelta(i)
         btn = (f+nextday).strftime("%d.%m.%Y")
         kb.button(text=btn, callback_data=f"get_date_{btn}")
