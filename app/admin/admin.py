@@ -192,10 +192,10 @@ async def delivery_date(call: CallbackQuery):
     await call.message.edit_text(text="Выберите дату доставки: ", reply_markup=admin_date_kb())
 
 @admin_router.callback_query(F.data.startswith("delivery_date_"), F.from_user.id.in_(settings.ADMIN_IDS))
-async def show_delivery(call: CallbackQuery, session_with_commit: AsyncSession):
+async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSession):
     date_text = call.data.split("_")[-1]
     date_order=datetime.strptime(date_text, "%d.%m.%Y").date()
-    purchases = await PurchaseDao.find_all(session=session_with_commit,
+    purchases = await PurchaseDao.find_all(session=session_without_commit,
                                            filters=PurchaseDateModel(date=date_order))
     logger.error(purchases)
     for purchase in purchases:
@@ -204,13 +204,13 @@ async def show_delivery(call: CallbackQuery, session_with_commit: AsyncSession):
         for good in products:
             if good.find('_') != -1:
                 product_id, taste_id = good.split('_')
-                taste = await TasteDao.find_one_or_none_by_id(session=session_with_commit, data_id=taste_id)
-                product = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=product_id)
+                taste = await TasteDao.find_one_or_none_by_id(session=session_without_commit, data_id=taste_id)
+                product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=product_id)
                 product_text += (f"🔹 {product.name} ({taste.taste_name})\n")
             else: 
-                product = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=good)
+                product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=good)
                 product_text += (f"🔹 {product.name}\n")
-        user=UserDAO.find_one_or_none(session=session_with_commit,
+        user= await UserDAO.find_one_or_none(session=session_without_commit,
                                       filters=UserIDModel(telegram_id=purchase.user_id))
         logger.error(user)
         user_info = f"@{user.username}" if user.username else f"c ID {user.telegram_id}"
