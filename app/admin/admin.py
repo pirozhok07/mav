@@ -211,6 +211,7 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
                 product_text += (f"🔹 {product.name}\n")
         user=UserDAO.find_one_or_none(session=session_without_commit,
                                       filters=UserIDModel(telegram_id=purchase.user_id))
+        logger.error(user)
         user_info = f"@{user.username}" if user.username else f"c ID {user.telegram_id}"
         if purchase.money: money_text = "наличными."
         else: money_text = "переводом."
