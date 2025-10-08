@@ -161,9 +161,9 @@ async def admin_taste_(call: CallbackQuery, session_without_commit: AsyncSession
 async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
     await call.answer("Изменение кол-во")
     _, product_id, taste_id = call.data.split('_')
-    product = ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=product_id)
+    product = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=product_id)
     if taste_id == "0":
-        taste = TasteDao.find_one_or_none_by_id(session=session_with_commit, data_id=taste_id)
+        taste = await TasteDao.find_one_or_none_by_id(session=session_with_commit, data_id=taste_id)
         text_data=(f"В наличие <b>{taste.quantity}</b>"
                    f"{product.name} ({taste.taste_name})"
         )
