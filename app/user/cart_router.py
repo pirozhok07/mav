@@ -101,9 +101,21 @@ async def edit_cart(call: CallbackQuery, session_without_commit: AsyncSession):
         filters=PurchaseModel(user_id=user_id,
                               status="NEW")
     )
+    purchases = purchase.goods_id.split(', ')
+    product_data, taste_data=[]
+    for good in purchases:
+        product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=product_id)
+        if good.find('_') != -1:
+            product_id, taste_id = good.split('_')
+            taste = await TasteDao.find_one_or_none_by_id(session=session_without_commit, data_id=taste_id)
+        else: 
+            taste=None
+        product_data.append(product)
+        taste_data.append(taste)
+    
     await call.message.edit_text(
         text="Выберите товар для удаления:",
-        reply_markup=delete_kb(session_without_commit, purchase.goods_id))
+        reply_markup=delete_kb(product_data, taste_data))
 
 @cart_router.callback_query(F.data.startswith('itemDell_'))
 async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
