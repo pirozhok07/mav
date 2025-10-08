@@ -164,14 +164,14 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
     product = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=product_id)
     if taste_id != "0":
         taste = await TasteDao.find_one_or_none_by_id(session=session_with_commit, data_id=taste_id)
-        text_data=(f"В наличие <b>{taste.quantity}</b>"
+        text_data=(f"В наличие <b>{taste.quantity}</b> шт.\n"
                    f"{product.name} ({taste.taste_name})"
         )
     
-    text_data=(f"В наличие <b>{product.quantity}</b>"
+    text_data=(f"В наличие <b>{product.quantity}</b> шт.\n"
                f"{product.name}"
     )
-    await call.message.edit_text(text=(f"{text_data}"
+    await call.message.edit_text(text=(f"{text_data}\n"
                                        f"Укажите количество товара: ")
     )
 
