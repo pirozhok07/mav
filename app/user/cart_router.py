@@ -52,6 +52,7 @@ class DoOrder(StatesGroup):
 async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
     await call.answer("Товар добавлен в корзину", show_alert=True)
     _, product_id, taste_id = call.data.split('_')
+    logger.error(taste_id)
     user_id = call.from_user.id
     purchase = await PurchaseDao.find_one_or_none(
         session=session_with_commit,
