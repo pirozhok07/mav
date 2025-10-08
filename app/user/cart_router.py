@@ -134,38 +134,49 @@ async def get_date(call: CallbackQuery, state: FSMContext):
     await state.set_state(DoOrder.adress)
 
 @cart_router.message(F.text, DoOrder.adress)
-async def get_adress(message: Message, state: FSMContext, session_with_commit: AsyncSession):
+async def get_adress(message: Message, state: FSMContext):
     await state.update_data(adress=message.text)
     order = await state.get_data()
     await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
     await bot.delete_message(chat_id=message.from_user.id, message_id=order["last_msg_id"])
-    purchases = await PurchaseDao.get_purchases(session=session_with_commit, telegram_id=message.from_user.id, isFlag="NEW")
-    logger.error(purchases)
-    for purchase in purchases:
-        await PurchaseDao.set_order(session_with_commit, data_id=purchase.id, getdate=order["date"], adress=order["adress"])
-        
-    await state.clear()
-    msg = await message.answer(text="Выберите способ оплаты", reply_markup=order_kb(order["date"]))
+    
+    
+    msg = await message.answer(text="Выберите способ оплаты", reply_markup=order_kb())
     await state.update_data(last_msg_id=msg.message_id)
     
 
 @cart_router.callback_query(F.data.startswith("money_"))
-async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
-    _, order_date, money_flag = call.data.split('_')
-    total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW", get_date=datetime.strptime(order_date, "%d.%m.%Y").date())
-    purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id, isFlag="NEW", get_date=datetime.strptime(order_date, "%d.%m.%Y").date())
+async def nal(call: CallbackQuery, session_with_commit: AsyncSession, state: FSMContext):
+    _, money_flag = call.data.split('_')
+    purchase = await PurchaseDao.find_one_or_none(
+        session=session_with_commit,
+        filters=PurchaseModel(user_id=call.from_user.id,
+                              status="NEW")
+    )
+    order = await state.get_data()
+    await PurchaseDao.set_order(session_with_commit, data_id=purchase.id, getdate=order["date"], adress=order["adress"], status="WAIT", money=money_flag)
+    await order.clear()
+
     if money_flag == "1":
-        await call.answer(f"Оплата переводом.\nСумма к оплате: {total}₽\nРЕКВИЗИТЫ\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
+        await call.answer(f"Оплата переводом.\nСумма к оплате: {purchase.total}₽\nРЕКВИЗИТЫ\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
         money_text = f"Оплата переводом.\n"
     else:
-        await call.answer("Оплата наличными. \nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
+        await call.answer(f"Оплата наличными. \nСумма к оплате: {purchase.total}₽\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
         money_text = f"Оплата наличными.\n"
     
     await page_home(call)
-    text=''
-    for purchase in purchases:
-        await PurchaseDao.set_order(session_without_commit, data_id=purchase.id, money=money_flag)
-        text += f"{purchase.product.name}\n"
+    product_text=""
+    purchases = purchase.goods_id.split(', ')
+    for good in purchases:
+        if good.find('_') != -1:
+            product_id, taste_id = good.split('_')
+            taste = await TasteDao.find_one_or_none_by_id(session=session_with_commit, data_id=taste_id)
+            product = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=product_id)
+            product_text += (f"🔹 {product.name} ({taste.taste_name})\n")
+        else: 
+            product = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=good)
+            product_text += (f"🔹 {product.name}\n")
+        
     username = call.from_user.username
     user_info = f"@{username}" if username else f"c ID {call.from_user.id}"
     for admin_id in settings.ADMIN_IDS:
@@ -176,11 +187,11 @@ async def nal(call: CallbackQuery, session_without_commit: AsyncSession):
                 text=(
                     f"💲 Пользователь {user_info} оформил заказ\n"
                     f"-------------------------------------------\n"
-                    f"{text}"
-                    f"за <b>{total} ₽</b> {money_text}"
-                    f"дата: {order_date}\n"
-                    f"адресс: {purchases[0].adress}\n"
-                ), reply_markup=admin_accept_kb(user_id=call.from_user.id, date=order_date)
+                    f"{product_text}"
+                    f"за <b>{purchase.total} ₽</b> {money_text}"
+                    f"дата: {purchase.date}\n"
+                    f"адресс: {purchase.adress}\n"
+                ), reply_markup=admin_accept_kb(user_id=call.from_user.id)
             )
         except Exception as e:
             logger.error(f"Ошибка при отправке уведомления администраторам: {e}")

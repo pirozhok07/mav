@@ -111,12 +111,14 @@ class PurchaseDao(BaseDAO[Purchase]):
                         adress: str= None, 
                         money:bool=None,
                         goods:str = None,
-                        total:int=None):
+                        total:int=None,
+                        status:str=None):
         try:
             record = await session.get(cls.model, data_id)
             if adress is not None: setattr(record, 'adress', adress)
             if goods is not None: setattr(record, 'goods_id', goods)
             if total is not None: setattr(record, 'total', total)
+            if status is not None: setattr(record, 'status', status)
             if getdate is not None: 
                 setDate=datetime.strptime(getdate, "%d.%m.%Y").date()
                 setattr(record, 'date', setDate)

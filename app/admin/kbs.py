@@ -2,7 +2,7 @@ from typing import List
 from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from dao.models import Category
-
+from datetime import date
 
 def catalog_admin_kb(catalog_data: List[Category]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
@@ -64,9 +64,9 @@ def admin_confirm_kb() -> InlineKeyboardMarkup:
     return kb.as_markup()
 
 
-def admin_accept_kb(user_id: int, date:str) -> InlineKeyboardMarkup:
+def admin_accept_kb(user_id: int) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    kb.button(text="✔ Подтвердить", callback_data=f"acceptOrder_{date}_{user_id}")
+    kb.button(text="✔ Подтвердить", callback_data=f"acceptOrder_{user_id}")
     kb.adjust(1)
     return kb.as_markup()
 
