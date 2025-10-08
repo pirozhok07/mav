@@ -30,6 +30,20 @@ class ProductDao(BaseDAO[Product]):
     model = Product
 
     @classmethod
+    async def set_order(cls, session: AsyncSession, 
+                        data_id: int, 
+                        quantity: int = None,
+                        price: int = None):
+        try:
+            record = await session.get(cls.model, data_id)
+            if quantity is not None: setattr(record, 'quantity', quantity)
+            if price is not None: setattr(record, 'price', price)
+            await session.flush()
+        except SQLAlchemyError as e:
+            print(e)
+            raise e
+
+    @classmethod
     async def get_products(cls, session: AsyncSession, category_id: int) -> Optional[List[Product]]:
         try:
             # Запрос для получения продуктов
@@ -67,7 +81,19 @@ class ProductDao(BaseDAO[Product]):
         
 class TasteDao(BaseDAO[Taste]):
     model = Taste
-    
+
+    @classmethod
+    async def set_order(cls, session: AsyncSession, 
+                        data_id: int, 
+                        quantity: int):
+        try:
+            record = await session.get(cls.model, data_id)
+            if quantity is not None: setattr(record, 'quantity', quantity)
+            await session.flush()
+        except SQLAlchemyError as e:
+            print(e)
+            raise e
+        
     @classmethod
     async def get_tastes(cls, session: AsyncSession, product_id: int) -> Optional[List[Taste]]:
         try:

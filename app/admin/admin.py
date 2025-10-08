@@ -8,7 +8,7 @@ from user.schemas import PurchaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from config import settings, bot
 from dao.dao import TasteDao, UserDAO, ProductDao, CategoryDao, PurchaseDao
-from admin.kbs import admin_date_kb, admin_delivery_kb, admin_kb, admin_kb_back, product_management_kb, cancel_kb_inline, catalog_admin_kb, \
+from admin.kbs import admin_catalog_kb, admin_date_kb, admin_delivery_kb, admin_kb, admin_kb_back, admin_product_kb, admin_taste_kb, product_management_kb, cancel_kb_inline, catalog_admin_kb, \
     admin_confirm_kb, dell_product_kb
 from admin.schemas import ProductModel, ProductIDModel, PurchaseDateModel, UserIDModel
 from admin.utils import process_dell_text_msg
@@ -109,6 +109,72 @@ async def admin_process_start_dell(call: CallbackQuery, session_with_commit: Asy
     await call.message.edit_text(f"Товар с ID {product_id} удален!", show_alert=True)
     await call.message.delete()
 
+@admin_router.callback_query(F.data.startswith("add_category_"),
+                             F.from_user.id.in_(settings.ADMIN_IDS),
+                             AddProduct.category_id)
+async def admin_process_category(call: CallbackQuery, state: FSMContext):
+    category_id = int(call.data.split("_")[-1])
+    await state.update_data(category_id=category_id)
+    await call.answer('Категория товара успешно выбрана.')
+    msg = await call.message.edit_text(text="Введите цену товара: ", reply_markup=cancel_kb_inline())
+    await state.update_data(last_msg_id=msg.message_id)
+    await state.set_state(AddProduct.price)
+
+@admin_router.callback_query(F.data.startswith("edit_product"),
+                             F.from_user.id.in_(settings.ADMIN_IDS))
+async def edit_product(call: CallbackQuery, session_without_commit: AsyncSession):
+    await call.answer("Загрузка каталога...")
+    catalog_data = await CategoryDao.find_all(session=session_without_commit)
+    await call.message.edit_text(
+        text="Выберите категорию товаров:",
+        reply_markup=admin_catalog_kb(catalog_data)
+    )
+
+@admin_router.callback_query(F.data.startswith("admin_category_"),
+                             F.from_user.id.in_(settings.ADMIN_IDS))
+async def admin_category_(call: CallbackQuery, session_without_commit: AsyncSession):
+    await call.answer("Загрузка товаров...")
+    category_id = int(call.data.split("_")[-1])
+    product_data = await ProductDao.get_products(session=session_without_commit, category_id=category_id)
+    count_products = len(product_data)
+    if count_products:
+        await call.message.edit_text(
+            text=f"В данной категории {count_products} товаров.",
+            reply_markup=admin_product_kb(product_data)
+        )
+    else:
+        catalog_data = await CategoryDao.find_all(session=session_without_commit)
+        await call.message.edit_text(text="В данной категории нет товаров.\n\n Выберите категорию товаров:", reply_markup=admin_catalog_kb(catalog_data)) # возврат
+
+@admin_router.callback_query(F.data.startswith("admin_taste_"),
+                             F.from_user.id.in_(settings.ADMIN_IDS))
+async def admin_taste_(call: CallbackQuery, session_without_commit: AsyncSession):
+    await call.answer("Загрузка вкусов...")
+    product_id = int(call.data.split("_")[-1])    
+    taste_data = await TasteDao.get_tastes(session=session_without_commit, product_id=product_id)
+    await call.message.edit_text(
+        text="Выберите вкус:",
+        reply_markup=admin_taste_kb(taste_data))
+
+
+@admin_router.callback_query(F.data.startswith('admin_good_'))
+async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
+    await call.answer("Изменение кол-во")
+    _, product_id, taste_id = call.data.split('_')
+    product = ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=product_id)
+    if taste_id == "0":
+        taste = TasteDao.find_one_or_none_by_id(session=session_with_commit, data_id=taste_id)
+        text_data=(f"В наличие <b>{taste.quantity}</b>"
+                   f"{product.name} ({taste.taste_name})"
+        )
+    
+    text_data=(f"В наличие <b>{product.quantity}</b>"
+               f"{product.name}"
+    )
+    await call.message.edit_text(text=(f"{text_data}"
+                                       f"Укажите количество товара: ")
+    )
+
 @admin_router.callback_query(F.data == 'add_product', F.from_user.id.in_(settings.ADMIN_IDS))
 async def admin_process_add_product(call: CallbackQuery, state: FSMContext):
     await call.answer('Запущен сценарий добавления товара.')
@@ -134,19 +200,6 @@ async def admin_process_description(message: Message, state: FSMContext, session
     msg = await message.answer(text="Теперь выберите категорию товара: ", reply_markup=catalog_admin_kb(catalog_data))
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(AddProduct.category_id)
-
-
-@admin_router.callback_query(F.data.startswith("add_category_"),
-                             F.from_user.id.in_(settings.ADMIN_IDS),
-                             AddProduct.category_id)
-async def admin_process_category(call: CallbackQuery, state: FSMContext):
-    category_id = int(call.data.split("_")[-1])
-    await state.update_data(category_id=category_id)
-    await call.answer('Категория товара успешно выбрана.')
-    msg = await call.message.edit_text(text="Введите цену товара: ", reply_markup=cancel_kb_inline())
-    await state.update_data(last_msg_id=msg.message_id)
-    await state.set_state(AddProduct.price)
-
 
 @admin_router.message(F.text, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.price)
 async def admin_process_price(message: Message, state: FSMContext, session_without_commit: AsyncSession):
@@ -212,7 +265,6 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
                 product_text += (f"🔹 {product.name}\n")
         user= await UserDAO.find_one_or_none(session=session_without_commit,
                                       filters=UserIDModel(telegram_id=purchase.user_id))
-        logger.error(user)
         user_info = f"@{user.username}" if user.username else f"c ID {user.telegram_id}"
         if purchase.money: money_text = "наличными."
         else: money_text = "переводом."
@@ -223,7 +275,7 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
                     f"💲 Пользователь {user_info}\n"
                     f"-------------------------------------------\n"
                     f"{product_text}"
-                    f"за <b>{purchase.total} ₽</b> Оплата {money_text}.\n"
+                    f"за <b>{purchase.total} ₽</b> Оплата {money_text}\n"
                     f"адресс: {purchase.adress}\n"
                 ), reply_markup=admin_delivery_kb(user.telegram_id)
             )

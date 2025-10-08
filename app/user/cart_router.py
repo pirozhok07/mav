@@ -20,12 +20,11 @@ cart_router = Router()
 class DoOrder(StatesGroup):
     adress = State()
     date = State()
-    
+
 @cart_router.callback_query(F.data.startswith('cart_'))
 async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
     await call.answer("Товар добавлен в корзину", show_alert=True)
     _, product_id, taste_id = call.data.split('_')
-    logger.error(taste_id)
     user_id = call.from_user.id
     purchase = await PurchaseDao.find_one_or_none(
         session=session_with_commit,

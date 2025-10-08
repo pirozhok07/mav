@@ -27,7 +27,7 @@ class BaseDAO(Generic[T]):
         except SQLAlchemyError as e:
             print(e)
             raise e
-    
+
 
         
     @classmethod

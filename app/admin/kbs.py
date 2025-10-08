@@ -1,7 +1,7 @@
 from typing import List
 from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from dao.models import Category
+from dao.models import Category, Product, Taste
 from datetime import date, timedelta
 
 def catalog_admin_kb(catalog_data: List[Category]) -> InlineKeyboardMarkup:
@@ -12,6 +12,34 @@ def catalog_admin_kb(catalog_data: List[Category]) -> InlineKeyboardMarkup:
     kb.adjust(2)
     return kb.as_markup()
 
+def admin_catalog_kb(catalog_data: List[Category]) -> InlineKeyboardMarkup:
+    kb = InlineKeyboardBuilder()
+    for category in catalog_data:
+        kb.button(text=category.category_name, callback_data=f"admin_category_{category.id}")
+    kb.button(text="🏠 На главную", callback_data="home")
+    kb.adjust(1)
+    return kb.as_markup()
+
+def admin_product_kb(product_data: List[Product]) -> InlineKeyboardMarkup:
+    kb = InlineKeyboardBuilder()
+    for product in product_data:
+        if product.category_id == 3:
+            kb.button(text=f"{product.name} - {product.price} ₽", callback_data=f"admin_taste_{product.id}")
+        else:
+            kb.button(text=f"{product.name} - {product.price} ₽", callback_data=f"admin_good_{product.id}_0")
+    kb.button(text="🛍 Назад", callback_data="edit_product")
+    kb.button(text="🏠 На главную", callback_data="home")
+    kb.adjust(1)
+    return kb.as_markup()
+
+def admin_taste_kb(taste_data: List[Taste]) -> InlineKeyboardMarkup:
+    kb = InlineKeyboardBuilder()
+    for taste in taste_data:
+        kb.button(text=taste.taste_name, callback_data=f"admin_good_{taste.product_id}_{taste.id}")
+    kb.button(text="🛍 Назад", callback_data=f"admin_category_{taste_data[0].product_id}")
+    kb.button(text="🏠 На главную", callback_data="home")
+    kb.adjust(1)
+    return kb.as_markup()
 
 def admin_kb() -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
@@ -53,6 +81,7 @@ def dell_product_kb(product_id: int) -> InlineKeyboardMarkup:
 def product_management_kb() -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     kb.button(text="➕ Добавить товар", callback_data="add_product")
+    kb.button(text="🗑️ Редактировать кол-во", callback_data="edit_product")
     kb.button(text="🗑️ Удалить товар", callback_data="delete_product")
     kb.button(text="⚙️ Админ панель", callback_data="admin_panel")
     kb.button(text="🏠 На главную", callback_data="home")

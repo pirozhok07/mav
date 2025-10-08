@@ -42,25 +42,6 @@ async def page_catalog_products(call: CallbackQuery, session_without_commit: Asy
             text=f"В данной категории {count_products} товаров.",
             reply_markup=product_kb(product_data)
         )
-        # for product in products_category:
-        #     product_text = (
-        #         f"📦 <b>Название товара:</b> {product.name}\n\n"
-        #         f"💰 <b>Цена:</b> {product.price} руб.\n\n"
-        #         f"📝 <b>Описание:</b>\n<i>{product.description}</i>\n\n"
-        #         f"━━━━━━━━━━━━━━━━━━"
-        #     )
-        #     if product.category_id == 1:
-        #         await call.message.answer(
-        #             product_text,
-        #             reply_markup=product_kb_1(product.id)
-        #         )
-        #     else:
-        #         await call.message.answer(
-        #             product_text,
-        #             reply_markup=product_kb(product.id)
-        #         )
-            
-        # await call.message.answer(".", reply_markup=cancele_kb())
     else:
         catalog_data = await CategoryDao.find_all(session=session_without_commit)
         await call.message.edit_text(text="В данной категории нет товаров.\n\n Выберите категорию товаров:", reply_markup=catalog_kb(catalog_data)) # возврат
@@ -73,44 +54,6 @@ async def show_taste(call: CallbackQuery, session_without_commit: AsyncSession):
     await call.message.edit_text(
         text="Выберите вкус:",
         reply_markup=taste_kb(taste_data))
-    
-    # count_tastes = len(tastes_product)
-    # if count_tastes:
-
-    #     await call.message.edit_text(f"У данного товара {count_tastes} вкусов.")
-    #     for taste in tastes_product:
-    #         taste_text = (
-    #             f"📦 <b>Название вкуса:</b> {taste.taste_name}\n\n"
-    #             f"━━━━━━━━━━━━━━━━━━"
-    #         )
-    #         await call.message.answer(
-    #             taste_text,
-    #             reply_markup=taste_kb(taste.id)
-    #         )
-    #     await call.message.answer("-----", reply_markup=cancele_kb())
-    # else:
-    #     await call.message.edit_text(text="В данной категории нет товаров.\n\n Выберите категорию товаров:") # возврат   
-# @catalog_router.callback_query(F.data.startswith('cart_'))
-# async def process_about(call: CallbackQuery, session_without_commit: AsyncSession):
-    # user_info = await UserDAO.find_one_or_none(
-    #     session=session_without_commit,
-    #     filters=TelegramIDModel(telegram_id=call.from_user.id)
-    # )
-    # _, product_id, price = call.data.split('_')
-#     await bot.send_invoice(
-#         chat_id=call.from_user.id,
-#         title=f'Оплата 👉 {price}₽',
-#         description=f'Пожалуйста, завершите оплату в размере {price}₽, чтобы открыть доступ к выбранному товару.',
-#         payload=f"{user_info.id}_{product_id}",
-#         provider_token=settings.PROVIDER_TOKEN,
-#         currency='rub',
-#         prices=[LabeledPrice(
-#             label=f'Оплата {price}',
-#             amount=int(price) * 100
-#         )],
-#         reply_markup=get_product_buy_kb(price)
-#     )
-#     await call.message.delete()
 
 @catalog_router.pre_checkout_query(lambda query: True)
 async def pre_checkout_query(pre_checkout_q: PreCheckoutQuery):
