@@ -138,8 +138,11 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
     # Для каждой покупки отправляем информацию
     for good in purchases:
         if good.find('_') != -1:
+            logger.error(good)
             product_id, taste_id = good.split('_')
+            logger.error(taste_id)
             taste = await TasteDao.find_one_or_none_by_id(session=session_without_commit, data_id=taste_id)
+            logger.error(taste)
             product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=product_id)
             product_text += (f"🔹 {product.name} ({taste.taste_name}) - {product.price} ₽\n")
         else: 
