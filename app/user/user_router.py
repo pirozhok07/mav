@@ -111,12 +111,15 @@ async def page_user_purchases(call: CallbackQuery, session_without_commit: Async
             else: 
                 product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=good)
                 product_text += (f"🔹 {product.name}\n")
-        
+        if(purchase.status == "WAIT"): text_status = "Ожидает подтверждения"
+        elif(purchase.status == "CONFIRM"): text_status = "Ожидает доставки"
+        elif(purchase.status == "DONE"): text_status = "Выполнен"
+
         product_text += (
-                f"\n<b>сумма: {purchase.total}₽</b>\n"
-                f"<b>дата: {purchase.date}</b>\n"
-                f"<b>адресс: {purchase.adress}</b>\n"
-                f"<b>статус: {purchase.status}</b>\n"
+                f"\n<b>сумма:</b> {purchase.total}₽\n"
+                f"<b>дата:</b> {purchase.date}\n"
+                f"<b>адресс:</b> {purchase.adress}\n"
+                f"<b>статус:</b> {purchase.status}\n"
                 f"━━━━━━━━━━━━━━━━━━\n")
 
     await call.message.edit_text(
