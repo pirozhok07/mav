@@ -134,11 +134,10 @@ async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
                               status="NEW")
     )
     goods = purchase.goods_id.split(', ')   
-    logger.error(dell_text)
-    logger.error(goods)
     goods.remove(dell_text)
-    logger.error(goods)
-    await PurchaseDao.set_order(session_with_commit, data_id=purchase.id, goods=', '.join(goods))
+    product = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=product_id)
+    new_total=purchase.total-product.price
+    await PurchaseDao.set_order(session_with_commit, data_id=purchase.id, goods=', '.join(goods), total=new_total)
     await edit_cart(call, session_with_commit)
 
 @cart_router.callback_query(F.data == 'do_order')
