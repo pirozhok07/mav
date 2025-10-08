@@ -197,6 +197,7 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
     date_order=datetime.strptime(date_text, "%d.%m.%Y").date()
     purchases = await PurchaseDao.find_all(session=session_without_commit,
                                            filters=PurchaseDateModel(date=date_order))
+    logger.error(purchases)
     for purchase in purchases:
         products = purchase.goods_id.split(', ')
         product_text=""
