@@ -81,7 +81,7 @@ def taste_kb(taste_data: List[Taste]) -> InlineKeyboardMarkup:
     kb.adjust(1)
     return kb.as_markup()
 
-def delete_kb(purchase_data: List[Purchase]) -> InlineKeyboardMarkup:
+def delete_kb(purchase_data: str) -> InlineKeyboardMarkup:
     logger.error(purchase_data)
     kb = InlineKeyboardBuilder()
     for purchase in purchase_data:

@@ -94,21 +94,15 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
 async def edit_cart(call: CallbackQuery, session_without_commit: AsyncSession):
     await call.answer('Режим редактирования корзины')
 
-    purchases = await PurchaseDao.get_purchases_new(session=session_without_commit, telegram_id=call.from_user.id)
+    user_id = call.from_user.id
+    purchase = await PurchaseDao.find_one_or_none(
+        session=session_without_commit,
+        filters=PurchaseModel(user_id=user_id,
+                              status="NEW")
+    )
     await call.message.edit_text(
         text="Выберите товар для удаления:",
-        reply_markup=delete_kb(purchases))
-
-    
-
-    # for item in all_items:
-    #     product = item.product
-    #     product_text = (f'🛒 Описание товара:\n\n'
-    #                     f'🔹 <b>Название товара:</b> <b>{product.name}</b>\n'
-    #                     f'🔹 <b>Описание:</b>\n\n<b>{product.description}</b>\n\n'
-    #                     f'🔹 <b>Цена:</b> <b>{product.price} ₽</b>\n')
-    #     await call.message.answer(text=product_text, reply_markup=dell_cart_kb(product.id))
-    # await call.message.answer("--", reply_markup=)
+        reply_markup=delete_kb(purchase.goods_id))
 
 @cart_router.callback_query(F.data.startswith('itemDell_'))
 async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
