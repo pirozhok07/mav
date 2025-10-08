@@ -83,8 +83,8 @@ def taste_kb(taste_data: List[Taste]) -> InlineKeyboardMarkup:
 
 async def delete_kb(session, purchase_data: str) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
+    logger.error("===")
     purchases = purchase_data.split(', ')
-    
     for good in purchases:
         if good.find('_') != -1:
             product_id, taste_id = good.split('_')
