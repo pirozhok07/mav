@@ -101,7 +101,8 @@ async def page_user_purchases(call: CallbackQuery, session_without_commit: Async
             f"━━━━━━━━━━━━━━━━━━\n")
     # Для каждой покупки отправляем информацию
     for purchase in purchases:
-        for good in purchase:
+        products = purchase.goods_id.split(', ')
+        for good in products:
             if good.find('_') != -1:
                 product_id, taste_id = good.split('_')
                 taste = await TasteDao.find_one_or_none_by_id(session=session_without_commit, data_id=taste_id)
