@@ -134,7 +134,9 @@ async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
                               status="NEW")
     )
     goods = purchase.goods_id   
+    logger.error(goods)
     new_goods = goods.replace(f'{dell_text}, ','')
+    logger.error(new_goods)
     await PurchaseDao.set_order(session_with_commit, data_id=purchase.id, goods=new_goods)
     await edit_cart(call, session_with_commit)
 
