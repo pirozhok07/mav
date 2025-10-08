@@ -157,7 +157,7 @@ async def admin_taste_(call: CallbackQuery, session_without_commit: AsyncSession
         reply_markup=admin_taste_kb(taste_data))
 
 
-@admin_router.callback_query(F.data.startswith('admin_good_'))
+@admin_router.callback_query(F.data.startswith('adminGood_'))
 async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
     await call.answer("Изменение кол-во")
     _, product_id, taste_id = call.data.split('_')
