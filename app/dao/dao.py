@@ -133,15 +133,13 @@ class PurchaseDao(BaseDAO[Purchase]):
             print(e)
             raise e
         
- 
-        
     @classmethod
-    async def get_purchases(cls, session: AsyncSession, telegram_id: int, isFlag:str) -> Optional[List[Purchase]]:
+    async def get_purchases(cls, session: AsyncSession, telegram_id: int) -> Optional[List[Purchase]]:
         try:
             # Запрос для получения пользователя с его покупками и связанными продуктами
             result = await session.execute(
             select(Purchase)
-            .filter(Purchase.user_id == telegram_id, Purchase.status != isFlag)
+            .filter(Purchase.user_id == telegram_id, Purchase.status != "NEW")
             )
             
             purchases = result.scalars().all() 
@@ -251,26 +249,7 @@ class UserDAO(BaseDAO[User]):
             return None
         
 
-        
-    @classmethod
-    async def get_purchased_products(cls, session: AsyncSession, telegram_id: int) -> Optional[List[Purchase]]:
-        try:
-            # Запрос для получения пользователя с его покупками и связанными продуктами
-            result = await session.execute(
-                select(User)
-                .options(
-                    selectinload(User.purchases).selectinload(Purchase.product)
-                )
-                .filter(User.telegram_id == telegram_id)
-                )
-            user = result.scalar_one_or_none()
-            if user is None:
-                return None 
-            return user.purchases 
-        except SQLAlchemyError as e:
-            # Обработка ошибок при работе с базой данных
-            print(f"Ошибка при получении информации о покупках пользователя: {e}")
-            return None
+    
 
                 
     @classmethod
