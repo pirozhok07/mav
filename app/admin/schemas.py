@@ -1,9 +1,14 @@
 from pydantic import BaseModel, Field
-
+from datetime import date
 
 class ProductIDModel(BaseModel):
     id: int
 
+class UserIDModel(BaseModel):
+    telegram_id: int
+
+class PurchaseDateModel(BaseModel):
+    date:date
 
 class ProductModel(BaseModel):
     name: str = Field(..., min_length=5)

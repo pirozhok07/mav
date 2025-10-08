@@ -4,13 +4,14 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import CallbackQuery, Message
 from loguru import logger
+from app.user.kbs import date_kb
 from user.schemas import PurchaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from config import settings, bot
-from dao.dao import UserDAO, ProductDao, CategoryDao, PurchaseDao
-from admin.kbs import admin_delivery_kb, admin_kb, admin_kb_back, product_management_kb, cancel_kb_inline, catalog_admin_kb, \
+from dao.dao import TasteDao, UserDAO, ProductDao, CategoryDao, PurchaseDao
+from admin.kbs import admin_date_kb, admin_delivery_kb, admin_kb, admin_kb_back, product_management_kb, cancel_kb_inline, catalog_admin_kb, \
     admin_confirm_kb, dell_product_kb
-from admin.schemas import ProductModel, ProductIDModel
+from admin.schemas import ProductModel, ProductIDModel, PurchaseDateModel, UserIDModel
 from admin.utils import process_dell_text_msg
 from datetime import date, datetime
 
@@ -186,27 +187,43 @@ async def accept_order(call: CallbackQuery, session_with_commit: AsyncSession):
     await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id, status = "CONFIRM")
     await call.message.edit_text(text=f"{call.message.text}\n <b>Подтвержден</b>.")
 
+@admin_router.callback_query(F.data == 'delivery', F.from_user.id.in_(settings.ADMIN_IDS))
+async def delivery_date(call: CallbackQuery):
+    await call.answer("Доставки")
+    await call.message.edit_text(text="Выберите дату доставки: ", reply_markup=admin_date_kb())
 
-
-@admin_router.callback_query(F.data.startswith("delivery"), F.from_user.id.in_(settings.ADMIN_IDS))
+@admin_router.callback_query(F.data.startswith("delivery_date_"), F.from_user.id.in_(settings.ADMIN_IDS))
 async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSession):
-    users = await PurchaseDao.get_user_today(session=session_without_commit)
-    for user in users:
-        text = ""
-        purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=user.telegram_id, isFlag="CONFIRM", get_date=date.today())
-        for purchase in purchases:
-            text += f"🔹 {purchase.product.name}\n"
+    date_text = call.data.split("_")[-1]
+    date_order=datetime.strptime(date_text, "%d.%m.%Y").date()
+    purchases = await PurchaseDao.find_all(session=session_without_commit,
+                                           filters=PurchaseDateModel(date=date_order))
+    for purchase in purchases:
+        products = purchase.goods_id.split(', ')
+        product_text=""
+        for good in products:
+            if good.find('_') != -1:
+                product_id, taste_id = good.split('_')
+                taste = await TasteDao.find_one_or_none_by_id(session=session_without_commit, data_id=taste_id)
+                product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=product_id)
+                product_text += (f"🔹 {product.name} ({taste.taste_name})\n")
+            else: 
+                product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=good)
+                product_text += (f"🔹 {product.name}\n")
+        user=UserDAO.find_one_or_none(session=session_without_commit,
+                                      filters=UserIDModel(telegram_id=purchase.user_id))
         user_info = f"@{user.username}" if user.username else f"c ID {user.telegram_id}"
-        total = await PurchaseDao.get_total(session=session_without_commit, telegram_id=user.telegram_id, isFlag="CONFIRM", get_date=date.today())
+        if purchase.money: money_text = "наличными."
+        else: money_text = "переводом."
         try:
             await bot.send_message(
                 chat_id=call.from_user.id,
                 text=(
                     f"💲 Пользователь {user_info}\n"
                     f"-------------------------------------------\n"
-                    f"{text}"
-                    f"за <b>{total} ₽</b> Оплата переводом.\n"
-                    f"адресс: {purchases[0].adress}\n"
+                    f"{product_text}"
+                    f"за <b>{purchase.total} ₽</b> Оплата {money_text}.\n"
+                    f"адресс: {purchase.adress}\n"
                 ), reply_markup=admin_delivery_kb(user.telegram_id)
             )
         except Exception as e:

@@ -2,7 +2,7 @@ from typing import List
 from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from dao.models import Category
-from datetime import date
+from datetime import date, timedelta
 
 def catalog_admin_kb(catalog_data: List[Category]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
@@ -17,7 +17,7 @@ def admin_kb() -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     kb.button(text="📊 Статистика", callback_data="statistic")
     kb.button(text="🛍️ Управлять товарами", callback_data="process_products")
-    kb.button(text="✅ Доставки сегодня", callback_data="delivery")
+    kb.button(text="✅ Доставки", callback_data="delivery")
     kb.button(text="🏠 На главную", callback_data="home")
     kb.adjust(2)
     return kb.as_markup()
@@ -30,6 +30,16 @@ def admin_kb_back() -> InlineKeyboardMarkup:
     kb.adjust(1)
     return kb.as_markup()
 
+def admin_date_kb() -> InlineKeyboardMarkup:
+    kb = InlineKeyboardBuilder()
+    f = date.today()
+    for i in range(0,3):
+        nextday=timedelta(i)
+        btn = (f+nextday).strftime("%d.%m.%Y")
+        kb.button(text=btn, callback_data=f"delivery_date_{btn}")
+    kb.button(text="Отмена", callback_data="cancel")
+    kb.adjust(1)
+    return kb.as_markup()
 
 def dell_product_kb(product_id: int) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()

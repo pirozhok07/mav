@@ -20,34 +20,7 @@ cart_router = Router()
 class DoOrder(StatesGroup):
     adress = State()
     date = State()
-
-# @cart_router.callback_query(F.data.startswith('taste_cart_'))
-# async def add_in_cart_taste(call: CallbackQuery, session_with_commit: AsyncSession):
-#     user_info = await UserDAO.find_one_or_none(
-#         session=session_with_commit,
-#         filters=TelegramIDModel(telegram_id=call.from_user.id)
-#     )
-#     _, taste_id = call.data.split('_')
-#     taste_info = await TasteDao.find_one_or_none(
-#         session=session_with_commit,
-#         filters=TasteIDModel(id=taste_id)
-#     )
-#     product_id = await ProductDao.find_one_or_none(
-#         session=session_with_commit,
-#         filters=ProductIDModel(id=taste_info.product_id)
-#     )
-#     user_id = call.from_user.id
-#     payment_data = {
-#         'user_id': user_id,
-#         'product_id': int(product_id),
-#         #taste
-#         'status': 'NEW',
-#     }
-#     logger.error(payment_data)
-#     # Добавляем информацию о покупке в базу данных
-#     await PurchaseDao.add(session=session_with_commit, values=ItemCartData(**payment_data))
-
-# @catalog_router.message(F.content_type == ContentType.SUCCESSFUL_PAYMENT)
+    
 @cart_router.callback_query(F.data.startswith('cart_'))
 async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
     await call.answer("Товар добавлен в корзину", show_alert=True)
