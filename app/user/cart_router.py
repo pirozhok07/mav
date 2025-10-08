@@ -134,6 +134,7 @@ async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
                               status="NEW")
     )
     goods = purchase.goods_id   
+    logger.error(dell_text)
     logger.error(goods)
     new_goods = goods.replace(f'{dell_text}, ','')
     logger.error(new_goods)
