@@ -64,7 +64,7 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
     await ProductDao.update_one_by_id(session=session_with_commit, data_id=product_id, in_cart=True)
     if taste_id != '0':
         await TasteDao.update_one_by_id(session=session_with_commit, data_id=taste_id, in_cart=True)
-        taste = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=product_id)
+        taste = await TasteDao.find_one_or_none_by_id(session=session_with_commit, data_id=taste_id)
         add_text_data =f"{product.id}_{taste.id}"
     else: 
         add_text_data =f"{product.id}"
