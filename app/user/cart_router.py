@@ -126,7 +126,7 @@ async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
     await ProductDao.update_one_by_id(session=session_with_commit, data_id=product_id, in_cart=False)
     dell_text=product_id
     if taste_id != "0":
-        await TasteDao.update_one_by_id(session=session_with_commit, data_id=product_id, in_cart=False)
+        await TasteDao.update_one_by_id(session=session_with_commit, data_id=taste_id, in_cart=False)
         dell_text +=f"_{taste_id}"
     purchase = await PurchaseDao.find_one_or_none(
         session=session_with_commit,
