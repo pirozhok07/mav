@@ -119,7 +119,7 @@ async def page_user_purchases(call: CallbackQuery, session_without_commit: Async
                 f"\n<b>сумма:</b> {purchase.total}₽\n"
                 f"<b>дата:</b> {purchase.date}\n"
                 f"<b>адресс:</b> {purchase.adress}\n"
-                f"<b>статус:</b> {purchase.status}\n"
+                f"<b>статус:</b> {text_status}\n"
                 f"━━━━━━━━━━━━━━━━━━\n")
 
     await call.message.edit_text(

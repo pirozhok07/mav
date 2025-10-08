@@ -2,7 +2,7 @@ from typing import List
 from aiogram.types import InlineKeyboardMarkup, ReplyKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 from loguru import logger
-from dao.dao import TasteDao
+from dao.dao import ProductDao, TasteDao
 from user.schemas import TasteIDModel
 from config import settings
 from dao.models import Category, Product, Purchase, Taste
@@ -81,16 +81,20 @@ def taste_kb(taste_data: List[Taste]) -> InlineKeyboardMarkup:
     kb.adjust(1)
     return kb.as_markup()
 
-def delete_kb(purchase_data: str) -> InlineKeyboardMarkup:
-    logger.error(purchase_data)
+async def delete_kb(session, purchase_data: str) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    for purchase in purchase_data:
-        product = purchase.product
-        if purchase.taste_id != 0:
-            taste = purchase.taste
-            kb.button(text=f"{product.name} ({taste.taste_name}) - {product.price}₽", callback_data=f"itemDell_{purchase.id}_{purchase.product_id}_{purchase.taste_id}")
-        else:
-            kb.button(text=f"{product.name} - {product.price}₽", callback_data=f"itemDell_{purchase.id}_{purchase.product_id}_0")
+    purchases = purchase_data.split(', ')
+    
+    for good in purchases:
+        if good.find('_') != -1:
+            product_id, taste_id = good.split('_')
+            taste = await TasteDao.find_one_or_none_by_id(session=session, data_id=taste_id)
+            product = await ProductDao.find_one_or_none_by_id(session=session, data_id=product_id)
+            kb.button(text=f"{product.name} ({taste.taste_name}) - {product.price}₽", callback_data=f"itemDell_{product_id}_{taste_id}")
+        else: 
+            product = await ProductDao.find_one_or_none_by_id(session=session, data_id=good)
+            kb.button(text=f"{product.name} - {product.price}₽", callback_data=f"itemDell_{product_id}_0")
+    
     kb.button(text="🛍 Назад", callback_data="cart")
     kb.button(text="🏠 На главную", callback_data="home")
     kb.adjust(1)

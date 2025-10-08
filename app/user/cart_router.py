@@ -103,7 +103,7 @@ async def edit_cart(call: CallbackQuery, session_without_commit: AsyncSession):
     )
     await call.message.edit_text(
         text="Выберите товар для удаления:",
-        reply_markup=delete_kb(purchase.goods_id))
+        reply_markup=delete_kb(session_without_commit, purchase.goods_id))
 
 @cart_router.callback_query(F.data.startswith('itemDell_'))
 async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
