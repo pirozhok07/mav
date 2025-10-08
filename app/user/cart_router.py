@@ -133,9 +133,10 @@ async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
         filters=PurchaseModel(user_id=call.from_user.id,
                               status="NEW")
     )
+    logger.error(dell_text)
     goods = purchase.goods_id   
     logger.error(goods)
-    goods.replace(f'{dell_text}, ','')
+    new_goods = goods.replace(f'{dell_text}, ','')
     logger.error(goods)
     await edit_cart(call, session_with_commit)
 
