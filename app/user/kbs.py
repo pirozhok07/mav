@@ -81,16 +81,14 @@ def taste_kb(taste_data: List[Taste]) -> InlineKeyboardMarkup:
     kb.adjust(1)
     return kb.as_markup()
 
-def delete_kb(purchase_data: List[Product], taste_date:List[Taste]) -> InlineKeyboardMarkup:
+def delete_kb(product_data: List[Product], taste_date:List[Taste]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     logger.error("===")
-    for purchase in purchase_data:
-        product = purchase.product
-        if purchase.taste_id != 0:
-            taste = purchase.taste
-            kb.button(text=f"{product.name} ({taste.taste_name}) - {product.price}₽", callback_data=f"itemDell_{purchase.id}_{purchase.product_id}_{purchase.taste_id}")
+    for i in len(product_data):
+        if taste_date[i] is not None:
+            kb.button(text=f"{product_data[i].name} ({taste_date[i].taste_name}) - {product_data[i].price}₽", callback_data=f"itemDell_{product_data[i].id}_{taste_date[i].id}")
         else:
-            kb.button(text=f"{product.name} - {product.price}₽", callback_data=f"itemDell_{purchase.id}_{purchase.product_id}_0")
+            kb.button(text=f"{product_data[i].name} - {product_data[i].price}₽", callback_data=f"itemDell_{product_data[i].id}_0")
     kb.button(text="🛍 Назад", callback_data="cart")
     kb.button(text="🏠 На главную", callback_data="home")
     kb.adjust(1)
