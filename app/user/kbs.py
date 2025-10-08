@@ -123,7 +123,7 @@ def cancele_kb()-> InlineKeyboardMarkup:
     kb.adjust(2)
     return kb.as_markup()
 
-def order_kb(date:str)-> InlineKeyboardMarkup:
+def order_kb()-> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     kb.button(text="💵 Наличные", callback_data=f"money_0")
     kb.button(text="💳 Перевод", callback_data=f"money_1")
