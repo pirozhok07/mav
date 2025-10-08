@@ -105,12 +105,12 @@ async def edit_cart(call: CallbackQuery, session_without_commit: AsyncSession):
     product_data=[] 
     taste_data=[]
     for good in purchases:
-        product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=product_id)
         if good.find('_') != -1:
             product_id, taste_id = good.split('_')
             taste = await TasteDao.find_one_or_none_by_id(session=session_without_commit, data_id=taste_id)
         else: 
             taste=None
+        product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=product_id)
         product_data.append(product)
         taste_data.append(taste)
     
