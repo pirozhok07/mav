@@ -136,14 +136,12 @@ class PurchaseDao(BaseDAO[Purchase]):
  
         
     @classmethod
-    async def get_purchases(cls, session: AsyncSession, telegram_id: int, isFlag:str, get_date:date = None) -> Optional[List[Purchase]]:
+    async def get_purchases(cls, session: AsyncSession, telegram_id: int, isFlag:str) -> Optional[List[Purchase]]:
         try:
             # Запрос для получения пользователя с его покупками и связанными продуктами
             result = await session.execute(
             select(Purchase)
-            .options(selectinload(Purchase.product))
-            .options(selectinload(Purchase.taste))
-            .filter(Purchase.user_id == telegram_id, Purchase.status == isFlag, Purchase.date == get_date)
+            .filter(Purchase.user_id == telegram_id, Purchase.status != isFlag)
             )
             
             purchases = result.scalars().all() 
@@ -231,10 +229,10 @@ class UserDAO(BaseDAO[User]):
             result = await session.execute(
                 select(
                     func.count(Purchase.id).label('total_purchases'),
-                    func.sum(Product.price).label('total_amount')
+                    func.sum(Purchase.price).label('total_amount')
                 )
                 .join(User).filter(User.telegram_id == telegram_id)
-                .join(Product).filter(Product.id == Purchase.product_id)
+                .filter(Purchase.status != "NEW")
             )
             stats = result.one_or_none()
 

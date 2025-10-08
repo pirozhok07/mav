@@ -55,10 +55,15 @@ async def page_about(call: CallbackQuery, session_without_commit: AsyncSession):
     await call.answer("Профиль")
 
     # Получаем статистику покупок пользователя
-    purchases = await UserDAO.get_purchase_statistics(session=session_without_commit, telegram_id=call.from_user.id)
-    total_amount = purchases.get("total_amount", 0)
-    total_purchases = purchases.get("total_purchases", 0)
-
+    purchase = await UserDAO.get_purchase_statistics(
+        session=session_without_commit,
+        telegram_id=call.from_user.id
+    )
+    
+    total_amount = purchase.get("total_amount", 0)
+    total_purchases = purchase.get("total_purchases", 0)
+    logger.error(total_amount)
+    logger.error(total_purchases)
     # Формируем сообщение в зависимости от наличия покупок
     if total_purchases == 0:
         await call.message.edit_text(
