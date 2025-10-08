@@ -24,6 +24,15 @@ class AddProduct(StatesGroup):
     hidden_content = State()
     confirm_add = State()
 
+class ChangeProductQuantity(StatesGroup):
+    quantity = State()
+    isTaste = State()
+    id_Taste = State()
+    id_Product = State()
+
+class ChangeProductPrice(StatesGroup):
+    price = State()
+
 @admin_router.callback_query(F.data == "cancel", F.from_user.id.in_(settings.ADMIN_IDS))
 async def admin_process_cancel(call: CallbackQuery, state: FSMContext):
     await state.clear()
@@ -158,7 +167,7 @@ async def admin_taste_(call: CallbackQuery, session_without_commit: AsyncSession
 
 
 @admin_router.callback_query(F.data.startswith('adminGood_'))
-async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
+async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession, state: FSMContext):
     await call.answer("Изменение кол-во")
     _, product_id, taste_id = call.data.split('_')
     product = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=product_id)
@@ -167,13 +176,32 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
         text_data=(f"В наличие <b>{taste.quantity}</b> шт.\n"
                    f"{product.name} ({taste.taste_name})"
         )
+        await state.update_data(isTaste=True)
+        await state.update_data(id_date=taste_id)
     else:
         text_data=(f"В наличие <b>{product.quantity}</b> шт.\n"
                    f"{product.name}"
         )
-    await call.message.edit_text(text=(f"{text_data}\n"
+        await state.update_data(id_date=product_id)
+    msg = await call.message.edit_text(text=(f"{text_data}\n"
                                        f"Укажите количество товара: ")
     )
+    await state.update_data(last_msg_id=msg.message_id)
+    await state.set_state(ChangeProductQuantity.quantity)
+
+@admin_router.message(F.text, F.from_user.id.in_(settings.ADMIN_IDS), ChangeProductQuantity.quantity)
+async def admin_process_quantity(message: Message, session_with_commit: AsyncSession, state: FSMContext):
+    await state.update_data(quantity=message.text)
+    await process_dell_text_msg(message, state)
+    data = await state.get_data()
+    logger.error(data)
+    if data["isTaste"] is not None:
+        await TasteDao.set_order(session_with_commit, data_id=data["id_Taste"], quantity=data["quantity"])
+        product = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=data["id_Product"])
+        await ProductDao.set_order(session_with_commit, data_id=data["id_Taste"], quantity=product.quantity+data["quantity"])
+    else:
+        await ProductDao.set_order(session_with_commit, data_id=data["id_Product"], quantity=data["quantity"])
+    await state.clear()
 
 @admin_router.callback_query(F.data == 'add_product', F.from_user.id.in_(settings.ADMIN_IDS))
 async def admin_process_add_product(call: CallbackQuery, state: FSMContext):
