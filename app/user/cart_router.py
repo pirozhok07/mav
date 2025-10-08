@@ -122,12 +122,21 @@ async def edit_cart(call: CallbackQuery, session_without_commit: AsyncSession):
 @cart_router.callback_query(F.data.startswith('itemDell_'))
 async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
     await call.answer("Товар удален из корзины", show_alert=True)
-    _, purchase_id, product_id, taste_id = call.data.split('_')
-    await call.answer(f"Заказ с ID {purchase_id} удален!")
+    _, product_id, taste_id = call.data.split('_')
     await ProductDao.update_one_by_id(session=session_with_commit, data_id=product_id, in_cart=False)
+    dell_text=product_id
     if taste_id != "0":
         await TasteDao.update_one_by_id(session=session_with_commit, data_id=product_id, in_cart=False)
-    await PurchaseDao.delete(session=session_with_commit, filters=PurchaseIDModel(id=purchase_id))
+        dell_text +=f"_{taste_id}"
+    purchase = await PurchaseDao.find_one_or_none(
+        session=session_with_commit,
+        filters=PurchaseModel(user_id=call.from_user.id,
+                              status="NEW")
+    )
+    goods = purchase.goods_id   
+    logger.error(goods)
+    goods.replace(f'{dell_text}, ','')
+    logger.error(goods)
     await edit_cart(call, session_with_commit)
 
 @cart_router.callback_query(F.data == 'do_order')
