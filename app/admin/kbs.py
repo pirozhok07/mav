@@ -24,9 +24,9 @@ def admin_product_kb(product_data: List[Product]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     for product in product_data:
         if product.category_id == 3:
-            kb.button(text=f"{product.name} - {product.price} ₽", callback_data=f"admin_taste_{product.id}")
+            kb.button(text=f"{product.name} - {product.quantity} шт", callback_data=f"admin_taste_{product.id}")
         else:
-            kb.button(text=f"{product.name} - {product.price} ₽", callback_data=f"admin_good_{product.id}_0")
+            kb.button(text=f"{product.name} - {product.quantity} шт", callback_data=f"adminGood_{product.id}_0")
     kb.button(text="🛍 Назад", callback_data="edit_product")
     kb.button(text="🏠 На главную", callback_data="home")
     kb.adjust(1)
@@ -35,7 +35,7 @@ def admin_product_kb(product_data: List[Product]) -> InlineKeyboardMarkup:
 def admin_taste_kb(taste_data: List[Taste]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     for taste in taste_data:
-        kb.button(text=taste.taste_name, callback_data=f"admin_good_{taste.product_id}_{taste.id}")
+        kb.button(text=f"{taste.taste_name} - {taste.quantity} шт", callback_data=f"adminGood_{taste.product_id}_{taste.id}")
     kb.button(text="🛍 Назад", callback_data=f"admin_category_{taste_data[0].product_id}")
     kb.button(text="🏠 На главную", callback_data="home")
     kb.adjust(1)
