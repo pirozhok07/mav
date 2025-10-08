@@ -84,7 +84,7 @@ def taste_kb(taste_data: List[Taste]) -> InlineKeyboardMarkup:
 def delete_kb(product_data: List[Product], taste_date:List[Taste]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     logger.error("===")
-    for i in len(product_data):
+    for i in range(len(product_data)):
         if taste_date[i] is not None:
             kb.button(text=f"{product_data[i].name} ({taste_date[i].taste_name}) - {product_data[i].price}₽", callback_data=f"itemDell_{product_data[i].id}_{taste_date[i].id}")
         else:
