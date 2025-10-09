@@ -207,7 +207,7 @@ async def admin_process_quantity(message: Message, session_with_commit: AsyncSes
     if data_order["isTaste"] is not None:
         await TasteDao.set_order(session_with_commit, data_id=data_order["id_Taste"], quantity=data_order["value"])
         product = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=data_order["id_Product"])
-        await ProductDao.set_order(session_with_commit, data_id=data_order["id_Taste"], quantity=product.quantity+int(data_order["value"]))
+        await ProductDao.set_order(session_with_commit, data_id=data_order["id_Product"], quantity=product.quantity+int(data_order["value"]))
     else:
         if data_order["isPrice"] is not None:
             await ProductDao.set_order(session_with_commit, data_id=data_order["id_Product"], price=data_order["value"])
