@@ -134,7 +134,7 @@ async def admin_process_category(call: CallbackQuery, state: FSMContext):
                              F.from_user.id.in_(settings.ADMIN_IDS))
 async def edit_product(call: CallbackQuery, session_without_commit: AsyncSession):
     await call.answer("Загрузка каталога...")
-    _, isFlag = call.data.split("_")[-1]
+    isFlag = call.data.split("_")[-1]
     catalog_data = await CategoryDao.find_all(session=session_without_commit)
     await call.message.edit_text(
         text="Выберите категорию товаров:",
