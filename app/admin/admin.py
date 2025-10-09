@@ -205,14 +205,14 @@ async def admin_process_quantity(message: Message, session_with_commit: AsyncSes
     await process_dell_text_msg(message, state)
     data_order = await state.get_data()
     if data_order["isTaste"] is not None:
-        await TasteDao.set_order(session_with_commit, data_id=data_order["id_Taste"], quantity=data_order["quantity"])
+        await TasteDao.set_order(session_with_commit, data_id=data_order["id_Taste"], quantity=data_order["value"])
         product = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=data_order["id_Product"])
-        await ProductDao.set_order(session_with_commit, data_id=data_order["id_Taste"], quantity=product.quantity+data_order["quantity"])
+        await ProductDao.set_order(session_with_commit, data_id=data_order["id_Taste"], quantity=product.quantity+data_order["value"])
     else:
         if data_order["isPrice"] is not None:
-            await ProductDao.set_order(session_with_commit, data_id=data_order["id_Product"], price=data_order["data"])
+            await ProductDao.set_order(session_with_commit, data_id=data_order["id_Product"], price=data_order["value"])
         else: 
-            await ProductDao.set_order(session_with_commit, data_id=data_order["id_Product"], quantity=data_order["data"])
+            await ProductDao.set_order(session_with_commit, data_id=data_order["id_Product"], quantity=data_order["value"])
     await state.clear()
 
 @admin_router.callback_query(F.data == 'add_product', F.from_user.id.in_(settings.ADMIN_IDS))
