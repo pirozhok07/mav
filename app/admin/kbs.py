@@ -49,7 +49,7 @@ def admin_kb() -> InlineKeyboardMarkup:
     kb.button(text="🛍️ Управлять товарами", callback_data="process_products")
     kb.button(text="✅ Доставки", callback_data="delivery")
     kb.button(text="🏠 На главную", callback_data="home")
-    kb.adjust(2)
+    kb.adjust(1)
     return kb.as_markup()
 
 
@@ -88,7 +88,7 @@ def product_management_kb() -> InlineKeyboardMarkup:
     kb.button(text="🗑️ Удалить товар", callback_data="delete_product")
     kb.button(text="⚙️ Админ панель", callback_data="admin_panel")
     kb.button(text="🏠 На главную", callback_data="home")
-    kb.adjust(2, 2, 1)
+    kb.adjust(1)
     return kb.as_markup()
 
 

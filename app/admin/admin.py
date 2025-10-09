@@ -159,7 +159,7 @@ async def admin_category_(call: CallbackQuery, session_without_commit: AsyncSess
 
 @admin_router.callback_query(F.data.startswith("adminTaste_"),
                              F.from_user.id.in_(settings.ADMIN_IDS))
-async def admin_taste_(call: CallbackQuery, session_without_commit: AsyncSession):
+async def adminTaste(call: CallbackQuery, session_without_commit: AsyncSession):
     await call.answer("Загрузка вкусов...")
     product_id = int(call.data.split("_")[-1])    
     taste_data = await TasteDao.get_tastes(session=session_without_commit, product_id=product_id)
@@ -169,7 +169,7 @@ async def admin_taste_(call: CallbackQuery, session_without_commit: AsyncSession
 
 
 @admin_router.callback_query(F.data.startswith('adminGood_'))
-async def adminGood(call: CallbackQuery, session_with_commit: AsyncSession, state: FSMContext):
+async def adminGood(call: CallbackQuery | Message, session_with_commit: AsyncSession, state: FSMContext):
     await call.answer("Изменение кол-во")
     _, isFlag, product_id, taste_id = call.data.split('_')
     product = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=int(product_id))
@@ -204,18 +204,19 @@ async def admin_process_quantity(message: Message, session_with_commit: AsyncSes
     await state.update_data(value=message.text)
     await process_dell_text_msg(message, state)
     data_order = await state.get_data()
+    await state.clear()
     if data_order["isTaste"] is not None:
         product = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=data_order["id_Product"])
         taste = await TasteDao.find_one_or_none_by_id(session=session_with_commit, data_id=data_order["id_Taste"])
         setQuantity=product.quantity-taste.quantity
         await TasteDao.set_order(session_with_commit, data_id=data_order["id_Taste"], quantity=data_order["value"])
         await ProductDao.set_order(session_with_commit, data_id=data_order["id_Product"], quantity=setQuantity+int(data_order["value"]))
+        await adminTaste(message,session_with_commit)
     else:
         if data_order["isPrice"] is not None:
             await ProductDao.set_order(session_with_commit, data_id=data_order["id_Product"], price=data_order["value"])
         else: 
             await ProductDao.set_order(session_with_commit, data_id=data_order["id_Product"], quantity=data_order["value"])
-    await state.clear()
 
 @admin_router.callback_query(F.data == 'add_product', F.from_user.id.in_(settings.ADMIN_IDS))
 async def admin_process_add_product(call: CallbackQuery, state: FSMContext):
