@@ -197,9 +197,9 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession, st
                                        f"Укажите количество товара: ")
     )
     await state.update_data(last_msg_id=msg.message_id)
-    await state.set_state(ChangeProductQuantity.quantity)
+    await state.set_state(ChangeProductQuantity.data)
 
-@admin_router.message(F.text, F.from_user.id.in_(settings.ADMIN_IDS), ChangeProductQuantity.quantity)
+@admin_router.message(F.text, F.from_user.id.in_(settings.ADMIN_IDS), ChangeProductQuantity.data)
 async def admin_process_quantity(message: Message, session_with_commit: AsyncSession, state: FSMContext):
     await state.update_data(data=message.text)
     await process_dell_text_msg(message, state)
