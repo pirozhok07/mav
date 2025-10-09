@@ -12,21 +12,23 @@ def catalog_admin_kb(catalog_data: List[Category]) -> InlineKeyboardMarkup:
     kb.adjust(2)
     return kb.as_markup()
 
-def admin_catalog_kb(catalog_data: List[Category]) -> InlineKeyboardMarkup:
+def admin_catalog_kb(catalog_data: List[Category], isFlag:str) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     for category in catalog_data:
-        kb.button(text=category.category_name, callback_data=f"admin_category_{category.id}")
+        kb.button(text=category.category_name, callback_data=f"adminCategory_{isFlag}_{category.id}")
     kb.button(text="🏠 На главную", callback_data="home")
     kb.adjust(1)
     return kb.as_markup()
 
-def admin_product_kb(product_data: List[Product]) -> InlineKeyboardMarkup:
+def admin_product_kb(product_data: List[Product], isFlag:str) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     for product in product_data:
-        if product.category_id == 3:
-            kb.button(text=f"{product.name} - {product.quantity} шт", callback_data=f"admin_taste_{product.id}")
+        if isFlag =="0": data=f"{product.quantity} шт"
+        else: data=f"{product.price} ₽"
+        if product.category_id == 3 and isFlag =="0":
+            kb.button(text=f"{product.name} - {data}", callback_data=f"adminTaste_{product.id}")
         else:
-            kb.button(text=f"{product.name} - {product.quantity} шт", callback_data=f"adminGood_{product.id}_0")
+            kb.button(text=f"{product.name} - {data}", callback_data=f"adminGood_{isFlag}_{product.id}_0")
     kb.button(text="🛍 Назад", callback_data="edit_product")
     kb.button(text="🏠 На главную", callback_data="home")
     kb.adjust(1)
@@ -35,8 +37,8 @@ def admin_product_kb(product_data: List[Product]) -> InlineKeyboardMarkup:
 def admin_taste_kb(taste_data: List[Taste]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     for taste in taste_data:
-        kb.button(text=f"{taste.taste_name} - {taste.quantity} шт", callback_data=f"adminGood_{taste.product_id}_{taste.id}")
-    kb.button(text="🛍 Назад", callback_data=f"admin_category_{taste_data[0].product_id}")
+        kb.button(text=f"{taste.taste_name} - {taste.quantity} шт", callback_data=f"adminGood_0_{taste.product_id}_{taste.id}")
+    kb.button(text="🛍 Назад", callback_data=f"adminCategory_{isFlag}_{taste_data[0].product_id}")
     kb.button(text="🏠 На главную", callback_data="home")
     kb.adjust(1)
     return kb.as_markup()
@@ -81,7 +83,8 @@ def dell_product_kb(product_id: int) -> InlineKeyboardMarkup:
 def product_management_kb() -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     kb.button(text="➕ Добавить товар", callback_data="add_product")
-    kb.button(text="🗑️ Редактировать кол-во", callback_data="edit_product")
+    kb.button(text="🗑️ Редактировать кол-во", callback_data="edit_product_0")
+    kb.button(text="🗑️ Редактировать цену", callback_data="edit_product_1")
     kb.button(text="🗑️ Удалить товар", callback_data="delete_product")
     kb.button(text="⚙️ Админ панель", callback_data="admin_panel")
     kb.button(text="🏠 На главную", callback_data="home")
