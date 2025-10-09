@@ -38,7 +38,7 @@ def admin_taste_kb(taste_data: List[Taste]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     for taste in taste_data:
         kb.button(text=f"{taste.taste_name} - {taste.quantity} шт", callback_data=f"adminGood_0_{taste.product_id}_{taste.id}")
-    kb.button(text="🛍 Назад", callback_data=f"adminCategory_{isFlag}_{taste_data[0].product_id}")
+    kb.button(text="🛍 Назад", callback_data=f"adminCategory_0_{taste_data[0].product_id.}")
     kb.button(text="🏠 На главную", callback_data="home")
     kb.adjust(1)
     return kb.as_markup()
