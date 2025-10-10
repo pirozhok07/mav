@@ -318,9 +318,8 @@ async def delivery_adress(call: CallbackQuery, session_with_commit: AsyncSession
 
 @admin_router.callback_query(F.data.startswith("delivery_show"), F.from_user.id.in_(settings.ADMIN_IDS))
 async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSession):
-    order_adress = DeliveryDao.get_delivery_adress(session=session_without_commit)
-    order_date = DeliveryDao.get_delivery_date(session=session_without_commit)
-    
+    order_adress = await DeliveryDao.get_delivery_adress(session=session_without_commit)
+    order_date = await DeliveryDao.get_delivery_date(session=session_without_commit)
     
     for adress in order_adress:
         purchases = await PurchaseDao.find_all(session=session_without_commit,
