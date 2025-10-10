@@ -307,7 +307,6 @@ async def delivery_adress(call: CallbackQuery, session_with_commit: AsyncSession
     await DeliveryDao.add(session=session_with_commit, values=DeliveryData(adress=adress_text))
     data = await state.get_data()
     data["adress"].remove(adress_text)
-    logger.error(data["adress"])
     if not data["adress"]:
         await state.clear()
         await call.message.edit_text(text="Доставки отсортированы: ", reply_markup=admin_show_kb()) 
@@ -318,13 +317,16 @@ async def delivery_adress(call: CallbackQuery, session_with_commit: AsyncSession
 
 @admin_router.callback_query(F.data == "delivery_show", F.from_user.id.in_(settings.ADMIN_IDS))
 async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSession):
+    logger.error("delivery_show")
     order_adress = await DeliveryDao.get_delivery_adress(session=session_without_commit)
     # order_date = await DeliveryDao.get_delivery_date(session=session_without_commit)
     order_date= date.today()
+    logger.error(order_adress)
     for adress in order_adress:
         purchases = await PurchaseDao.find_all(session=session_without_commit,
                                            filters=PurchaseAdressModel(date=order_date,
                                                                      adress=adress))
+        logger.error(purchases)
         for purchase in purchases:
             products = purchase.goods_id.split(', ')
             product_text=""
