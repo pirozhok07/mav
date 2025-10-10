@@ -316,7 +316,7 @@ async def delivery_adress(call: CallbackQuery, session_with_commit: AsyncSession
         await call.message.edit_text(text="Выберите адресс: ", reply_markup=admin_adress_kb(data["adress"]))  
         
 
-@admin_router.callback_query(F.data.startswith("delivery_show"), F.from_user.id.in_(settings.ADMIN_IDS))
+@admin_router.callback_query(F.data == "delivery_show", F.from_user.id.in_(settings.ADMIN_IDS))
 async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSession):
     order_adress = await DeliveryDao.get_delivery_adress(session=session_without_commit)
     # order_date = await DeliveryDao.get_delivery_date(session=session_without_commit)
