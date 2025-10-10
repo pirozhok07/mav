@@ -300,7 +300,7 @@ async def delivery_adress(call: CallbackQuery, session_without_commit: AsyncSess
     await state.update_data(adress=adresses)
     await call.message.edit_text(text="Выберите дату доставки: ", reply_markup=admin_adress_kb(adresses))  
 
-@admin_router.callback_query(F.data == 'delivery_adress_', F.from_user.id.in_(settings.ADMIN_IDS))
+@admin_router.callback_query(F.data.startswith("delivery_adress_"), F.from_user.id.in_(settings.ADMIN_IDS))
 async def delivery_adress(call: CallbackQuery, session_without_commit: AsyncSession, state: FSMContext):
     await call.answer("Доставки")
     adress_text = call.data.split("_")[-1]
