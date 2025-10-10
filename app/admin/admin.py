@@ -49,7 +49,7 @@ async def admin_process_cancel(call: CallbackQuery, state: FSMContext):
 
 @admin_router.callback_query(F.data == "all_p", F.from_user.id.in_(settings.ADMIN_IDS))
 async def all_p(call: CallbackQuery, session_without_commit: AsyncSession):
-    purchases = await DeliveryDao.find_all(session=session_without_commit)
+    purchases = await PurchaseDao.find_all(session=session_without_commit)
     for purchase in purchases:
         logger.error(purchase)
 
