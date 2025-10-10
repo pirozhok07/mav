@@ -1,6 +1,7 @@
 from typing import List
 from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+from loguru import logger
 from dao.models import Category, Product, Taste
 from datetime import date, timedelta
 
@@ -74,6 +75,7 @@ def admin_date_kb() -> InlineKeyboardMarkup:
 def admin_adress_kb(adress_data:List[str]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     for i in range(len(adress_data)):
+        logger.error(i)
         kb.button(text=i, callback_data=f"delivery_adress_{i}")
     kb.button(text="Отмена", callback_data="cancel")
     kb.adjust(1)
