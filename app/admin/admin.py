@@ -308,7 +308,7 @@ async def delivery_adress(call: CallbackQuery, session_with_commit: AsyncSession
     data = await state.get_data()
     data["adress"].remove(adress_text)
     logger.error(data["adress"])
-    if data["adress"] == "":
+    if not data["adress"]:
         await state.clear()
         await call.message.edit_text(text="Доставки отсортированы: ", reply_markup=admin_show_kb()) 
     else:
