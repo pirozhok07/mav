@@ -291,23 +291,14 @@ async def delivery_date(call: CallbackQuery):
     await call.message.edit_text(text="Выберите дату доставки: ", reply_markup=admin_date_kb())
 
 @admin_router.callback_query(F.data.startswith("delivery_date_"), F.from_user.id.in_(settings.ADMIN_IDS))
-async def delivery_adress(call: CallbackQuery, session_without_commit: AsyncSession):
-    await call.answer("Доставки")
-    date_text = call.data.split("_")[-1]
-    date_order=datetime.strptime(date_text, "%d.%m.%Y").date()
-    purchases = await PurchaseDao.get_delivery_adress(session=session_without_commit,
-                                           filters=PurchaseDateModel(date=date_order))
-    await call.message.edit_text(text="Выберите дату доставки: ", reply_markup=admin_adress_kb())
-
-@admin_router.callback_query(F.data == 'delivery_adress_', F.from_user.id.in_(settings.ADMIN_IDS))
 async def delivery_adress(call: CallbackQuery, session_without_commit: AsyncSession, state: FSMContext):
     await call.answer("Доставки")
     date_text = call.data.split("_")[-1]
     date_order=datetime.strptime(date_text, "%d.%m.%Y").date()
     adresses = await PurchaseDao.get_delivery_adress(session=session_without_commit,
-                                           filters=PurchaseDateModel(date=date_order))
+                                                     getdate=date_order)
     await state.update_data(adress=adresses)
-    await call.message.edit_text(text="Выберите дату доставки: ", reply_markup=admin_adress_kb())  
+    await call.message.edit_text(text="Выберите дату доставки: ", reply_markup=admin_adress_kb(adresses))  
 
 @admin_router.callback_query(F.data == 'delivery_adress_', F.from_user.id.in_(settings.ADMIN_IDS))
 async def delivery_adress(call: CallbackQuery, session_without_commit: AsyncSession, state: FSMContext):
