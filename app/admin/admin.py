@@ -317,6 +317,7 @@ async def delivery_adress(call: CallbackQuery, session_with_commit: AsyncSession
 
 @admin_router.callback_query(F.data == "delivery_show", F.from_user.id.in_(settings.ADMIN_IDS))
 async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSession,session_with_commit: AsyncSession):
+    await call.answer("Доставки")
     order_adress = await DeliveryDao.get_delivery_adress(session=session_without_commit)
     # order_date = await DeliveryDao.get_delivery_date(session=session_without_commit)
     order_date= date.today()
@@ -345,12 +346,11 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
             if purchase.money: money_text = "наличными."
             else: money_text = "переводом."
             delivery_text +=(
-                    f"💲 Пользователь {user_info}\n"
-                    f"-------------------------------------------\n"
+                    f"Пользователь {user_info}\n"
                     f"{product_text}"
-                    f"за <b>{purchase.total} ₽</b> Оплата {money_text}\n"
+                    f"💲 за <b>{purchase.total} ₽</b> Оплата {money_text}\n"
                     f"адресс: {purchase.adress}\n"
-                    f"____________________________________________\n"
+                    f"_________________________________________\n"
                 )
     await call.message.edit_text(text=delivery_text, reply_markup=cancel_kb_inline())  
 

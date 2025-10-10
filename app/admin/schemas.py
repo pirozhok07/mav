@@ -10,6 +10,8 @@ class UserIDModel(BaseModel):
 class PurchaseDateModel(BaseModel):
     date:date
 
+class PurchaseForDellModel(BaseModel):
+    status:str
 
 class PurchaseAdressModel(BaseModel):
     adress:str
