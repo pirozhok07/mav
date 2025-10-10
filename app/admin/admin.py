@@ -321,7 +321,7 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
     order_adress = await DeliveryDao.get_delivery_adress(session=session_without_commit)
     # order_date = await DeliveryDao.get_delivery_date(session=session_without_commit)
     order_date= date.today()
-    order_adress = await DeliveryDao.find_all(session=session_without_commit)
+    # order_adress = await DeliveryDao.find_all(session=session_without_commit)
     logger.error(order_adress)
     for adress in order_adress:
         purchases = await PurchaseDao.find_all(session=session_without_commit,
