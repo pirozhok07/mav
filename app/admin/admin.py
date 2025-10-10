@@ -49,7 +49,7 @@ async def admin_process_cancel(call: CallbackQuery, state: FSMContext):
 
 @admin_router.callback_query(F.data == "all_p", F.from_user.id.in_(settings.ADMIN_IDS))
 async def all_p(call: CallbackQuery, session_without_commit: AsyncSession):
-    purchases = await PurchaseDao.find_all(session=session_without_commit)
+    purchases = await DeliveryDao.find_all(session=session_without_commit)
     for purchase in purchases:
         logger.error(purchase)
 
@@ -301,10 +301,10 @@ async def delivery_adress(call: CallbackQuery, session_without_commit: AsyncSess
     await call.message.edit_text(text="Выберите дату доставки: ", reply_markup=admin_adress_kb(adresses))  
 
 @admin_router.callback_query(F.data.startswith("delivery_adress_"), F.from_user.id.in_(settings.ADMIN_IDS))
-async def delivery_adress(call: CallbackQuery, session_without_commit: AsyncSession, state: FSMContext):
+async def delivery_adress(call: CallbackQuery, session_with_commit: AsyncSession, state: FSMContext):
     await call.answer("Доставки")
     adress_text = call.data.split("_")[-1]
-    await DeliveryDao.add(session=session_without_commit, values=DeliveryData(adress=adress_text))
+    await DeliveryDao.add(session=session_with_commit, values=DeliveryData(adress=adress_text))
     data = await state.get_data()
     data["adress"].remove(adress_text)
     await state.update_data(adress=data["adress"])
