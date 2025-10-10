@@ -74,7 +74,7 @@ def admin_date_kb() -> InlineKeyboardMarkup:
 
 def admin_adress_kb(adress_data:List[str]) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    for i in range(len(adress_data)):
+    for i in adress_data:
         logger.error(i)
         kb.button(text=i, callback_data=f"delivery_adress_{i}")
     kb.button(text="Отмена", callback_data="cancel")
