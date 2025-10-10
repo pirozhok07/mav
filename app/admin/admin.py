@@ -326,10 +326,8 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
         purchases = await PurchaseDao.find_all(session=session_without_commit,
                                            filters=PurchaseAdressModel(date=order_date,
                                                                      adress=adress))
-        logger.error(purchases)
         for purchase in purchases:
             products = purchase.goods_id.split(', ')
-            product_text=""
             for good in products:
                 if good.find('_') != -1:
                     product_id, taste_id = good.split('_')
@@ -344,19 +342,15 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
             user_info = f"@{user.username}" if user.username else f"c ID {user.telegram_id}"
             if purchase.money: money_text = "наличными."
             else: money_text = "переводом."
-            try:
-                await bot.send_message(
-                    chat_id=call.from_user.id,
-                    text=(
-                        f"💲 Пользователь {user_info}\n"
-                        f"-------------------------------------------\n"
-                        f"{product_text}"
-                        f"за <b>{purchase.total} ₽</b> Оплата {money_text}\n"
-                        f"адресс: {purchase.adress}\n"
-                    ), reply_markup=admin_delivery_kb(user.telegram_id)
+            delivery_text +=(
+                    f"💲 Пользователь {user_info}\n"
+                    f"-------------------------------------------\n"
+                    f"{product_text}"
+                    f"за <b>{purchase.total} ₽</b> Оплата {money_text}\n"
+                    f"адресс: {purchase.adress}\n"
+                    f"____________________________________________\n"
                 )
-            except Exception as e:
-                logger.error(f"Ошибка при отправке уведомления администраторам: {e}") 
+    call.message.edit_text(text=delivery_text, reply_markup=cancel_kb_inline())  
 
 @admin_router.callback_query(F.data.startswith("deliver_order_"), F.from_user.id.in_(settings.ADMIN_IDS))
 async def deliver_order(call: CallbackQuery, session_with_commit: AsyncSession):
