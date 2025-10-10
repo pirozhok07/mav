@@ -115,7 +115,22 @@ class BaseDAO(Generic[T]):
             await session.rollback()
             logger.error(f"Ошибка при удалении записей: {e}")
             raise e
-
+        
+    @classmethod
+    async def deleteAll(cls, session: AsyncSession):
+        # Удалить записи по фильтру
+        logger.info(f"Удаление всех записей {cls.model.__name__}")
+        query = sqlalchemy_delete(cls.model)
+        try:
+            result = await session.execute(query)
+            await session.flush()
+            logger.info(f"Удалены все записи.")
+            return result.rowcount
+        except SQLAlchemyError as e:
+            await session.rollback()
+            logger.error(f"Ошибка при удалении записей: {e}")
+            raise e
+        
     @classmethod
     async def count(cls, session: AsyncSession, filters: BaseModel | None = None):
         # Подсчитать количество записей
