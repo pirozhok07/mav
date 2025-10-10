@@ -1,6 +1,7 @@
 import asyncio
 from aiogram.types import BotCommand, BotCommandScopeDefault
 from loguru import logger
+from admin.utils import scheduled_cleanup
 from config import bot, admins, dp
 from dao.database_middleware import DatabaseMiddlewareWithoutCommit, DatabaseMiddlewareWithCommit
 from admin.admin import admin_router
@@ -43,7 +44,7 @@ def setup_scheduler():
     # Очистка каждый день в 6:00 утра
     scheduler.add_job(
         scheduled_cleanup,
-        trigger=CronTrigger(hour=15, minute=30),
+        trigger=CronTrigger(hour=15, minute=32),
         id="daily_cleanup",
         replace_existing=True
     )
