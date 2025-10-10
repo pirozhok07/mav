@@ -307,6 +307,7 @@ async def delivery_adress(call: CallbackQuery, session_with_commit: AsyncSession
     await DeliveryDao.add(session=session_with_commit, values=DeliveryData(adress=adress_text))
     data = await state.get_data()
     data["adress"].remove(adress_text)
+    logger.error(data["adress"])
     if data["adress"] != "":
         await state.update_data(adress=data["adress"])
         await call.message.edit_text(text="Выберите адресс: ", reply_markup=admin_adress_kb(data["adress"]))  
