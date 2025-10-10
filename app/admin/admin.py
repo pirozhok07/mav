@@ -322,12 +322,14 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
     order_date= date.today()
     # order_adress = await DeliveryDao.find_all(session=session_without_commit)
     await DeliveryDao.deleteAll(session=session_with_commit)
+    delivery_text=""
     for adress in order_adress:
         purchases = await PurchaseDao.find_all(session=session_without_commit,
                                            filters=PurchaseAdressModel(date=order_date,
                                                                      adress=adress))
         for purchase in purchases:
             products = purchase.goods_id.split(', ')
+            product_text=""
             for good in products:
                 if good.find('_') != -1:
                     product_id, taste_id = good.split('_')
