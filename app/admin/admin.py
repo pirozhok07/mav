@@ -323,11 +323,14 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
     # order_adress = await DeliveryDao.find_all(session=session_without_commit)
     await DeliveryDao.deleteAll(session=session_with_commit)
     delivery_text=""
+    logger.error(delivery_text)
     for adress in order_adress:
+        logger.error(adress)
         purchases = await PurchaseDao.find_all(session=session_without_commit,
                                            filters=PurchaseAdressModel(date=order_date,
                                                                      adress=adress))
         for purchase in purchases:
+            logger.error(purchase)
             products = purchase.goods_id.split(', ')
             product_text=""
             for good in products:
@@ -352,6 +355,7 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
                     f"адресс: {purchase.adress}\n"
                     f"____________________________________________\n"
                 )
+    logger.error("==")
     call.message.edit_text(text=delivery_text, reply_markup=cancel_kb_inline())  
 
 @admin_router.callback_query(F.data.startswith("deliver_order_"), F.from_user.id.in_(settings.ADMIN_IDS))

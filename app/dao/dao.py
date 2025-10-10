@@ -22,7 +22,6 @@ class DeliveryDao(BaseDAO[Delivery]):
                 select(Delivery.adress)
                 )
             adress = result.scalars().all()
-            logger.error(adress)
             if adress is None:
                 return None 
             return adress
