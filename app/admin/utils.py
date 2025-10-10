@@ -3,7 +3,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from loguru import logger
 
-from app.admin.schemas import PurchaseForDellModel
+from admin.schemas import PurchaseForDellModel
 from dao.dao import PurchaseDao
 from config import bot
 from sqlalchemy.ext.asyncio import AsyncSession
