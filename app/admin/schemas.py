@@ -10,6 +10,11 @@ class UserIDModel(BaseModel):
 class PurchaseDateModel(BaseModel):
     date:date
 
+
+class PurchaseAdressModel(BaseModel):
+    adress:str
+    date:date
+
 class DeliveryData(BaseModel):
     adress:str = Field(...)
 

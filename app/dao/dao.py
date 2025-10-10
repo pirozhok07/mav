@@ -14,6 +14,38 @@ from dao.models import Taste, User, Purchase, Category, Product, Delivery
 class DeliveryDao(BaseDAO[Delivery]):
     model = Delivery
 
+    @classmethod
+    async def get_delivery_adress(cls, session: AsyncSession) -> Optional[List[str]]:
+        try:
+            # Запрос для получения доставок сегодня
+            result = await session.execute(
+                select(Delivery.adress)
+                )
+            adress = result.scalars().all()
+            adress = result.scalars().all()
+            if adress is None:
+                return None 
+            return adress
+        except SQLAlchemyError as e:
+            logger.error(f"Ошибка при получении суммы заказа: {e}")
+            raise
+    
+    @classmethod
+    async def get_delivery_date(cls, session: AsyncSession):
+        try:
+            # Запрос для получения доставок сегодня
+            result = await session.execute(
+                select(Delivery.date)
+                .group_by(Delivery.date)
+                )
+            orderDate = result.scalars().all()
+            if orderDate is None:
+                return None
+            return orderDate
+        except SQLAlchemyError as e:
+            logger.error(f"Ошибка при получении суммы заказа: {e}")
+            raise
+
 class CategoryDao(BaseDAO[Category]):
     model = Category
 

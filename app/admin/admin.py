@@ -8,9 +8,9 @@ from user.schemas import PurchaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from config import settings, bot
 from dao.dao import DeliveryDao, TasteDao, UserDAO, ProductDao, CategoryDao, PurchaseDao
-from admin.kbs import admin_adress_kb, admin_catalog_kb, admin_date_kb, admin_delivery_kb, admin_kb, admin_kb_back, admin_product_kb, admin_taste_kb, product_management_kb, cancel_kb_inline, catalog_admin_kb, \
+from admin.kbs import admin_adress_kb, admin_catalog_kb, admin_date_kb, admin_delivery_kb, admin_kb, admin_kb_back, admin_product_kb, admin_show_kb, admin_taste_kb, product_management_kb, cancel_kb_inline, catalog_admin_kb, \
     admin_confirm_kb, dell_product_kb
-from admin.schemas import DeliveryData, ProductModel, ProductIDModel, PurchaseDateModel, UserIDModel
+from admin.schemas import DeliveryData, ProductModel, ProductIDModel, PurchaseAdressModel, PurchaseDateModel, UserIDModel
 from admin.utils import process_dell_text_msg
 from datetime import date, datetime
 
@@ -307,46 +307,54 @@ async def delivery_adress(call: CallbackQuery, session_with_commit: AsyncSession
     await DeliveryDao.add(session=session_with_commit, values=DeliveryData(adress=adress_text))
     data = await state.get_data()
     data["adress"].remove(adress_text)
-    await state.update_data(adress=data["adress"])
-    await call.message.edit_text(text="Выберите дату доставки: ", reply_markup=admin_adress_kb(data["adress"]))  
+    if data["adress"] != "":
+        await state.update_data(adress=data["adress"])
+        await call.message.edit_text(text="Выберите адресс: ", reply_markup=admin_adress_kb(data["adress"]))  
+    else:
+        await state.clear()
+        await call.message.edit_text(text="Доставки отсортированы: ", reply_markup=admin_show_kb()) 
+        
 
-@admin_router.callback_query(F.data.startswith("delivery_date_"), F.from_user.id.in_(settings.ADMIN_IDS))
+@admin_router.callback_query(F.data.startswith("delivery_show"), F.from_user.id.in_(settings.ADMIN_IDS))
 async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSession):
-    date_text = call.data.split("_")[-1]
-    date_order=datetime.strptime(date_text, "%d.%m.%Y").date()
-    purchases = await PurchaseDao.find_all(session=session_without_commit,
-                                           filters=PurchaseDateModel(date=date_order))
-    logger.error(purchases)
-    for purchase in purchases:
-        products = purchase.goods_id.split(', ')
-        product_text=""
-        for good in products:
-            if good.find('_') != -1:
-                product_id, taste_id = good.split('_')
-                taste = await TasteDao.find_one_or_none_by_id(session=session_without_commit, data_id=taste_id)
-                product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=product_id)
-                product_text += (f"🔹 {product.name} ({taste.taste_name})\n")
-            else: 
-                product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=good)
-                product_text += (f"🔹 {product.name}\n")
-        user= await UserDAO.find_one_or_none(session=session_without_commit,
-                                      filters=UserIDModel(telegram_id=purchase.user_id))
-        user_info = f"@{user.username}" if user.username else f"c ID {user.telegram_id}"
-        if purchase.money: money_text = "наличными."
-        else: money_text = "переводом."
-        try:
-            await bot.send_message(
-                chat_id=call.from_user.id,
-                text=(
-                    f"💲 Пользователь {user_info}\n"
-                    f"-------------------------------------------\n"
-                    f"{product_text}"
-                    f"за <b>{purchase.total} ₽</b> Оплата {money_text}\n"
-                    f"адресс: {purchase.adress}\n"
-                ), reply_markup=admin_delivery_kb(user.telegram_id)
-            )
-        except Exception as e:
-            logger.error(f"Ошибка при отправке уведомления администраторам: {e}") 
+    order_adress = DeliveryDao.get_delivery_adress(session=session_without_commit)
+    order_date = DeliveryDao.get_delivery_date(session=session_without_commit)
+    
+    
+    for adress in order_adress:
+        purchases = await PurchaseDao.find_all(session=session_without_commit,
+                                           filters=PurchaseAdressModel(date=order_date,
+                                                                     adress=adress))
+        for purchase in purchases:
+            products = purchase.goods_id.split(', ')
+            product_text=""
+            for good in products:
+                if good.find('_') != -1:
+                    product_id, taste_id = good.split('_')
+                    taste = await TasteDao.find_one_or_none_by_id(session=session_without_commit, data_id=taste_id)
+                    product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=product_id)
+                    product_text += (f"🔹 {product.name} ({taste.taste_name})\n")
+                else: 
+                    product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=good)
+                    product_text += (f"🔹 {product.name}\n")
+            user= await UserDAO.find_one_or_none(session=session_without_commit,
+                                          filters=UserIDModel(telegram_id=purchase.user_id))
+            user_info = f"@{user.username}" if user.username else f"c ID {user.telegram_id}"
+            if purchase.money: money_text = "наличными."
+            else: money_text = "переводом."
+            try:
+                await bot.send_message(
+                    chat_id=call.from_user.id,
+                    text=(
+                        f"💲 Пользователь {user_info}\n"
+                        f"-------------------------------------------\n"
+                        f"{product_text}"
+                        f"за <b>{purchase.total} ₽</b> Оплата {money_text}\n"
+                        f"адресс: {purchase.adress}\n"
+                    ), reply_markup=admin_delivery_kb(user.telegram_id)
+                )
+            except Exception as e:
+                logger.error(f"Ошибка при отправке уведомления администраторам: {e}") 
 
 @admin_router.callback_query(F.data.startswith("deliver_order_"), F.from_user.id.in_(settings.ADMIN_IDS))
 async def deliver_order(call: CallbackQuery, session_with_commit: AsyncSession):
