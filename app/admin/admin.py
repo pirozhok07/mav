@@ -308,12 +308,12 @@ async def delivery_adress(call: CallbackQuery, session_with_commit: AsyncSession
     data = await state.get_data()
     data["adress"].remove(adress_text)
     logger.error(data["adress"])
-    if data["adress"] != "":
-        await state.update_data(adress=data["adress"])
-        await call.message.edit_text(text="Выберите адресс: ", reply_markup=admin_adress_kb(data["adress"]))  
-    else:
+    if data["adress"] == "":
         await state.clear()
         await call.message.edit_text(text="Доставки отсортированы: ", reply_markup=admin_show_kb()) 
+    else:
+        await state.update_data(adress=data["adress"])
+        await call.message.edit_text(text="Выберите адресс: ", reply_markup=admin_adress_kb(data["adress"]))  
         
 
 @admin_router.callback_query(F.data.startswith("delivery_show"), F.from_user.id.in_(settings.ADMIN_IDS))
