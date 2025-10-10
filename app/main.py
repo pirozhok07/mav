@@ -9,6 +9,8 @@ from user.user_router import user_router
 from user.cart_router import cart_router
 from user.catalog_router import catalog_router
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.cron import CronTrigger
+
 
 
 
