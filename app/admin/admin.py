@@ -7,10 +7,10 @@ from loguru import logger
 from user.schemas import PurchaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from config import settings, bot
-from dao.dao import TasteDao, UserDAO, ProductDao, CategoryDao, PurchaseDao
+from dao.dao import DeliveryDao, TasteDao, UserDAO, ProductDao, CategoryDao, PurchaseDao
 from admin.kbs import admin_adress_kb, admin_catalog_kb, admin_date_kb, admin_delivery_kb, admin_kb, admin_kb_back, admin_product_kb, admin_taste_kb, product_management_kb, cancel_kb_inline, catalog_admin_kb, \
     admin_confirm_kb, dell_product_kb
-from admin.schemas import ProductModel, ProductIDModel, PurchaseDateModel, UserIDModel
+from admin.schemas import DeliveryData, ProductModel, ProductIDModel, PurchaseDateModel, UserIDModel
 from admin.utils import process_dell_text_msg
 from datetime import date, datetime
 
@@ -303,11 +303,12 @@ async def delivery_adress(call: CallbackQuery, session_without_commit: AsyncSess
 @admin_router.callback_query(F.data == 'delivery_adress_', F.from_user.id.in_(settings.ADMIN_IDS))
 async def delivery_adress(call: CallbackQuery, session_without_commit: AsyncSession, state: FSMContext):
     await call.answer("Доставки")
-    date_text = call.data.split("_")[-1]
-    date_order=datetime.strptime(date_text, "%d.%m.%Y").date()
-    purchases = await PurchaseDao.get_delivery_adress(session=session_without_commit,
-                                           filters=PurchaseDateModel(date=date_order))
-    await call.message.edit_text(text="Выберите дату доставки: ", reply_markup=admin_adress_kb())  
+    adress_text = call.data.split("_")[-1]
+    await DeliveryDao.add(session=session_without_commit, values=DeliveryData(adress=adress_text))
+    data = await state.get_data()
+    data["adress"].remove(adress_text)
+    await state.update_data(adress=data["adress"])
+    await call.message.edit_text(text="Выберите дату доставки: ", reply_markup=admin_adress_kb(data["adress"]))  
 
 @admin_router.callback_query(F.data.startswith("delivery_date_"), F.from_user.id.in_(settings.ADMIN_IDS))
 async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSession):

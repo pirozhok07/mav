@@ -9,7 +9,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from dao.base import BaseDAO
-from dao.models import Taste, User, Purchase, Category, Product
+from dao.models import Taste, User, Purchase, Category, Product, Delivery
+
+class DeliveryDao(BaseDAO[Delivery]):
+    model = Delivery
 
 class CategoryDao(BaseDAO[Category]):
     model = Category

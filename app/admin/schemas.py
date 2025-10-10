@@ -10,6 +10,9 @@ class UserIDModel(BaseModel):
 class PurchaseDateModel(BaseModel):
     date:date
 
+class DeliveryData(BaseModel):
+    adress:str = Field(...)
+
 class ProductModel(BaseModel):
     name: str = Field(..., min_length=5)
     description: str = Field(..., min_length=5)
