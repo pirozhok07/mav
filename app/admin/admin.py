@@ -290,7 +290,7 @@ async def delivery_date(call: CallbackQuery):
     await call.answer("Доставки")
     await call.message.edit_text(text="Выберите дату доставки: ", reply_markup=admin_date_kb())
 
-@admin_router.callback_query(F.data == 'delivery_date_', F.from_user.id.in_(settings.ADMIN_IDS))
+@admin_router.callback_query(F.data.startswith("delivery_date_"), F.from_user.id.in_(settings.ADMIN_IDS))
 async def delivery_adress(call: CallbackQuery, session_without_commit: AsyncSession):
     await call.answer("Доставки")
     date_text = call.data.split("_")[-1]
