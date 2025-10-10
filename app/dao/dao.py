@@ -207,6 +207,22 @@ class PurchaseDao(BaseDAO[Purchase]):
             raise
 
     @classmethod
+    async def get_delivery_adress(cls, session: AsyncSession, getdate:date) -> Optional[List[str]]:
+        try:
+            # Запрос для получения доставок сегодня
+            result = await session.execute(
+                select(Purchase.adress)
+                .filter(Purchase.status == "CONFIRM", Purchase.date == getdate)
+                .group_by(Purchase.adress)
+                )
+            total_price = result.scalars().all()
+            logger.error(total_price)
+            return total_price if total_price is not None else 0
+        except SQLAlchemyError as e:
+            logger.error(f"Ошибка при получении суммы заказа: {e}")
+            raise
+
+    @classmethod
     async def get_user_today(cls, session: AsyncSession) -> Optional[List[Purchase]]:
         try:
             # Запрос для получения доставок сегодня

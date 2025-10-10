@@ -71,6 +71,14 @@ def admin_date_kb() -> InlineKeyboardMarkup:
     kb.adjust(1)
     return kb.as_markup()
 
+def admin_adress_kb(adress_data:List[str]) -> InlineKeyboardMarkup:
+    kb = InlineKeyboardBuilder()
+    for i in range(len(adress_data)):
+        kb.button(text=i, callback_data=f"delivery_adress_{i}")
+    kb.button(text="Отмена", callback_data="cancel")
+    kb.adjust(1)
+    return kb.as_markup()
+
 def dell_product_kb(product_id: int) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     kb.button(text="🗑️ Удалить", callback_data=f"dell_{product_id}")

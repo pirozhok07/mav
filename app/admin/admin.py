@@ -8,7 +8,7 @@ from user.schemas import PurchaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from config import settings, bot
 from dao.dao import TasteDao, UserDAO, ProductDao, CategoryDao, PurchaseDao
-from admin.kbs import admin_catalog_kb, admin_date_kb, admin_delivery_kb, admin_kb, admin_kb_back, admin_product_kb, admin_taste_kb, product_management_kb, cancel_kb_inline, catalog_admin_kb, \
+from admin.kbs import admin_adress_kb, admin_catalog_kb, admin_date_kb, admin_delivery_kb, admin_kb, admin_kb_back, admin_product_kb, admin_taste_kb, product_management_kb, cancel_kb_inline, catalog_admin_kb, \
     admin_confirm_kb, dell_product_kb
 from admin.schemas import ProductModel, ProductIDModel, PurchaseDateModel, UserIDModel
 from admin.utils import process_dell_text_msg
@@ -33,6 +33,9 @@ class ChangeProductQuantity(StatesGroup):
 
 class ChangeProductPrice(StatesGroup):
     price = State()
+
+class DeliveryOrder(StatesGroup):
+    adress = State()
 
 @admin_router.callback_query(F.data == "cancel", F.from_user.id.in_(settings.ADMIN_IDS))
 async def admin_process_cancel(call: CallbackQuery, state: FSMContext):
@@ -286,6 +289,34 @@ async def accept_order(call: CallbackQuery, session_with_commit: AsyncSession):
 async def delivery_date(call: CallbackQuery):
     await call.answer("Доставки")
     await call.message.edit_text(text="Выберите дату доставки: ", reply_markup=admin_date_kb())
+
+@admin_router.callback_query(F.data == 'delivery_date_', F.from_user.id.in_(settings.ADMIN_IDS))
+async def delivery_adress(call: CallbackQuery, session_without_commit: AsyncSession):
+    await call.answer("Доставки")
+    date_text = call.data.split("_")[-1]
+    date_order=datetime.strptime(date_text, "%d.%m.%Y").date()
+    purchases = await PurchaseDao.get_delivery_adress(session=session_without_commit,
+                                           filters=PurchaseDateModel(date=date_order))
+    await call.message.edit_text(text="Выберите дату доставки: ", reply_markup=admin_adress_kb())
+
+@admin_router.callback_query(F.data == 'delivery_adress_', F.from_user.id.in_(settings.ADMIN_IDS))
+async def delivery_adress(call: CallbackQuery, session_without_commit: AsyncSession, state: FSMContext):
+    await call.answer("Доставки")
+    date_text = call.data.split("_")[-1]
+    date_order=datetime.strptime(date_text, "%d.%m.%Y").date()
+    adresses = await PurchaseDao.get_delivery_adress(session=session_without_commit,
+                                           filters=PurchaseDateModel(date=date_order))
+    await state.update_data(adress=adresses)
+    await call.message.edit_text(text="Выберите дату доставки: ", reply_markup=admin_adress_kb())  
+
+@admin_router.callback_query(F.data == 'delivery_adress_', F.from_user.id.in_(settings.ADMIN_IDS))
+async def delivery_adress(call: CallbackQuery, session_without_commit: AsyncSession, state: FSMContext):
+    await call.answer("Доставки")
+    date_text = call.data.split("_")[-1]
+    date_order=datetime.strptime(date_text, "%d.%m.%Y").date()
+    purchases = await PurchaseDao.get_delivery_adress(session=session_without_commit,
+                                           filters=PurchaseDateModel(date=date_order))
+    await call.message.edit_text(text="Выберите дату доставки: ", reply_markup=admin_adress_kb())  
 
 @admin_router.callback_query(F.data.startswith("delivery_date_"), F.from_user.id.in_(settings.ADMIN_IDS))
 async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSession):

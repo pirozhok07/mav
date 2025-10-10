@@ -65,3 +65,12 @@ class Purchase(Base):
     def __repr__(self):
         return f"<Purchase(id={self.id}, user_id={self.user_id} date={self.date}, satus={self.status})>"
     
+
+class Delivery(Base):
+    __tablename__ = 'deliveries'
+
+    adress: Mapped[str] = mapped_column(Text, nullable=True)
+
+    def __repr__(self):
+        return f"<Deliveries(id={self.id}, adress={self.adress})>"
+    
