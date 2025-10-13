@@ -37,19 +37,19 @@ async def stop_bot():
 
 
 async def main():
-    scheduler = AsyncIOScheduler(timezone='Europe/Moscow')
-    scheduler.start()
+    # scheduler = AsyncIOScheduler(timezone='Europe/Moscow')
+    # scheduler.start()
     # Регистрация мидлварей
     dp.update.middleware.register(DatabaseMiddlewareWithoutCommit())
     dp.update.middleware.register(DatabaseMiddlewareWithCommit())
-    dp.update.middleware(SchedulerMiddleware(scheduler=scheduler)())
+    # dp.update.middleware(SchedulerMiddleware(scheduler=scheduler)())
 
     # Регистрация роутеров
     dp.include_router(catalog_router)
     dp.include_router(user_router)
     dp.include_router(admin_router)
     dp.include_router(cart_router)
-    dp.include_router(hello_router)
+    # dp.include_router(hello_router)
 
     # Регистрация функций
     dp.startup.register(start_bot)
