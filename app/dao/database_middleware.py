@@ -3,6 +3,8 @@ from aiogram import BaseMiddleware
 from aiogram.types import Message, CallbackQuery
 from dao.database import async_session_maker
 
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
 class BaseDatabaseMiddleware(BaseMiddleware):
     async def __call__(
         self,
@@ -43,3 +45,13 @@ class DatabaseMiddlewareWithCommit(BaseDatabaseMiddleware):
     async def after_handler(self, session) -> None:
         """Фиксируем изменения после обработки события."""
         await session.commit()
+
+class SchedulerMiddleware(BaseMiddleware):
+    def __init__(self, scheduler: AsyncIOScheduler):
+        super().__init__()
+        self._scheduler = scheduler
+
+    async def __call__(self,handler,event,data):
+        # прокидываем в словарь состояния scheduler
+        data["scheduler"] = self._scheduler
+        return await handler(event, data)

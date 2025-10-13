@@ -2,13 +2,14 @@ import asyncio
 from aiogram.types import BotCommand, BotCommandScopeDefault
 from loguru import logger
 from config import bot, admins, dp
-from dao.database_middleware import DatabaseMiddlewareWithoutCommit, DatabaseMiddlewareWithCommit
+from dao.database_middleware import DatabaseMiddlewareWithoutCommit, DatabaseMiddlewareWithCommit, SchedulerMiddleware
+from admin.hello import hello_router
 from admin.admin import admin_router
 from user.user_router import user_router
 from user.cart_router import cart_router
 from user.catalog_router import catalog_router
 
-
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 # Функция, которая настроит командное меню (дефолтное для всех пользователей)
 async def set_commands():
@@ -34,16 +35,21 @@ async def stop_bot():
         pass
     logger.error("Бот остановлен!")
 
+
 async def main():
+    scheduler = AsyncIOScheduler(timezone='Europe/Moscow')
+    scheduler.start()
     # Регистрация мидлварей
     dp.update.middleware.register(DatabaseMiddlewareWithoutCommit())
     dp.update.middleware.register(DatabaseMiddlewareWithCommit())
+    dp.update.middleware.register(SchedulerMiddleware(scheduler=scheduler)())
 
     # Регистрация роутеров
     dp.include_router(catalog_router)
     dp.include_router(user_router)
     dp.include_router(admin_router)
     dp.include_router(cart_router)
+    dp.include_router(hello_router)
 
     # Регистрация функций
     dp.startup.register(start_bot)
