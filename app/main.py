@@ -42,11 +42,7 @@ async def main():
     # Регистрация мидлварей
     dp.update.middleware.register(DatabaseMiddlewareWithoutCommit())
     dp.update.middleware.register(DatabaseMiddlewareWithCommit())
-<<<<<<< HEAD
     dp.update.middleware(SchedulerMiddleware(scheduler=scheduler)())
-=======
-    dp.update.middleware.register(SchedulerMiddleware(scheduler=scheduler)())
->>>>>>> 2488283111c5827a76b10555744c37437619b1f7
 
     # Регистрация роутеров
     dp.include_router(catalog_router)
