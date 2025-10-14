@@ -52,6 +52,10 @@ async def all_p(call: CallbackQuery, session_without_commit: AsyncSession):
     purchases = await PurchaseDao.find_all(session=session_without_commit)
     for purchase in purchases:
         logger.error(purchase)
+        
+@admin_router.callback_query(F.data == "dell_p", F.from_user.id.in_(settings.ADMIN_IDS))
+async def dell_p(call: CallbackQuery, session_without_commit: AsyncSession):
+    await PurchaseDao.delete_old(session=session_without_commit, status="NEW", date=datetime.now())
 
 @admin_router.callback_query(F.data == "admin_panel", F.from_user.id.in_(settings.ADMIN_IDS))
 async def start_admin(call: CallbackQuery):

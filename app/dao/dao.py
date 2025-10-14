@@ -165,6 +165,26 @@ class PurchaseDao(BaseDAO[Purchase]):
     model = Purchase
 
     @classmethod
+    async def delete_old(cls, session: AsyncSession, status:str, date:datetime):
+        # Удалить записи по фильтру
+        try:
+            # Запрос для получения пользователя с его покупками и связанными продуктами
+            result = await session.execute(
+            select(Purchase)
+            .filter(Purchase.date < date, Purchase.status != "NEW")
+            )
+            
+            purchases = result.scalars().all() 
+            for item in purchases:
+                await session.delete(item)
+            logger.error("DONE")
+            return None 
+        except SQLAlchemyError as e:
+            # Обработка ошибок при работе с базой данных
+            print(f"Ошибка при удалении объекта: {e}")
+            return None
+        
+    @classmethod
     async def set_order(cls, session: AsyncSession, 
                         data_id: int, 
                         getdate: int = None, 

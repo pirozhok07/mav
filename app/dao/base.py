@@ -116,6 +116,8 @@ class BaseDAO(Generic[T]):
             logger.error(f"Ошибка при удалении записей: {e}")
             raise e
         
+    
+        
     @classmethod
     async def deleteAll(cls, session: AsyncSession):
         # Удалить записи по фильтру
