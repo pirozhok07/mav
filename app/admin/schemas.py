@@ -12,11 +12,10 @@ class PurchaseDateModel(BaseModel):
 
 class PurchaseForDellModel(BaseModel):
     status:str
-    date:date
+    created_at:datetime
 
 class PurchaseAdressModel(BaseModel):
     adress:str
-    created_at:datetime
 
 class DeliveryData(BaseModel):
     adress:str = Field(...)
