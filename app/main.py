@@ -11,7 +11,7 @@ from user.catalog_router import catalog_router
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-sheduler = AsyncIOScheduler()
+scheduler = AsyncIOScheduler()
 # Функция, которая настроит командное меню (дефолтное для всех пользователей)
 async def set_commands():
     commands = [BotCommand(command='start', description='Старт')]
@@ -19,14 +19,14 @@ async def set_commands():
 
 # Функция, которая выполнится, когда бот запустится
 async def start_bot():
-    sheduler.add_job(
-        send_sheduled_message,
+    scheduler.add_job(
+        send_scheduled_message,
         CronTrigger(hour=10, minute=30, timezone="Europe/Moscow"),
         args=(bot, 1330085937),
         kwargs={"text": "text"},
         id="daily_mess"
     )
-    sheduler.start()
+    scheduler.start()
     await set_commands()
     for admin_id in admins:
         try:
