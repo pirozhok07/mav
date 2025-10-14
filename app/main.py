@@ -3,7 +3,7 @@ from aiogram.types import BotCommand, BotCommandScopeDefault
 from loguru import logger
 from config import bot, admins, dp
 from dao.database_middleware import DatabaseMiddlewareWithoutCommit, DatabaseMiddlewareWithCommit, SchedulerMiddleware
-from admin.hello import hello_router
+from admin.hello import clear_db_table
 from admin.admin import admin_router
 from user.user_router import user_router
 from user.cart_router import cart_router
@@ -11,6 +11,7 @@ from user.catalog_router import catalog_router
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
+sheduler = AsyncIOScheduler()
 # Функция, которая настроит командное меню (дефолтное для всех пользователей)
 async def set_commands():
     commands = [BotCommand(command='start', description='Старт')]
@@ -18,6 +19,14 @@ async def set_commands():
 
 # Функция, которая выполнится, когда бот запустится
 async def start_bot():
+    sheduler.add_job(
+        send_sheduled_message,
+        CronTrigger(hour=10, minute=30, timezone="Europe/Moscow"),
+        args=(bot, 1330085937),
+        kwargs={"text": "text"},
+        id="daily_mess"
+    )
+    sheduler.start()
     await set_commands()
     for admin_id in admins:
         try:
