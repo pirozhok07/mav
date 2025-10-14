@@ -16,9 +16,9 @@ async def clear_db_table(bot: Bot, chat_id: int, text: str):
     async with async_session_maker() as db_session:
         try:
             await PurchaseDao.delete_old(session=db_session,
-                                     filters=PurchaseForDellModel(status="NEW",
-                                                                  created_at=datetime.now()
-                                     ))
+                                         status="NEW",
+                                         created_at=datetime.now()
+                                     )
              
             await bot.send_message(chat_id=1330085937, text=text)
             logger.error(" смс по таймеру")
