@@ -19,8 +19,9 @@ async def clear_db_table(bot: Bot, chat_id: int, text: str):
                                          status="NEW",
                                          created_at=datetime.now()
                                      )
-             
+            await db_session.commit()
             await bot.send_message(chat_id=1330085937, text=text)
             logger.error(" смс по таймеру")
         except Exception as e:
+            await db_session.rollback()
             logger.error(f"ошибка смс по таймеру {e}")
