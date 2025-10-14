@@ -171,7 +171,7 @@ class PurchaseDao(BaseDAO[Purchase]):
             # Запрос для получения пользователя с его покупками и связанными продуктами
             result = await session.execute(
             select(Purchase)
-            .filter(Purchase.date < date, Purchase.status != "NEW")
+            .filter(Purchase.created_at < created_at, Purchase.status != "NEW")
             )
             
             purchases = result.scalars().all() 
