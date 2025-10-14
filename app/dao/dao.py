@@ -165,13 +165,13 @@ class PurchaseDao(BaseDAO[Purchase]):
     model = Purchase
 
     @classmethod
-    async def delete_old(cls, session: AsyncSession, status:str, created_at:datetime):
+    async def delete_old(cls, session: AsyncSession, status:str):
         # Удалить записи по фильтру
         try:
             # Запрос для получения пользователя с его покупками и связанными продуктами
             result = await session.execute(
             select(Purchase)
-            .filter(Purchase.created_at < created_at, Purchase.status != "NEW")
+            .filter(Purchase.status == status)
             )
             
             purchases = result.scalars().all() 

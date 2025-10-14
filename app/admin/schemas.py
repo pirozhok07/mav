@@ -12,7 +12,6 @@ class PurchaseDateModel(BaseModel):
 
 class PurchaseForDellModel(BaseModel):
     status:str
-    created_at:datetime
 
 class PurchaseAdressModel(BaseModel):
     adress:str
