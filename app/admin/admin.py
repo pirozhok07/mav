@@ -356,15 +356,15 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
                     f"адресс: {purchase.adress}\n"
                     f"_________________________________________\n"
                 )
-    await call.message.edit_text(text=delivery_text, reply_markup=cancel_kb_inline())  
+    await call.message.edit_text(text=delivery_text, reply_markup=admin_delivery_kb())  
 
-@admin_router.callback_query(F.data.startswith("deliver_order_"), F.from_user.id.in_(settings.ADMIN_IDS))
+@admin_router.callback_query(F.data == "deliver_order", F.from_user.id.in_(settings.ADMIN_IDS))
 async def deliver_order(call: CallbackQuery, session_with_commit: AsyncSession):
-    user_id = int(call.data.split("_")[-1])
-    purchases = await PurchaseDao.get_purchases(session=session_with_commit, telegram_id=user_id)
+    purchases = await PurchaseDao.find_all(session=session_with_commit,
+                                           filters=PurchaseDateModel(date=date.today()))
     for purchase in purchases:
         await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id, status = "DONE")
-    await call.message.answer(text="Заказ доставлен")
+    await call.message.answer(text="Заказы доставлены")
 
 @admin_router.callback_query(F.data.startswith("deliver_transferred_"), F.from_user.id.in_(settings.ADMIN_IDS))
 async def deliver_transferred(call: CallbackQuery, session_with_commit: AsyncSession):
