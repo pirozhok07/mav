@@ -47,6 +47,7 @@ def admin_taste_kb(taste_data: List[Taste]) -> InlineKeyboardMarkup:
 def admin_kb() -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     kb.button(text="📊 Статистика", callback_data="statistic")
+    kb.button(text="🕢 Время доставки", callback_data="set_time")
     kb.button(text="🛍️ Управлять товарами", callback_data="process_products")
     kb.button(text="✅ Доставки", callback_data="delivery")
     kb.button(text="🏠 На главную", callback_data="home")

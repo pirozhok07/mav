@@ -17,13 +17,13 @@ class Base(AsyncAttrs, DeclarativeBase):
     # Общее поле "id" для всех таблиц
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
 
-    # Поля времени создания и обновления записи
-    created_at: Mapped[datetime] = mapped_column(
-        TIMESTAMP, server_default=func.now()
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        TIMESTAMP, server_default=func.now(), onupdate=func.now()
-    )
+    # # Поля времени создания и обновления записи
+    # created_at: Mapped[datetime] = mapped_column(
+    #     TIMESTAMP, server_default=func.now()
+    # )
+    # updated_at: Mapped[datetime] = mapped_column(
+    #     TIMESTAMP, server_default=func.now(), onupdate=func.now()
+    # )
 
     # Автоматическое определение имени таблицы
     @classmethod

@@ -373,3 +373,10 @@ async def deliver_transferred(call: CallbackQuery, session_with_commit: AsyncSes
     for purchase in purchases:
         await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id, status = "DONE")
     await call.message.answer(text="Заказ доставлен")
+
+@admin_router.callback_query(F.data == "set_time", F.from_user.id.in_(settings.ADMIN_IDS))
+async def set_time(call: CallbackQuery, session_with_commit: AsyncSession):
+    purchases = await PurchaseDao.get_purchases(session=session_with_commit, telegram_id=user_id)
+    for purchase in purchases:
+        await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id, status = "DONE")
+    await call.message.answer(text="Заказ доставлен")

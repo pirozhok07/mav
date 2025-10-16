@@ -1,7 +1,7 @@
-from datetime import datetime, date
+from datetime import datetime, date, time
 from typing import List
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import BigInteger, Text, ForeignKey, Integer, DATE, BOOLEAN
+from sqlalchemy import BigInteger, Text, ForeignKey, Integer, DATE, BOOLEAN, TIME
 from dao.database import Base
 
 
@@ -73,4 +73,13 @@ class Delivery(Base):
 
     def __repr__(self):
         return f"<Deliveries(id={self.id}, adress={self.adress})>"
+    
+class DeliveryTime(Base):
+    __tablename__ = 'delivery_times'
+
+    date: Mapped[date] = mapped_column(DATE, nullable=True)
+    time: Mapped[time] = mapped_column(TIME, nullable=True)
+
+    def __repr__(self):
+        return f"<Deliveriestime(time={self.time}, date={self.date})>"
     
