@@ -29,20 +29,20 @@ async def start_bot():
     )
     scheduler.start()
     await set_commands()
-    for admin_id in admins:
-        try:
-            await bot.send_message(admin_id, f'Я запущен🥳.')
-        except:
-            pass
+    # for admin_id in admins:
+        # try:
+        #     # await bot.send_message(admin_id, f'Я запущен🥳.')
+        # except:
+        #     pass
     logger.info("Бот успешно запущен.")
 
 # Функция, которая выполнится, когда бот завершит свою работу
 async def stop_bot():
-    try:
-        for admin_id in admins:
-            await bot.send_message(admin_id, 'Бот остановлен. За что?😔')
-    except:
-        pass
+    # try:
+    #     for admin_id in admins:
+    #         # await bot.send_message(admin_id, 'Бот остановлен. За что?😔')
+    # except:
+    #     pass
     logger.error("Бот остановлен!")
 
 
