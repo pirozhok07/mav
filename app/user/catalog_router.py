@@ -6,7 +6,6 @@ from aiogram.filters import or_f, StateFilter
 from aiogram.enums import ContentType
 from aiogram.types import Message, CallbackQuery, LabeledPrice, PreCheckoutQuery
 from loguru import logger
-from user.cart_router import add_in_cart
 from user.service import CallbackStateFilter, NavState
 from sqlalchemy.ext.asyncio import AsyncSession
 from config import bot, settings
