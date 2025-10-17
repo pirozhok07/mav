@@ -86,7 +86,7 @@ async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
 async def get_date(call: CallbackQuery, state: FSMContext):
     await call.answer("Оформление заказа")
     # await call.message.answer(f"Заказ будет доставлен ориентировочно сегодня после 19:30")
-    msg = await call.message.edit_text(text="Для начала укажите дату доставки: ", reply_markup=date_kb())
+    msg = await call.message.edit_text(text="Укажите дату доставки: ", reply_markup=date_kb())
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(DoOrder.date)
 
@@ -96,7 +96,7 @@ async def get_date(call: CallbackQuery, state: FSMContext):
     date = call.data.split("_")[-1]
     await state.update_data(date = date)
     # await call.message.answer(f"Заказ будет доставлен ориентировочно сегодня после 19:30")
-    msg = await call.message.edit_text(text="Для начала укажите адресс доставки: ", reply_markup=cancele_kb())
+    msg = await call.message.edit_text(text="Куда доставить ваш заказ? ", reply_markup=cancele_kb())
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(DoOrder.adress)
 
