@@ -92,6 +92,7 @@ async def show_taste(call: CallbackQuery, session_without_commit: AsyncSession):
     taste_data = await TasteDao.get_tastes(session=session_without_commit, product_id=product_id)
     if taste_data == []:
         await add_in_cart(call, session_without_commit)
+        return
     await call.answer("Загрузка вкусов...")   
     await call.message.edit_text(
         text="Выберите вкус:",
