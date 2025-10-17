@@ -125,10 +125,10 @@ async def nal(call: CallbackQuery, session_with_commit: AsyncSession, state: FSM
     await state.clear()
 
     if money_flag == "1":
-        await call.answer(f"Оплата переводом.\nСумма к оплате: {purchase.total}₽\nРЕКВИЗИТЫ\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
+        await call.answer(f"Оплата переводом.\Итого: {purchase.total}₽\nРЕКВИЗИТЫ\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
         money_text = f"Оплата переводом.\n"
     else:
-        await call.answer(f"Оплата наличными. \nСумма к оплате: {purchase.total}₽\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
+        await call.answer(f"Оплата наличными. \Итого: {purchase.total}₽\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
         money_text = f"Оплата наличными.\n"
     
     await page_home(call)
