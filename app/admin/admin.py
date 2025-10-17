@@ -349,10 +349,11 @@ async def show_delivery(call: CallbackQuery, session_without_commit: AsyncSessio
             user_info = f"@{user.username}" if user.username else f"c ID {user.telegram_id}"
             if purchase.money: money_text = "наличными."
             else: money_text = "переводом."
+            if purchase.total < 500 : total=purchase.total+50
             delivery_text +=(
                     f"Пользователь {user_info}\n"
                     f"{product_text}"
-                    f"💲 за <b>{purchase.total} ₽</b> Оплата {money_text}\n"
+                    f"💲 за <b>{total} ₽</b> Оплата {money_text}\n"
                     f"адресс: {purchase.adress}\n"
                     f"_________________________________________\n"
                 )

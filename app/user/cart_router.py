@@ -124,11 +124,12 @@ async def nal(call: CallbackQuery, session_with_commit: AsyncSession, state: FSM
     await PurchaseDao.set_order(session_with_commit, data_id=purchase.id, getdate=order["date"], adress=order["adress"], status="WAIT", money=money_flag)
     await state.clear()
 
+    if purchase.total < 500 : total=purchase.total+50
     if money_flag == "1":
-        await call.answer(f"Оплата переводом.\Итого: {purchase.total}₽\nРЕКВИЗИТЫ\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
+        await call.answer(f"Оплата переводом.\n Итого: {total}₽\nРЕКВИЗИТЫ\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
         money_text = f"Оплата переводом.\n"
     else:
-        await call.answer(f"Оплата наличными. \Итого: {purchase.total}₽\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
+        await call.answer(f"Оплата наличными. \n Итого: {total}₽\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
         money_text = f"Оплата наличными.\n"
     
     await page_home(call)
