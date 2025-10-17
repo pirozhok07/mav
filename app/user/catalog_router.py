@@ -149,7 +149,7 @@ async def show_taste(call: CallbackQuery, session_without_commit: AsyncSession):
         await page_catalog(call, session_without_commit)
         return
     await call.answer("Загрузка вкусов...") 
-    product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, product_id=product_id)  
+    product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id==product_id)  
     await call.message.edit_text(
         text="Выберите вкус:",
         reply_markup=taste_kb(taste_data, product.category_id))
