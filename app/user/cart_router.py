@@ -21,45 +21,6 @@ class DoOrder(StatesGroup):
     adress = State()
     date = State()
 
-@cart_router.callback_query(F.data.startswith('cart_'))
-async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
-    await call.answer("Товар добавлен в корзину", show_alert=True)
-    _, product_id, taste_id = call.data.split('_')
-    user_id = call.from_user.id
-    purchase = await PurchaseDao.find_one_or_none(
-        session=session_with_commit,
-        filters=PurchaseModel(user_id=user_id,
-                              status="NEW")
-    )
-    
-    product = await ProductDao.find_one_or_none_by_id(session=session_with_commit, data_id=product_id)
-    await ProductDao.update_one_by_id(session=session_with_commit, data_id=product_id, in_cart=True)
-    if taste_id != '0':
-        await TasteDao.update_one_by_id(session=session_with_commit, data_id=taste_id, in_cart=True)
-        taste = await TasteDao.find_one_or_none_by_id(session=session_with_commit, data_id=taste_id)
-        add_text_data =f"{product.id}_{taste.id}"
-    else: 
-        add_text_data =f"{product.id}"
-    
-    
-    if purchase is not None:
-        text_data = f"{purchase.goods_id}, {add_text_data}"
-        total_price = purchase.total + product.price
-        await PurchaseDao.set_order(session=session_with_commit,
-                                       data_id=purchase.id,
-                                       goods=text_data,
-                                       total=total_price)
-                                       
-    else:
-        payment_data = {
-            'user_id': int(user_id),
-            'goods_id': add_text_data,
-            'total': product.price,
-            'status': 'NEW',
-        }
-        logger.error(payment_data)
-        await PurchaseDao.add(session=session_with_commit, values=ItemCartData(**payment_data))
-    await page_catalog(call, session_with_commit)
 
 
 
