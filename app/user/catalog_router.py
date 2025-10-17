@@ -72,11 +72,11 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
 
 @catalog_router.callback_query(F.data.startswith('cart_'))
 async def to_cart(call: CallbackQuery, session_with_commit: AsyncSession):
+    await call.answer("Товар добавлен в корзину", show_alert=True)
     await add_in_cart(call, session_with_commit)
     await page_catalog(call, session_with_commit)
 
 async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
-    await call.answer("Товар добавлен в корзину", show_alert=True)
     _, product_id, taste_id = call.data.split('_')
     user_id = call.from_user.id
     purchase = await PurchaseDao.find_one_or_none(
@@ -136,6 +136,7 @@ async def show_taste(call: CallbackQuery, session_without_commit: AsyncSession):
     taste_data = await TasteDao.get_tastes(session=session_without_commit, product_id=product_id)
     if taste_data == []:
         # logger.error(call.data)data = 
+        await call.answer("Товар добавлен в корзину", show_alert=True)
         new_call = CallbackQuery(
             id=call.id,
             from_user=call.from_user,
