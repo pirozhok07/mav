@@ -53,11 +53,11 @@ async def edit_cart(call: CallbackQuery, session_without_commit: AsyncSession):
         reply_markup=delete_kb(product_data, taste_data))
     
 @cart_router.callback_query(F.data == 'clean_cart')
-async def clean_cart(call: CallbackQuery, session_without_commit: AsyncSession):
+async def clean_cart(call: CallbackQuery, session_with_commit: AsyncSession):
     await call.answer('Корзина очищена', show_alert=True)
 
     user_id = call.from_user.id
-    await PurchaseDao.deleteAll(session=session_without_commit)
+    await PurchaseDao.deleteAll(session=session_with_commit)
     await page_home(call)
     
 
