@@ -107,8 +107,8 @@ def date_kb() -> InlineKeyboardMarkup:
     f = date.today()
     for i, btn in zip(range(0,3), ['Сегодня','Завтра','Послезавтра']):
         nextday=timedelta(i)
-        date = (f+nextday).strftime("%d.%m.%Y")
-        kb.button(text=btn, callback_data=f"get_date_{date}")
+        date_text = (f+nextday).strftime("%d.%m.%Y")
+        kb.button(text=btn, callback_data=f"get_date_{date_text}")
     kb.button(text="Отмена", callback_data="cancel")
     kb.adjust(1)
     return kb.as_markup()
