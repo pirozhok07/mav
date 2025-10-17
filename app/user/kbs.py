@@ -95,6 +95,7 @@ def cart_kb() -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     kb.button(text="💰 Оформить заказ", callback_data=f"do_order")
     kb.button(text="✖ Редактировать корзину", callback_data=f"edit_cart")
+    kb.button(text="✖ Очистить корзину", callback_data=f"clean_cart")
     kb.button(text="🏠 На главную", callback_data="home")
     kb.adjust(1)
     return kb.as_markup()
