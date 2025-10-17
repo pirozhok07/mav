@@ -42,10 +42,15 @@ async def page_home(call: CallbackQuery):
 
 @user_router.callback_query(F.data == "about")
 async def page_about(call: CallbackQuery):
-    await call.answer("О магазине")
+    await call.answer("Информация")
     await call.message.edit_text(
         text=(
-            "🎓 Добро пожаловать в магазин!\n\n"
+            "🎓 Добро пожаловать в систему заказов.!\n\n"
+            "Только безналичная оплата. В случае отмены заказа предоплата не возвращается.\n\n"
+            "Доставка осуществляется только по г. Звенигород.\n"
+            "Сумма доставки 50₽. При сумме заказа от 500₽ доставка бесплана.\n\n"
+            "Заказ можно проверить на месте при курьере\n\n"
+            "Предупредим за 15 минут до доставки\n\n"
         ),
         reply_markup=call.message.reply_markup
     )
@@ -75,7 +80,7 @@ async def page_about(call: CallbackQuery, session_without_commit: AsyncSession):
         text = (
             f"🛍 <b>Ваш профиль:</b>\n\n"
             f"Количество заказов: <b>{total_purchases}</b>\n"
-            f"Общая сумма: <b>{total_amount}₽</b>\n\n"
+            f"Итого: <b>{total_amount}₽</b>\n\n"
             "Хотите просмотреть детали ваших покупок?"
         )
         await call.message.edit_text(
@@ -116,7 +121,7 @@ async def page_user_purchases(call: CallbackQuery, session_without_commit: Async
         elif(purchase.status == "DONE"): text_status = "Выполнен"
 
         product_text += (
-                f"\n<b>сумма:</b> {purchase.total}₽\n"
+                f"\n<b>итого:</b> {purchase.total}₽\n"
                 f"<b>дата:</b> {purchase.date}\n"
                 f"<b>адресс:</b> {purchase.adress}\n"
                 f"<b>статус:</b> {text_status}\n"
@@ -164,7 +169,7 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
         
     product_text += (
             f"━━━━━━━━━━━━━━━━━━\n"
-            f"сумма заказа: {purchase.total}₽\n")
+            f"Итого: {purchase.total}₽\n")
 
     await call.message.edit_text(
         text=product_text,
