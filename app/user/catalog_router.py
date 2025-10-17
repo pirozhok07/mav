@@ -148,10 +148,11 @@ async def show_taste(call: CallbackQuery, session_without_commit: AsyncSession):
         await add_in_cart(new_call, session_without_commit)
         await page_catalog(call, session_without_commit)
         return
-    await call.answer("Загрузка вкусов...")   
+    await call.answer("Загрузка вкусов...") 
+    product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, product_id=product_id)  
     await call.message.edit_text(
         text="Выберите вкус:",
-        reply_markup=taste_kb(taste_data))
+        reply_markup=taste_kb(taste_data, product.category_id))
 
 @catalog_router.pre_checkout_query(lambda query: True)
 async def pre_checkout_query(pre_checkout_q: PreCheckoutQuery):
