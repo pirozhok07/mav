@@ -51,7 +51,7 @@ async def show_taste(call: CallbackQuery, session_without_commit: AsyncSession):
     product_id = int(call.data.split("_")[-1]) 
     taste_data = await TasteDao.get_tastes(session=session_without_commit, product_id=product_id)
     logger.error(taste_data)
-    if taste_data is None:
+    if taste_data == []:
         logger.error("пустота")
     await call.answer("Загрузка вкусов...")   
     await call.message.edit_text(
