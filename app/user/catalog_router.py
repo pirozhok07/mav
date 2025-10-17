@@ -93,7 +93,7 @@ async def show_taste(call: CallbackQuery, session_without_commit: AsyncSession):
     taste_data = await TasteDao.get_tastes(session=session_without_commit, product_id=product_id)
     if taste_data == []:
         # logger.error(call.data)data = 
-        new_call = CallbackQuery(
+        new_call = await CallbackQuery(
             id=call.id,
             from_user=call.from_user,
             chat_instance=call.chat_instance,
