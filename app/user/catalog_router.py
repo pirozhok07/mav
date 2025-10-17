@@ -50,6 +50,7 @@ async def page_catalog_products(call: CallbackQuery, session_without_commit: Asy
 async def show_taste(call: CallbackQuery, session_without_commit: AsyncSession):
     product_id = int(call.data.split("_")[-1]) 
     taste_data = await TasteDao.get_tastes(session=session_without_commit, product_id=product_id)
+    logger.error(taste_data)
     if taste_data is None:
         logger.error("пустота")
     await call.answer("Загрузка вкусов...")   
