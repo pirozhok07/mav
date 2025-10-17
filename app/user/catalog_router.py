@@ -6,6 +6,7 @@ from aiogram.filters import or_f, StateFilter
 from aiogram.enums import ContentType
 from aiogram.types import Message, CallbackQuery, LabeledPrice, PreCheckoutQuery
 from loguru import logger
+from user.cart_router import add_in_cart
 from user.service import CallbackStateFilter, NavState
 from sqlalchemy.ext.asyncio import AsyncSession
 from config import bot, settings
@@ -50,9 +51,8 @@ async def page_catalog_products(call: CallbackQuery, session_without_commit: Asy
 async def show_taste(call: CallbackQuery, session_without_commit: AsyncSession):
     product_id = int(call.data.split("_")[-1]) 
     taste_data = await TasteDao.get_tastes(session=session_without_commit, product_id=product_id)
-    logger.error(taste_data)
     if taste_data == []:
-        logger.error("пустота")
+        await add_in_cart(call, session_without_commit)
     await call.answer("Загрузка вкусов...")   
     await call.message.edit_text(
         text="Выберите вкус:",
