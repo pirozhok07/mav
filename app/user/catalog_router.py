@@ -69,11 +69,12 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
         }
         logger.error(payment_data)
         await PurchaseDao.add(session=session_with_commit, values=ItemCartData(**payment_data))
-    await page_catalog(call, session_with_commit)
 
 @catalog_router.callback_query(F.data.startswith('cart_'))
 async def to_cart(call: CallbackQuery, session_with_commit: AsyncSession):
     await call.answer("Товар добавлен в корзину", show_alert=True)
+    await add_in_cart(call, session_with_commit)
+    await page_catalog(call, session_with_commit)
 
 async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
     logger.error("i am here")
@@ -112,7 +113,7 @@ async def add_in_cart(call: CallbackQuery, session_with_commit: AsyncSession):
         }
         logger.error(payment_data)
         await PurchaseDao.add(session=session_with_commit, values=ItemCartData(**payment_data))
-    await page_catalog(call, session_with_commit)
+    
 
 
 @catalog_router.callback_query(F.data.startswith("category_"))
@@ -145,6 +146,7 @@ async def show_taste(call: CallbackQuery, session_without_commit: AsyncSession):
             inline_message_id=call.inline_message_id
         )
         await add_in_cart(new_call, session_without_commit)
+        await page_catalog(call, session_without_commit)
         return
     await call.answer("Загрузка вкусов...")   
     await call.message.edit_text(
