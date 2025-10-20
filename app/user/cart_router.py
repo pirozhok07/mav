@@ -109,7 +109,7 @@ async def create_order(call: CallbackQuery, session_with_commit: AsyncSession, s
 
     purchase = await PurchaseDao.find_one_or_none(
         session=session_with_commit,
-        filters=PurchaseModel(user_id=call.message.from_user.id,
+        filters=PurchaseModel(user_id=call.from_user.id,
                               status="NEW")
     )
     logger.error(call.message.from_user.id)
