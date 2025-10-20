@@ -280,7 +280,7 @@ async def admin_process_confirm_add(call: CallbackQuery, state: FSMContext, sess
 
 @admin_router.callback_query(F.data.startswith("acceptOrder_"), F.from_user.id.in_(settings.ADMIN_IDS))
 async def accept_order(call: CallbackQuery, session_with_commit: AsyncSession):
-    _, purchase_id = call.data.split("_")
+    purchase_id = int(call.data.split("_")[-1])
     purchase = await PurchaseDao.find_one_or_none(
         session=session_with_commit,
         filters=PurchaseIDModel(purchase_id=purchase_id)
