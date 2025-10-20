@@ -5,6 +5,7 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 from loguru import logger
 from admin.kbs import admin_accept_kb
+from admin.utils import process_dell_text_msg
 from user.user_router import page_home
 from user.catalog_router import page_catalog
 from user.service import NavState
@@ -95,6 +96,7 @@ async def get_date(message: Message, state: FSMContext):
     # await call.message.answer(f"Заказ будет доставлен ориентировочно сегодня после 19:30")
     await state.update_data(adress=message.text)
     logger.error("get_date")
+    await process_dell_text_msg(message, state)
     await message.answer(text="Укажите дату доставки: ", reply_markup=date_kb())
     await state.set_state(DoOrder.date)
 
@@ -104,9 +106,7 @@ async def create_order(call: CallbackQuery, session_with_commit: AsyncSession, s
     logger.error("create_order")
     date = call.data.split("_")[-1]
     await state.update_data(date = date)
-    await state.update_data(adress=call.message.text)
     order = await state.get_data()
-    await bot.delete_message(chat_id=call.message.from_user.id, message_id=order["last_msg_id"])
 
     purchase = await PurchaseDao.find_one_or_none(
         session=session_with_commit,
