@@ -95,7 +95,6 @@ async def get_adress(call: CallbackQuery, state: FSMContext):
 async def get_date(message: Message, state: FSMContext):
     # await call.message.answer(f"Заказ будет доставлен ориентировочно сегодня после 19:30")
     await state.update_data(adress=message.text)
-    logger.error("get_date")
     await process_dell_text_msg(message, state)
     await message.answer(text="Укажите дату доставки: ", reply_markup=date_kb())
     await state.set_state(DoOrder.date)
@@ -113,6 +112,7 @@ async def create_order(call: CallbackQuery, session_with_commit: AsyncSession, s
         filters=PurchaseModel(user_id=call.message.from_user.id,
                               status="NEW")
     )
+    logger.error(purchase)
     order = await state.get_data()
     await PurchaseDao.set_order(session_with_commit, data_id=purchase.id, getdate=order["date"], adress=order["adress"], status="WAIT", money=1)
     await state.clear()
