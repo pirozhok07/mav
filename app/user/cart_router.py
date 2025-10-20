@@ -150,7 +150,7 @@ async def create_order(call: CallbackQuery, session_with_commit: AsyncSession, s
                     f"за <b>{purchase.total} ₽</b> {money_text}"
                     f"дата: {purchase.date}\n"
                     f"адресс: {purchase.adress}\n"
-                ), reply_markup=admin_accept_kb(user_id=call.from_user.id)
+                ), reply_markup=admin_accept_kb(purchase_id=purchase.id)
             )
         except Exception as e:
             logger.error(f"Ошибка при отправке уведомления администраторам: {e}")

@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import CallbackQuery, Message
 from loguru import logger
-from user.schemas import PurchaseModel
+from user.schemas import PurchaseIDModel, PurchaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from config import settings, bot
 from dao.dao import DeliveryDao, TasteDao, UserDAO, ProductDao, CategoryDao, PurchaseDao
@@ -280,11 +280,10 @@ async def admin_process_confirm_add(call: CallbackQuery, state: FSMContext, sess
 
 @admin_router.callback_query(F.data.startswith("acceptOrder_"), F.from_user.id.in_(settings.ADMIN_IDS))
 async def accept_order(call: CallbackQuery, session_with_commit: AsyncSession):
-    _, user_id = call.data.split("_")
+    _, purchase_id = call.data.split("_")
     purchase = await PurchaseDao.find_one_or_none(
         session=session_with_commit,
-        filters=PurchaseModel(user_id=user_id,
-                              status="WAIT")
+        filters=PurchaseIDModel(purchase_id=purchase_id)
     )
     await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id, status = "CONFIRM")
     await call.message.edit_text(text=f"{call.message.text}\n <b>Подтвержден</b>.")

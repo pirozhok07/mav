@@ -124,9 +124,9 @@ def admin_confirm_kb() -> InlineKeyboardMarkup:
     return kb.as_markup()
 
 
-def admin_accept_kb(user_id: int) -> InlineKeyboardMarkup:
+def admin_accept_kb(purchase_id: int) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    kb.button(text="✔ Подтвердить", callback_data=f"acceptOrder_{user_id}")
+    kb.button(text="✔ Подтвердить", callback_data=f"acceptOrder_{purchase_id}")
     kb.adjust(1)
     return kb.as_markup()
 
