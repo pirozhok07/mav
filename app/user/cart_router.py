@@ -90,7 +90,7 @@ async def get_adress(call: CallbackQuery, state: FSMContext):
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(DoOrder.adress)
 
-@cart_router.callback_query(F.text, DoOrder.adress)
+@cart_router.message(F.text, DoOrder.adress)
 async def get_date(message: Message, state: FSMContext):
     # await call.message.answer(f"Заказ будет доставлен ориентировочно сегодня после 19:30")
     await state.update_data(adress=message.text)
@@ -100,7 +100,7 @@ async def get_date(message: Message, state: FSMContext):
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(DoOrder.date)
 
-@cart_router.message(F.data.startswith("get_date_"), DoOrder.date)
+@cart_router.callback_query(F.data.startswith("get_date_"), DoOrder.date)
 async def create_order(call: CallbackQuery, session_with_commit: AsyncSession, state: FSMContext):
     
     logger.error("create_order")
