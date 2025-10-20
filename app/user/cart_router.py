@@ -112,13 +112,14 @@ async def create_order(call: CallbackQuery, session_with_commit: AsyncSession, s
         filters=PurchaseModel(user_id=call.from_user.id,
                               status="NEW")
     )
-    logger.error(call.message.from_user.id)
-    logger.error(purchase)
     order = await state.get_data()
     await PurchaseDao.set_order(session_with_commit, data_id=purchase.id, getdate=order["date"], adress=order["adress"], status="WAIT", money=1)
     await state.clear()
 
-    if purchase.total < 500 : total=purchase.total+50
+    if purchase.total < 500: 
+        total=purchase.total+50 
+    else: 
+        total=purchase.total
     await call.message.edit_text(f"Оплата переводом.\n Итого: {total}₽\nРЕКВИЗИТЫ\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
     money_text = f"Оплата переводом.\n"
     
