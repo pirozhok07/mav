@@ -83,7 +83,7 @@ async def dell_item(call: CallbackQuery, session_with_commit: AsyncSession):
     await edit_cart(call, session_with_commit)
 
 @cart_router.callback_query(F.data == 'do_order')
-async def get_date(call: CallbackQuery, state: FSMContext):
+async def get_adress(call: CallbackQuery, state: FSMContext):
     await call.answer("Оформление заказа")
     # await call.message.answer(f"Заказ будет доставлен ориентировочно сегодня после 19:30")
     msg = await call.message.edit_text(text="Куда доставить ваш заказ? ", reply_markup=cancele_kb())
