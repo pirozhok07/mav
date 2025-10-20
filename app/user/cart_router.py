@@ -89,8 +89,6 @@ async def get_adress(call: CallbackQuery, state: FSMContext):
     msg = await call.message.edit_text(text="Куда доставить ваш заказ? ", reply_markup=cancele_kb())
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(DoOrder.adress)
-    logger.error(state.get_value())
-    logger.error(state.get_data())
 
 @cart_router.callback_query(F.text, DoOrder.adress)
 async def get_date(message: Message, state: FSMContext):
@@ -98,6 +96,7 @@ async def get_date(message: Message, state: FSMContext):
     await state.update_data(adress=message.text)
     logger.error("get_date")
     msg = await message.edit_text(text="Укажите дату доставки: ", reply_markup=date_kb())
+    await message.answer(text="Укажите дату доставки: ", reply_markup=date_kb())
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(DoOrder.date)
 
