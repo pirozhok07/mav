@@ -106,7 +106,6 @@ async def create_order(call: CallbackQuery, session_with_commit: AsyncSession, s
     await state.update_data(date = date)
     await state.update_data(adress=call.message.text)
     order = await state.get_data()
-    await bot.delete_message(chat_id=call.message.from_user.id, message_id=call.message.message_id)
     await bot.delete_message(chat_id=call.message.from_user.id, message_id=order["last_msg_id"])
 
     purchase = await PurchaseDao.find_one_or_none(
@@ -119,7 +118,7 @@ async def create_order(call: CallbackQuery, session_with_commit: AsyncSession, s
     await state.clear()
 
     if purchase.total < 500 : total=purchase.total+50
-    await call.answer(f"Оплата переводом.\n Итого: {total}₽\nРЕКВИЗИТЫ\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
+    await call.message.edit_text(f"Оплата переводом.\n Итого: {total}₽\nРЕКВИЗИТЫ\nСпасибо за заказ\nКурьер напишет вам за 15 мин", show_alert=True)
     money_text = f"Оплата переводом.\n"
     
     await page_home(call)
