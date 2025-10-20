@@ -283,7 +283,7 @@ async def accept_order(call: CallbackQuery, session_with_commit: AsyncSession):
     purchase_id = int(call.data.split("_")[-1])
     purchase = await PurchaseDao.find_one_or_none(
         session=session_with_commit,
-        filters=PurchaseIDModel(purchase_id=purchase_id)
+        filters=PurchaseIDModel(id=purchase_id)
     )
     await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id, status = "CONFIRM")
     await call.message.edit_text(text=f"{call.message.text}\n <b>Подтвержден</b>.")
