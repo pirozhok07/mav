@@ -112,6 +112,7 @@ async def create_order(call: CallbackQuery, session_with_commit: AsyncSession, s
         filters=PurchaseModel(user_id=call.message.from_user.id,
                               status="NEW")
     )
+    logger.error(call.message.from_user.id)
     logger.error(purchase)
     order = await state.get_data()
     await PurchaseDao.set_order(session_with_commit, data_id=purchase.id, getdate=order["date"], adress=order["adress"], status="WAIT", money=1)
