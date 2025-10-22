@@ -7,7 +7,7 @@ from loguru import logger
 from user.schemas import PurchaseIDModel, PurchaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from config import settings, bot
-from dao.dao import DeliveryDao, TasteDao, UserDAO, ProductDao, CategoryDao, PurchaseDao
+from dao.dao import DeliveryDao, DeliveryTimeDao, TasteDao, UserDAO, ProductDao, CategoryDao, PurchaseDao
 from admin.kbs import admin_adress_kb, admin_catalog_kb, admin_date_kb, admin_delivery_kb, admin_kb, admin_kb_back, admin_product_kb, admin_show_kb, admin_taste_kb, product_management_kb, cancel_kb_inline, catalog_admin_kb, \
     admin_confirm_kb, dell_product_kb
 from admin.schemas import DeliveryOrderAdress, ProductModel, ProductIDModel, PurchaseAdressModel, PurchaseDateModel, UserIDModel
@@ -376,19 +376,7 @@ async def deliver_transferred(call: CallbackQuery, session_with_commit: AsyncSes
 
 @admin_router.message(F.text.startswith("time_"), F.from_user.id.in_(settings.ADMIN_IDS))
 async def set_time(message: Message, session_with_commit: AsyncSession):
-    logger.error("vosh")
     time_str = message.text.split("_")[-1]
     time = datetime.strptime(time_str, "%H:%M").time()
-    purchases = await PurchaseDao.get_purchases(session=session_with_commit, telegram_id=user_id)
-    for purchase in purchases:
-        await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id, status = "DONE")
-
-@admin_router.message(F.text=="time", F.from_user.id.in_(settings.ADMIN_IDS))
-async def set_time(message: Message, session_with_commit: AsyncSession):
-    logger.error("vosha1")
-    time_str = message.text.split("_")[-1]
-    time = datetime.strptime(time_str, "%H:%M").time()
-    purchases = await PurchaseDao.get_purchases(session=session_with_commit, telegram_id=user_id)
-    for purchase in purchases:
-        await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id, status = "DONE")
-    await call.message.answer(text="Заказ доставлен")   
+    await DeliveryTimeDao.set_new_time(session=session_with_commit, get_date=date.today(), set_time=time)
+    
