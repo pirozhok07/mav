@@ -376,9 +376,19 @@ async def deliver_transferred(call: CallbackQuery, session_with_commit: AsyncSes
 
 @admin_router.message(F.text.startswith("time_"), F.from_user.id.in_(settings.ADMIN_IDS))
 async def set_time(message: Message, session_with_commit: AsyncSession):
+    logger.error("vosh")
     time_str = message.text.split("_")[-1]
     time = datetime.strptime(time_str, "%H:%M").time()
     purchases = await PurchaseDao.get_purchases(session=session_with_commit, telegram_id=user_id)
     for purchase in purchases:
         await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id, status = "DONE")
-    await call.message.answer(text="Заказ доставлен")
+
+@admin_router.message(F.text=="time", F.from_user.id.in_(settings.ADMIN_IDS))
+async def set_time(message: Message, session_with_commit: AsyncSession):
+    logger.error("vosha1")
+    time_str = message.text.split("_")[-1]
+    time = datetime.strptime(time_str, "%H:%M").time()
+    purchases = await PurchaseDao.get_purchases(session=session_with_commit, telegram_id=user_id)
+    for purchase in purchases:
+        await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id, status = "DONE")
+    await call.message.answer(text="Заказ доставлен")   
