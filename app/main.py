@@ -22,7 +22,7 @@ async def set_commands():
 async def start_bot():
     scheduler.add_job(
         clear_db_table,
-        CronTrigger(hour=11, minute=49, timezone="Europe/Moscow"),
+        CronTrigger(hour=0, minute=0, timezone="Europe/Moscow"),
         args=(bot, 1330085937),
         kwargs={"text": "text"},
         id="daily_mess"

@@ -27,8 +27,6 @@ class BaseDAO(Generic[T]):
         except SQLAlchemyError as e:
             print(e)
             raise e
-
-
         
     @classmethod
     async def find_one_or_none_by_id(cls, data_id: int, session: AsyncSession):

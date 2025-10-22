@@ -10,7 +10,7 @@ from config import settings, bot
 from dao.dao import DeliveryDao, TasteDao, UserDAO, ProductDao, CategoryDao, PurchaseDao
 from admin.kbs import admin_adress_kb, admin_catalog_kb, admin_date_kb, admin_delivery_kb, admin_kb, admin_kb_back, admin_product_kb, admin_show_kb, admin_taste_kb, product_management_kb, cancel_kb_inline, catalog_admin_kb, \
     admin_confirm_kb, dell_product_kb
-from admin.schemas import DeliveryData, ProductModel, ProductIDModel, PurchaseAdressModel, PurchaseDateModel, UserIDModel
+from admin.schemas import DeliveryData, DeliveryOrderAdress, ProductModel, ProductIDModel, PurchaseAdressModel, PurchaseDateModel, UserIDModel
 from admin.utils import process_dell_text_msg
 from datetime import date, datetime
 
@@ -307,7 +307,7 @@ async def delivery_adress(call: CallbackQuery, session_without_commit: AsyncSess
 async def delivery_adress(call: CallbackQuery, session_with_commit: AsyncSession, state: FSMContext):
     await call.answer("Доставки")
     adress_text = call.data.split("_")[-1]
-    await DeliveryDao.add(session=session_with_commit, values=DeliveryData(adress=adress_text))
+    await DeliveryDao.add(session=session_with_commit, values=DeliveryOrderAdress(adress=adress_text))
     data = await state.get_data()
     data["adress"].remove(adress_text)
     if not data["adress"]:
@@ -374,8 +374,10 @@ async def deliver_transferred(call: CallbackQuery, session_with_commit: AsyncSes
         await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id, status = "DONE")
     await call.message.answer(text="Заказ доставлен")
 
-@admin_router.callback_query(F.data == "set_time", F.from_user.id.in_(settings.ADMIN_IDS))
-async def set_time(call: CallbackQuery, session_with_commit: AsyncSession):
+@admin_router.message(F.text.startswith("time_"), F.from_user.id.in_(settings.ADMIN_IDS))
+async def set_time(message: Message, session_with_commit: AsyncSession):
+    time_str = message.text.split("_")[-1]
+    time = datetime.strptime(time_str, "%H:%M").time()
     purchases = await PurchaseDao.get_purchases(session=session_with_commit, telegram_id=user_id)
     for purchase in purchases:
         await PurchaseDao.change_status(session=session_with_commit, purchase_id=purchase.id, status = "DONE")

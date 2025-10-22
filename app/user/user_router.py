@@ -5,7 +5,7 @@ from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 from dao.dao import PurchaseDao, UserDAO, ProductDao, TasteDao
 from user.kbs import cart_kb, main_user_kb, purchases_kb
-from user.schemas import PurchaseModel, TasteIDModel, TelegramIDModel, UserModel, CartModel
+from user.schemas import PurchaseModel, TelegramIDModel, UserModel
 
 user_router = Router()
 
@@ -56,7 +56,7 @@ async def page_about(call: CallbackQuery):
     )
 
 @user_router.callback_query(F.data == "my_profile")
-async def page_about(call: CallbackQuery, session_without_commit: AsyncSession):
+async def page_profil(call: CallbackQuery, session_without_commit: AsyncSession):
     await call.answer("Профиль")
 
     # Получаем статистику покупок пользователя
@@ -67,8 +67,6 @@ async def page_about(call: CallbackQuery, session_without_commit: AsyncSession):
     
     total_amount = purchase.get("total_amount", 0)
     total_purchases = purchase.get("total_purchases", 0)
-    logger.error(total_amount)
-    logger.error(total_purchases)
     # Формируем сообщение в зависимости от наличия покупок
     if total_purchases == 0:
         await call.message.edit_text(
@@ -81,56 +79,56 @@ async def page_about(call: CallbackQuery, session_without_commit: AsyncSession):
             f"🛍 <b>Ваш профиль:</b>\n\n"
             f"Количество заказов: <b>{total_purchases}</b>\n"
             f"Итого: <b>{total_amount}₽</b>\n\n"
-            "Хотите просмотреть детали ваших покупок?"
+            # "Хотите просмотреть детали ваших покупок?"
         )
         await call.message.edit_text(
             text=text,
             reply_markup=purchases_kb()
         )
 
-@user_router.callback_query(F.data == "purchases")
-async def page_user_purchases(call: CallbackQuery, session_without_commit: AsyncSession):
-    await call.answer("Мои покупки")
+# @user_router.callback_query(F.data == "purchases")
+# async def page_user_purchases(call: CallbackQuery, session_without_commit: AsyncSession):
+#     await call.answer("Мои покупки")
 
-    # Получаем список покупок пользователя
-    purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id)
-    if not purchases:
-        await call.message.edit_text(
-            text=f"🔍 <b>У вас пока нет покупок.</b>\n\n"
-                 f"Откройте каталог и выберите что-нибудь интересное!",
-            reply_markup=main_user_kb(call.from_user.id)
-        )
-        return
-    product_text = (
-            f"🛒 <b>Информация о ваших покупках:</b>\n"
-            f"━━━━━━━━━━━━━━━━━━\n")
-    # Для каждой покупки отправляем информацию
-    for purchase in purchases:
-        products = purchase.goods_id.split(', ')
-        for good in products:
-            if good.find('_') != -1:
-                product_id, taste_id = good.split('_')
-                taste = await TasteDao.find_one_or_none_by_id(session=session_without_commit, data_id=taste_id)
-                product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=product_id)
-                product_text += (f"🔹 {product.name} ({taste.taste_name})\n")
-            else: 
-                product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=good)
-                product_text += (f"🔹 {product.name}\n")
-        if(purchase.status == "WAIT"): text_status = "Ожидает подтверждения"
-        elif(purchase.status == "CONFIRM"): text_status = "Ожидает доставки"
-        elif(purchase.status == "DONE"): text_status = "Выполнен"
+#     # Получаем список покупок пользователя
+#     purchases = await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id)
+#     if not purchases:
+#         await call.message.edit_text(
+#             text=f"🔍 <b>У вас пока нет покупок.</b>\n\n"
+#                  f"Откройте каталог и выберите что-нибудь интересное!",
+#             reply_markup=main_user_kb(call.from_user.id)
+#         )
+#         return
+#     product_text = (
+#             f"🛒 <b>Информация о ваших покупках:</b>\n"
+#             f"━━━━━━━━━━━━━━━━━━\n")
+#     # Для каждой покупки отправляем информацию
+#     for purchase in purchases:
+#         products = purchase.goods_id.split(', ')
+#         for good in products:
+#             if good.find('_') != -1:
+#                 product_id, taste_id = good.split('_')
+#                 taste = await TasteDao.find_one_or_none_by_id(session=session_without_commit, data_id=taste_id)
+#                 product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=product_id)
+#                 product_text += (f"🔹 {product.name} ({taste.taste_name})\n")
+#             else: 
+#                 product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=good)
+#                 product_text += (f"🔹 {product.name}\n")
+#         if(purchase.status == "WAIT"): text_status = "Ожидает подтверждения"
+#         elif(purchase.status == "CONFIRM"): text_status = "Ожидает доставки"
+#         elif(purchase.status == "DONE"): text_status = "Выполнен"
 
-        product_text += (
-                f"\n<b>итого:</b> {purchase.total}₽\n"
-                f"<b>дата:</b> {purchase.date}\n"
-                f"<b>адресс:</b> {purchase.adress}\n"
-                f"<b>статус:</b> {text_status}\n"
-                f"━━━━━━━━━━━━━━━━━━\n")
+#         product_text += (
+#                 f"\n<b>итого:</b> {purchase.total}₽\n"
+#                 f"<b>дата:</b> {purchase.date}\n"
+#                 f"<b>адресс:</b> {purchase.adress}\n"
+#                 f"<b>статус:</b> {text_status}\n"
+#                 f"━━━━━━━━━━━━━━━━━━\n")
 
-    await call.message.edit_text(
-        text=product_text,
-        reply_markup=main_user_kb(call.from_user.id)
-    )
+#     await call.message.edit_text(
+#         text=product_text,
+#         reply_markup=main_user_kb(call.from_user.id)
+#     )
 
 @user_router.callback_query(F.data == "cart")
 async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSession):
@@ -167,14 +165,11 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
             product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=good)
             product_text += (f"🔹 {product.name} - {product.price} ₽\n")
 
+    product_text += (f"━━━━━━━━━━━━━━━━━━\n")
     if purchase.total < 500 : 
-        product_text += (
-                f"━━━━━━━━━━━━━━━━━━\n"
-                f"Итого: {purchase.total+50}₽ с учетом доставки\n")
+        product_text += (f"Итого: {purchase.total+50}₽ с учетом доставки\n")
     else:
-        product_text += (
-                f"━━━━━━━━━━━━━━━━━━\n"
-                f"Итого: {purchase.total}₽. Доставка бесплатно.\n")
+        product_text += (f"Итого: {purchase.total}₽. Доставка бесплатно.\n")
 
     await call.message.edit_text(
         text=product_text,

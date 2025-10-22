@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, date
+from datetime import datetime, time, timedelta, date
 import json
 from typing import Optional, List, Dict
 
@@ -9,7 +9,25 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from dao.base import BaseDAO
-from dao.models import Taste, User, Purchase, Category, Product, Delivery
+from dao.models import Taste, User, Purchase, Category, Product, Delivery, DeliveryTime
+
+class DeliveryTimeDao(BaseDAO[DeliveryTime]):
+    model = DeliveryTime
+
+    @classmethod
+    async def set_new_time(cls, session: AsyncSession, get_date:date, set_time:time):
+        try:
+            result = await session.execute(
+                select(DeliveryTime)
+                .filter(Delivery.date == get_date)
+                )
+            record = result.one_or_none()
+            # record = await session.get(cls.model, data_id)
+            setattr(record, 'time', set_time)
+            logger.error(record)
+        except SQLAlchemyError as e:
+            logger.error(f"Ошибка при получении суммы заказа: {e}")
+            raise
 
 class DeliveryDao(BaseDAO[Delivery]):
     model = Delivery

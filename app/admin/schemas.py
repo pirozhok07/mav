@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from datetime import date, datetime
+from datetime import date, datetime, time
 
 class ProductIDModel(BaseModel):
     id: int
@@ -16,8 +16,12 @@ class PurchaseForDellModel(BaseModel):
 class PurchaseAdressModel(BaseModel):
     adress:str
 
-class DeliveryData(BaseModel):
+class DeliveryOrderAdress(BaseModel):
     adress:str = Field(...)
+
+class DeliveryDate(BaseModel):
+    date:date
+    time:time
 
 class ProductModel(BaseModel):
     name: str = Field(..., min_length=5)
