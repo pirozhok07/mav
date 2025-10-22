@@ -10,7 +10,7 @@ from config import settings, bot
 from dao.dao import DeliveryDao, TasteDao, UserDAO, ProductDao, CategoryDao, PurchaseDao
 from admin.kbs import admin_adress_kb, admin_catalog_kb, admin_date_kb, admin_delivery_kb, admin_kb, admin_kb_back, admin_product_kb, admin_show_kb, admin_taste_kb, product_management_kb, cancel_kb_inline, catalog_admin_kb, \
     admin_confirm_kb, dell_product_kb
-from admin.schemas import DeliveryData, DeliveryOrderAdress, ProductModel, ProductIDModel, PurchaseAdressModel, PurchaseDateModel, UserIDModel
+from admin.schemas import DeliveryOrderAdress, ProductModel, ProductIDModel, PurchaseAdressModel, PurchaseDateModel, UserIDModel
 from admin.utils import process_dell_text_msg
 from datetime import date, datetime
 
