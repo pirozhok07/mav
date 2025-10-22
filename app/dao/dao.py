@@ -21,8 +21,10 @@ class DeliveryTimeDao(BaseDAO[DeliveryTime]):
                 select(DeliveryTime)
                 .filter(DeliveryTime.date == get_date)
                 )
-            record = result.one_or_none()
-            # record = await session.get(cls.model, data_id)
+            o = result.one_or_none()
+            logger.error(o)
+            record = await session.get(cls.model, o.id)
+
             setattr(record, 'time', set_time)
             logger.error(record)
         except SQLAlchemyError as e:
