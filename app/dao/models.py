@@ -81,5 +81,5 @@ class DeliveryTime(Base):
     time: Mapped[time] = mapped_column(TIME, nullable=True)
 
     def __repr__(self):
-        return f"<Deliveriestime(time={self.time}, date={self.date})>"
+        return f"<Deliveriestime(time={self.time}, date={self.date}, {self.id})>"
     
