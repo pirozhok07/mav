@@ -19,7 +19,7 @@ class DeliveryTimeDao(BaseDAO[DeliveryTime]):
         try:
             result = await session.execute(
                 select(DeliveryTime)
-                .filter(Delivery.date == get_date)
+                .filter(DeliveryTime.date == get_date)
                 )
             record = result.one_or_none()
             # record = await session.get(cls.model, data_id)
