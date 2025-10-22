@@ -18,12 +18,12 @@ class DeliveryTimeDao(BaseDAO[DeliveryTime]):
     async def set_new_time(cls, session: AsyncSession, get_date:date, set_time:time):
         try:
             result = await session.execute(
-                select(DeliveryTime)
+                select(DeliveryTime.id)
                 .filter(DeliveryTime.date == get_date)
                 )
             o = result.one_or_none()
             logger.error(o)
-            record = await session.get(cls.model, o.id)
+            record = await session.get(cls.model, o)
 
             setattr(record, 'time', set_time)
             logger.error(record)
