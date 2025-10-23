@@ -60,14 +60,15 @@ async def page_profil(call: CallbackQuery, session_without_commit: AsyncSession)
     await call.answer("Профиль")
 
     # Получаем статистику покупок пользователя
-    purchase = await UserDAO.get_purchase_statistics(
+    statistic = await UserDAO.get_purchase_statistics(
         session=session_without_commit,
         telegram_id=call.from_user.id
     )
     
-    total_amount = purchase.get("total_amount", 0)
-    total_purchases = purchase.get("total_purchases", 0)
+    total_amount = statistic.get("total_amount", 0)
+    total_purchases = statistic.get("total_purchases", 0)
     # Формируем сообщение в зависимости от наличия покупок
+    text=''
     if total_purchases == 0:
         await call.message.edit_text(
             text="🔍 <b>У вас пока нет покупок.</b>\n\n"
@@ -85,6 +86,11 @@ async def page_profil(call: CallbackQuery, session_without_commit: AsyncSession)
             text=text,
             reply_markup=purchases_kb()
         )
+    purchase= await PurchaseDao.find_all(session=session_without_commit, filters=PurchaseModel(user_id=call.from_user.id,
+                                                                                               status="CONFIRM"))
+    if purchase is not None:
+        logger.error(purchase)
+
 
 # @user_router.callback_query(F.data == "purchases")
 # async def page_user_purchases(call: CallbackQuery, session_without_commit: AsyncSession):
