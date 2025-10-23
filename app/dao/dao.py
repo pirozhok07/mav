@@ -239,7 +239,7 @@ class PurchaseDao(BaseDAO[Purchase]):
             # Запрос для получения пользователя с его покупками и связанными продуктами
             result = await session.execute(
             select(Purchase)
-            .filter(Purchase.user_id == telegram_id, Purchase.status in ["NEW","CONFIRM"])
+            .filter(Purchase.user_id == telegram_id, Purchase.status.in_(["NEW","CONFIRM"]))
             .order_by(Purchase.date)
             )
             
