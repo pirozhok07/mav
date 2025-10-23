@@ -86,7 +86,7 @@ async def page_profil(call: CallbackQuery, session_without_commit: AsyncSession)
             text=text,
             reply_markup=purchases_kb()
         )
-    purchases= await PurchaseDao.get_purchases(session=session_without_commit, filters=PurchaseUserIDModel(user_id=call.from_user.id))
+    purchases= await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id)
     if purchases is not None:
         logger.error(purchases)
         # for purchase in purchases:
