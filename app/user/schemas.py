@@ -21,6 +21,9 @@ class ProductIDModel(BaseModel):
 class PurchaseIDModel(BaseModel):
     id: int
 
+class PurchaseUserIDModel(BaseModel):
+    user_id: int
+
 class TasteIDModel(BaseModel):
     id: int
 

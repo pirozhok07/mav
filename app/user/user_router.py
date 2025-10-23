@@ -5,7 +5,7 @@ from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 from dao.dao import PurchaseDao, UserDAO, ProductDao, TasteDao
 from user.kbs import cart_kb, main_user_kb, purchases_kb
-from user.schemas import PurchaseModel, TelegramIDModel, UserModel
+from user.schemas import PurchaseModel, PurchaseUserIDModel, TelegramIDModel, UserModel
 
 user_router = Router()
 
@@ -86,10 +86,11 @@ async def page_profil(call: CallbackQuery, session_without_commit: AsyncSession)
             text=text,
             reply_markup=purchases_kb()
         )
-    purchase= await PurchaseDao.find_all(session=session_without_commit, filters=PurchaseModel(user_id=call.from_user.id,
-                                                                                               status="CONFIRM"))
-    if purchase is not None:
-        logger.error(purchase)
+    purchases= await PurchaseDao.get_purchases(session=session_without_commit, filters=PurchaseUserIDModel(user_id=call.from_user.id))
+    if purchases is not None:
+        logger.error(purchases)
+        # for purchase in purchases:
+        #     if (purchase.status=="NEW")
 
 
 # @user_router.callback_query(F.data == "purchases")
