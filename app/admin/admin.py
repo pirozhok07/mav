@@ -57,6 +57,7 @@ async def all_p(call: CallbackQuery, session_without_commit: AsyncSession):
 async def dell_p(call: CallbackQuery, session_with_commit: AsyncSession):
     # await PurchaseDao.delete_old(session=session_without_commit, status="NEW", date=datetime.now())
     await PurchaseDao.delete_old(session=session_with_commit, status="WAIT")
+    await call.message.answer('удалены WAIT заказы')
 
 @admin_router.callback_query(F.data == "admin_panel", F.from_user.id.in_(settings.ADMIN_IDS))
 async def start_admin(call: CallbackQuery):
