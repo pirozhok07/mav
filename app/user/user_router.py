@@ -82,21 +82,19 @@ async def page_profil(call: CallbackQuery, session_without_commit: AsyncSession)
             f"Итого: <b>{total_amount}₽</b>\n\n"
             # "Хотите просмотреть детали ваших покупок?"
         )
-        await call.message.answer(text=text)
 
     purchases= await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id)
     
     if purchases is not None:
-        text=''
         for purchase in purchases:
             if (purchase.status=="CONFIRM"):
                 text += await text_purchases(session_without_commit, purchase)
                 text += ("<b>Ожидает доставки</b>\n"
-                        "*****************")
+                        "*****************\n")
             if (purchase.status=="WAIT"):
                 text += await text_purchases(session_without_commit, purchase)
                 text += ("<b>Ожидает подтверждения</b>\n"
-                        "*****************")
+                        "*****************\n")
         await call.message.answer(text=text)
 
 
@@ -111,9 +109,6 @@ async def text_purchases(session_without_commit: AsyncSession, purchase):
         return None
         
     purchases = purchase.goods_id.split(', ')
-    product_text = (
-            f"🛒 <b>Информация о вашей корзине:</b>\n"
-            f"━━━━━━━━━━━━━━━━━━\n")
     
     # Для каждой покупки отправляем информацию
     for good in purchases:
@@ -189,6 +184,9 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
         filters=PurchaseModel(user_id=user_id,
                               status="NEW")
     )
+    product_text = (
+            f"🛒 <b>Информация о вашей корзине:</b>\n"
+            f"━━━━━━━━━━━━━━━━━━\n")
     answer = await text_purchases(session_without_commit,purchase)
     if  answer is None:
         await call.message.edit_text(
@@ -198,6 +196,6 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
         )
     else:
         await call.message.edit_text(
-            text=answer,
+            text=product_text+answer,
             reply_markup=cart_kb()
         )
