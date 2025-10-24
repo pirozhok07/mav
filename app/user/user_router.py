@@ -104,6 +104,7 @@ async def get_purchases(session_without_commit: AsyncSession, user_id:int):
     )
 
     if not purchase:
+        logger.error(purchase)
         return None
         
     purchases = purchase.goods_id.split(', ')
