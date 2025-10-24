@@ -87,14 +87,16 @@ async def page_profil(call: CallbackQuery, session_without_commit: AsyncSession)
     purchases= await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id)
     
     if purchases is not None:
+        text=''
         for purchase in purchases:
             if (purchase.status=="CONFIRM"):
-                text = await text_purchases(session_without_commit, purchase)
-                text += "CONFIRM"
+                text += await text_purchases(session_without_commit, purchase)
+                text += ("CONFIRM\n"
+                        "--------------------")
                 logger.error(text)
             if (purchase.status=="WAIT"):
-                text = await text_purchases(session_without_commit, purchase)
-                text += "CONFIRM"
+                text += await text_purchases(session_without_commit, purchase)
+                text += "WAIT"
                 logger.error(text)
             await call.message.answer(text=text)
 
