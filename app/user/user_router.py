@@ -96,19 +96,16 @@ async def page_profil(call: CallbackQuery, session_without_commit: AsyncSession)
                 )
 
 
-async def get_purchases(session_without_commit: AsyncSession, user_id:int):
-    purchase = await PurchaseDao.find_one_or_none(
-        session=session_without_commit,
-        filters=PurchaseModel(user_id=user_id,
-                              status="NEW")
-    )
+async def get_purchases(session_without_commit: AsyncSession, purchase):
+    # purchase = await PurchaseDao.find_one_or_none(
+    #     session=session_without_commit,
+    #     filters=PurchaseModel(user_id=user_id,
+    #                           status="NEW")
+    # )
 
-    logger.error("tut")
     if not purchase:
-        logger.error(purchase)
         return None
         
-    logger.error("tuta")
     purchases = purchase.goods_id.split(', ')
     product_text = (
             f"🛒 <b>Информация о вашей корзине:</b>\n"
@@ -131,7 +128,6 @@ async def get_purchases(session_without_commit: AsyncSession, user_id:int):
     else:
         product_text += (f"Итого: {purchase.total}₽. Доставка бесплатно.\n")
 
-    logger.error(product_text)
     return product_text
 
 
@@ -184,9 +180,12 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
     await call.answer("Моя корзина")
 
     user_id = call.from_user.id
-    
-    answer = await get_purchases(session_without_commit,user_id)
-    logger.error(answer)
+    purchase = await PurchaseDao.find_one_or_none(
+        session=session_without_commit,
+        filters=PurchaseModel(user_id=user_id,
+                              status="NEW")
+    )
+    answer = await get_purchases(session_without_commit,purchase)
     if  answer is None:
         await call.message.edit_text(
             text=f"🔍 <b>У вас пока нет покупок.</b>\n\n"
