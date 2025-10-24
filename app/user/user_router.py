@@ -128,7 +128,7 @@ async def get_purchases(session_without_commit: AsyncSession, user_id:int):
     else:
         product_text += (f"Итого: {purchase.total}₽. Доставка бесплатно.\n")
 
-    
+    logger.error(product_text)
     return product_text
 
 
