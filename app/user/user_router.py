@@ -98,7 +98,7 @@ async def page_profil(call: CallbackQuery, session_without_commit: AsyncSession)
                 text += await text_purchases(session_without_commit, purchase)
                 text += "WAIT"
                 logger.error(text)
-            await call.message.answer(text=text)
+        await call.message.answer(text=text)
 
 
 async def text_purchases(session_without_commit: AsyncSession, purchase):
