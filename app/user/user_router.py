@@ -185,7 +185,7 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
 
     user_id = call.from_user.id
     
-    answer = get_purchases(session_without_commit,user_id)
+    answer = await get_purchases(session_without_commit,user_id)
     logger.error(answer)
     if  answer is None:
         await call.message.edit_text(
