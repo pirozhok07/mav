@@ -109,7 +109,7 @@ async def text_purchases(session_without_commit: AsyncSession, purchase):
         return None
         
     purchases = purchase.goods_id.split(', ')
-    
+    product_text=""
     # Для каждой покупки отправляем информацию
     for good in purchases:
         if good.find('_') != -1:
