@@ -78,7 +78,7 @@ async def page_profil(call: CallbackQuery, session_without_commit: AsyncSession)
     else:
         text = (
             f"🛍 <b>Ваш профиль:</b>\n\n"
-            f"Количество заказов: <b>{total_purchases}</b>\n"
+            f"Количество оплаченых заказов: <b>{total_purchases}</b>\n"
             f"Итого: <b>{total_amount}₽</b>\n\n"
             # "Хотите просмотреть детали ваших покупок?"
         )

@@ -347,7 +347,7 @@ class UserDAO(BaseDAO[User]):
                     func.sum(Purchase.total).label('total_amount')
                 )
                 .join(User).filter(User.telegram_id == telegram_id)
-                .filter(Purchase.status.in_("CONFIRM","DONE"))
+                .filter(Purchase.status.in_(["CONFIRM", "DONE"]))
             )
             stats = result.one_or_none()
 
