@@ -103,10 +103,12 @@ async def get_purchases(session_without_commit: AsyncSession, user_id:int):
                               status="NEW")
     )
 
+    logger.error("tut")
     if not purchase:
         logger.error(purchase)
         return None
         
+    logger.error("tuta")
     purchases = purchase.goods_id.split(', ')
     product_text = (
             f"🛒 <b>Информация о вашей корзине:</b>\n"
