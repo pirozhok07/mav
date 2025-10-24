@@ -1,3 +1,4 @@
+from typing import List
 from aiogram import Router, F
 from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
@@ -68,7 +69,6 @@ async def page_profil(call: CallbackQuery, session_without_commit: AsyncSession)
     total_amount = statistic.get("total_amount", 0)
     total_purchases = statistic.get("total_purchases", 0)
     # Формируем сообщение в зависимости от наличия покупок
-    text=''
     if total_purchases == 0:
         await call.message.edit_text(
             text="🔍 <b>У вас пока нет покупок.</b>\n\n"
@@ -82,15 +82,53 @@ async def page_profil(call: CallbackQuery, session_without_commit: AsyncSession)
             f"Итого: <b>{total_amount}₽</b>\n\n"
             # "Хотите просмотреть детали ваших покупок?"
         )
-        await call.message.edit_text(
-            text=text,
-            reply_markup=purchases_kb()
-        )
+        await call.message.answer(text=text)
+
     purchases= await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id)
     if purchases is not None:
-        logger.error(purchases)
-        # for purchase in purchases:
-        #     if (purchase.status=="NEW")
+        for purchase in purchases:
+            if (purchase.status=="CONFIRM"):
+                text = (
+                    f"🛍 <b>Ваш профиль:</b>\n\n"
+                    f"Количество заказов: <b>{total_purchases}</b>\n"
+                    f"Итого: <b>{total_amount}₽</b>\n\n"
+                    # "Хотите просмотреть детали ваших покупок?"
+                )
+
+
+async def get_purchases(session_without_commit: AsyncSession, user_id:int):
+    purchase = await PurchaseDao.find_one_or_none(
+        session=session_without_commit,
+        filters=PurchaseModel(user_id=user_id,
+                              status="NEW")
+    )
+
+    if not purchase:
+        return None
+        
+    purchases = purchase.goods_id.split(', ')
+    product_text = (
+            f"🛒 <b>Информация о вашей корзине:</b>\n"
+            f"━━━━━━━━━━━━━━━━━━\n")
+    
+    # Для каждой покупки отправляем информацию
+    for good in purchases:
+        if good.find('_') != -1:
+            product_id, taste_id = good.split('_')
+            taste = await TasteDao.find_one_or_none_by_id(session=session_without_commit, data_id=taste_id)
+            product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=product_id)
+            product_text += (f"🔹 {product.name} ({taste.taste_name}) - {product.price} ₽\n")
+        else: 
+            product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=good)
+            product_text += (f"🔹 {product.name} - {product.price} ₽\n")
+
+    product_text += (f"━━━━━━━━━━━━━━━━━━\n")
+    if purchase.total < 500 : 
+        product_text += (f"Итого: {purchase.total+50}₽ с учетом доставки\n")
+    else:
+        product_text += (f"Итого: {purchase.total}₽. Доставка бесплатно.\n")
+        
+    return product_text
 
 
 # @user_router.callback_query(F.data == "purchases")
@@ -142,43 +180,16 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
     await call.answer("Моя корзина")
 
     user_id = call.from_user.id
-    purchase = await PurchaseDao.find_one_or_none(
-        session=session_without_commit,
-        filters=PurchaseModel(user_id=user_id,
-                              status="NEW")
-    )
-
-    if not purchase:
+    
+    answer = get_purchases(user_id)
+    if  answer is None:
         await call.message.edit_text(
             text=f"🔍 <b>У вас пока нет покупок.</b>\n\n"
                  f"Откройте каталог и выберите что-нибудь интересное!",
             reply_markup=main_user_kb(call.from_user.id)
         )
-        return
-    
-    purchases = purchase.goods_id.split(', ')
-    product_text = (
-            f"🛒 <b>Информация о вашей корзине:</b>\n"
-            f"━━━━━━━━━━━━━━━━━━\n")
-    
-    # Для каждой покупки отправляем информацию
-    for good in purchases:
-        if good.find('_') != -1:
-            product_id, taste_id = good.split('_')
-            taste = await TasteDao.find_one_or_none_by_id(session=session_without_commit, data_id=taste_id)
-            product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=product_id)
-            product_text += (f"🔹 {product.name} ({taste.taste_name}) - {product.price} ₽\n")
-        else: 
-            product = await ProductDao.find_one_or_none_by_id(session=session_without_commit, data_id=good)
-            product_text += (f"🔹 {product.name} - {product.price} ₽\n")
-
-    product_text += (f"━━━━━━━━━━━━━━━━━━\n")
-    if purchase.total < 500 : 
-        product_text += (f"Итого: {purchase.total+50}₽ с учетом доставки\n")
     else:
-        product_text += (f"Итого: {purchase.total}₽. Доставка бесплатно.\n")
-
-    await call.message.edit_text(
-        text=product_text,
-        reply_markup=cart_kb()
-    )
+        await call.message.edit_text(
+            text=answer,
+            reply_markup=cart_kb()
+        )
