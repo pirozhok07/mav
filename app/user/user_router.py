@@ -127,7 +127,7 @@ async def get_purchases(session_without_commit: AsyncSession, user_id:int):
         product_text += (f"Итого: {purchase.total+50}₽ с учетом доставки\n")
     else:
         product_text += (f"Итого: {purchase.total}₽. Доставка бесплатно.\n")
-        
+
     return product_text
 
 
@@ -181,7 +181,7 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
 
     user_id = call.from_user.id
     
-    answer = get_purchases(user_id)
+    answer = get_purchases(session_without_commit,user_id)
     if  answer is None:
         await call.message.edit_text(
             text=f"🔍 <b>У вас пока нет покупок.</b>\n\n"
