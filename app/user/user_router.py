@@ -90,11 +90,11 @@ async def page_profil(call: CallbackQuery, session_without_commit: AsyncSession)
             if (purchase.status=="CONFIRM"):
                 text += await text_purchases(session_without_commit, purchase)
                 text += ("<b>Ожидает доставки</b>\n"
-                        "*****************\n")
+                        "*****************\n\n")
             if (purchase.status=="WAIT"):
                 text += await text_purchases(session_without_commit, purchase)
                 text += ("<b>Ожидает подтверждения</b>\n"
-                        "*****************\n")
+                        "*****************\n\n")
         await call.message.answer(text=text)
 
 

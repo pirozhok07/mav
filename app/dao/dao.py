@@ -197,7 +197,6 @@ class PurchaseDao(BaseDAO[Purchase]):
             purchases = result.scalars().all() 
             for item in purchases:
                 await session.delete(item)
-            logger.error("DONE")
             return None 
         except SQLAlchemyError as e:
             # Обработка ошибок при работе с базой данных
