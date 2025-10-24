@@ -85,18 +85,21 @@ async def page_profil(call: CallbackQuery, session_without_commit: AsyncSession)
         await call.message.answer(text=text)
 
     purchases= await PurchaseDao.get_purchases(session=session_without_commit, telegram_id=call.from_user.id)
+    
     if purchases is not None:
         for purchase in purchases:
             if (purchase.status=="CONFIRM"):
-                text = (
-                    f"🛍 <b>Ваш профиль:</b>\n\n"
-                    f"Количество заказов: <b>{total_purchases}</b>\n"
-                    f"Итого: <b>{total_amount}₽</b>\n\n"
-                    # "Хотите просмотреть детали ваших покупок?"
-                )
+                text = await text_purchases(session_without_commit, purchase)
+                text += "CONFIRM"
+                logger.error(text)
+            if (purchase.status=="WAIT"):
+                text = await text_purchases(session_without_commit, purchase)
+                text += "CONFIRM"
+                logger.error(text)
+            await call.message.answer(text=text)
 
 
-async def get_purchases(session_without_commit: AsyncSession, purchase):
+async def text_purchases(session_without_commit: AsyncSession, purchase):
     # purchase = await PurchaseDao.find_one_or_none(
     #     session=session_without_commit,
     #     filters=PurchaseModel(user_id=user_id,
@@ -185,7 +188,7 @@ async def page_user_cart(call: CallbackQuery, session_without_commit: AsyncSessi
         filters=PurchaseModel(user_id=user_id,
                               status="NEW")
     )
-    answer = await get_purchases(session_without_commit,purchase)
+    answer = await text_purchases(session_without_commit,purchase)
     if  answer is None:
         await call.message.edit_text(
             text=f"🔍 <b>У вас пока нет покупок.</b>\n\n"
