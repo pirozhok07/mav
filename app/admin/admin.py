@@ -380,3 +380,7 @@ async def set_time(message: Message, session_with_commit: AsyncSession):
     time = datetime.strptime(time_str, "%H:%M").time()
     await DeliveryTimeDao.set_new_time(session=session_with_commit, get_date=date.today(), set_time=time)
     
+@admin_router.message(F.text=="dell_wait", F.from_user.id.in_(settings.ADMIN_IDS))
+async def dell_wait(session_with_commit: AsyncSession):
+    await PurchaseDao.delete_old(session=session_with_commit, status="WAIT")
+    
